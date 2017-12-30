@@ -1,10 +1,10 @@
 package server;
 
 import java.io.IOException;
+import java.net.Socket;
 
 public class Run {
     public static void main(String[] args) throws IOException {
-        Server server = new AvnerServer();
-        server.start(4200);
+        new MyServer().start(new MyClientHandler());
     }
 }

@@ -1,5 +1,11 @@
 package server;
 
+import java.net.Socket;
+
 public interface ClientHandler {
-    public String RequestSolution(String level);
+    interface Response {
+        String manipulate(String request);
+    }
+
+    String handle(String request,  Response response);
 }

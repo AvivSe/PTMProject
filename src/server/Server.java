@@ -3,6 +3,11 @@ package server;
 import java.io.IOException;
 
 public interface Server {
-    public void start(int port) throws IOException;
-    public void stop() throws IOException;
+    /**
+     * start working with specific client.
+     * @param clientHandler
+     * @throws IOException
+     */
+    public void start(ClientHandler clientHandler) throws IOException;
+
 }
