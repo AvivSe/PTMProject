@@ -8,17 +8,28 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MyServer implements Server {
-    Socket client;
+
     @Override
     public void start(ClientHandler clientHandler) throws IOException {
-        client = new ServerSocket(4200).accept();
-        System.out.println("New Client: " + client.getRemoteSocketAddress());
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        String req = bufferedReader.readLine();
-        System.out.println("The asked for solution");
 
-        PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true);
-        printWriter.write(clientHandler.handle(req, request -> "Solution("+request+")"));
-        printWriter.close();
+        while (true){
+            System.out.println("Waiting for next client...");
+            Socket socket = this.server.accept();
+            System.out.println("New Client: " + socket.getPort());
+
+            clientHandler.handle(socket.getInputStream(), socket.getOutputStream());
+
+        }
+
+    }
+
+    ServerSocket server;
+    MyServer(int port) throws IOException {
+        this.server = new ServerSocket(port);
+    }
+
+    public static void main(String[] args) throws IOException {
+        MyServer myServer = new MyServer(4200);
+        myServer.start(new MyClientHandler());
     }
 }

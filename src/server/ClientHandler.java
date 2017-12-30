@@ -1,11 +1,11 @@
 package server;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface ClientHandler {
-    interface Response {
-        String manipulate(String request);
-    }
 
-    String handle(String request,  Response response);
+    void handle(InputStream input, OutputStream output) throws IOException;
+
 }
