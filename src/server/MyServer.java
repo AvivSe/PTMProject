@@ -13,9 +13,7 @@ public class MyServer implements Server {
             System.out.println("Waiting for next client...");
             Socket socket = this.server.accept();
             System.out.println("New Client: " + socket.getPort());
-
             clientHandler.handler(socket.getInputStream(), socket.getOutputStream());
-
         }
 
     }

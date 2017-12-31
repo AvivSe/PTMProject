@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
+/**
+ *
+ * ClientHandler is a service that takes care for specific client,
+ * it's helps stream the data between the server and client.
+ */
 public interface ClientHandler {
     /**
      *

@@ -10,6 +10,7 @@ public interface Server {
      * @param clientHandler Various implements solving different kinds of problems or requests.
      * @throws IOException
      */
+
     public void start(ClientHandler clientHandler) throws IOException;
     public void stop() throws IOException;
 }
