@@ -17,19 +17,26 @@ public class MyClientHandler implements ClientHandler{
         PrintWriter out = new PrintWriter(output);
 
         String request = in.readLine();
+        System.out.print("The client ask solution for: " + request + "...");
 
-        System.out.println("the client want solution for: " + request);
-        if(oldRequests.containsKey(request)) {
-            out.write("from Cache: " + oldRequests.get(request));
-
+        String solution = this.cacheManager.load(request);
+        if(solution != null) {
+            out.write("Cache: " + solution);
         } else {
-            out.write("from Solver: " + request + " Solution");
-            oldRequests.put(request, request + " Solution");
+            solution = solver.solve(request);
+            cacheManager.save(request,solution);
+            out.write("Solver: " + solution);
         }
-
+        System.out.print("Client got answer. ");
         out.flush();
         out.close();
     }
 
-    Map<String, String> oldRequests = new HashMap<>(); // Request | Solution
+    Solver solver;
+    CacheManager cacheManager;
+
+    public MyClientHandler(Solver solver, CacheManager cacheManager) {
+        this.solver = solver;
+        this.cacheManager = cacheManager;
+    }
 }
