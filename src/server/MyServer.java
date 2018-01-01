@@ -1,7 +1,5 @@
 package server;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,13 +30,14 @@ public class MyServer implements Server {
     }
 
     private ServerSocket server;
-    private boolean stop;
+    public boolean stop;
     private int port;
 
     private MyServer(int port) throws IOException {
         this.port = port;
         this.server = null;
         this.stop = true;
+        System.out.println("Ready to start...");
     }
 
     private void run(ClientHandler clientHandler) throws IOException {
@@ -65,35 +64,8 @@ public class MyServer implements Server {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         MyServer myServer = new MyServer(4200);
-
-        ControlPanel cp = new ControlPanel();
-
-        ActionListener stopAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if (myServer.stop == false) {
-                        myServer.stop();
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        };
-
-        ActionListener startAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    myServer.start(new MyClientHandler(new MySolver(),new MyCacheManager()));
-                } catch (IOException | ClassNotFoundException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        };
-
-        cp.start.addActionListener(startAction);
-        cp.stop.addActionListener(stopAction);
+        new MyAdministrator(myServer).gui();
 
     }
+
 }
