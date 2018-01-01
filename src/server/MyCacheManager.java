@@ -30,17 +30,17 @@ public class MyCacheManager implements CacheManager {
     private Map<String,String> cache;
 
     MyCacheManager() throws IOException, ClassNotFoundException {
-        ObjectInputStream objectInputStream = null;
+        ObjectInputStream objectInputStream;
 
         try {
              objectInputStream =
                     new ObjectInputStream(
                             new FileInputStream("db.bin"));
+            this.cache = (Map<String, String>) objectInputStream.readObject();
         } catch (IOException e) {
             e.getMessage();
             this.cache = new HashMap<>();
         }
-        this.cache = (HashMap<String, String>) objectInputStream.readObject();
 
     }
 }
