@@ -32,10 +32,10 @@ public class MyClientHandler implements ClientHandler{
         out.close();
     }
 
-    Solver solver;
-    CacheManager cacheManager;
+    private Solver solver;
+    private CacheManager cacheManager;
 
-    public MyClientHandler(Solver solver, CacheManager cacheManager) {
+    MyClientHandler(Solver solver, CacheManager cacheManager) {
         this.solver = solver;
         this.cacheManager = cacheManager;
     }

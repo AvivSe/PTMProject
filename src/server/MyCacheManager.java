@@ -14,9 +14,14 @@ public class MyCacheManager implements CacheManager {
 
     @Override
     public void save(String problem, String solution) throws IOException {
+        /**
+         *
+         * append the solution into map
+         */
         this.cache.put(problem,solution);
 
         /**
+         *
          * Save whole updated map to db
          */
         ObjectOutputStream objectOutputStream =
@@ -30,7 +35,7 @@ public class MyCacheManager implements CacheManager {
 
     Map<String,String> cache;
 
-    public MyCacheManager() throws IOException, ClassNotFoundException {
+    MyCacheManager() throws IOException, ClassNotFoundException {
         ObjectInputStream objectInputStream = null;
 
         try {
@@ -38,7 +43,7 @@ public class MyCacheManager implements CacheManager {
                     new ObjectInputStream(
                             new FileInputStream("db.bin"));
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getMessage();
             this.cache = new HashMap<>();
         }
         this.cache = (Map<String, String>) objectInputStream.readObject();
