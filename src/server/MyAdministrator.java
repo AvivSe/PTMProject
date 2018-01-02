@@ -6,8 +6,10 @@ import java.io.IOException;
 
 public class MyAdministrator {
     private MyServer remote;
-    MyAdministrator(MyServer remote) {
+    private  MyClientHandler clientHandler;
+    MyAdministrator(MyServer remote, MyClientHandler clientHandler) {
         this.remote = remote;
+        this.clientHandler = clientHandler;
     }
 
     public void gui() {
@@ -30,15 +32,24 @@ public class MyAdministrator {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    remote.start(new MyClientHandler(new MySolver(),new MyCacheManager()));
-                } catch (IOException | ClassNotFoundException e1) {
+                    remote.start(clientHandler);
+                } catch (IOException e1) {
                     e1.printStackTrace();
                 }
             }
         };
 
+        ActionListener exitAction = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+                System.out.println("exit.");
+            }
+        };
+
         cp.start.addActionListener(startAction);
         cp.stop.addActionListener(stopAction);
+        cp.exit.addActionListener(exitAction);
 
     }
 }

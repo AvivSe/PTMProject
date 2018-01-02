@@ -29,6 +29,9 @@ public class MyCacheManager implements CacheManager {
 
     private Map<String,String> cache;
 
+    // TODO: Dont load whole solutions to memory. keep it on files and load specific solution when asked. in addition, it better save eace solution in sperated file.
+    // TODO: save on HDD, but create hash map for session
+
     MyCacheManager() throws IOException, ClassNotFoundException {
         ObjectInputStream objectInputStream = null;
 
