@@ -33,17 +33,17 @@ public class MyCacheManager implements CacheManager {
     // TODO: save on HDD, but create hash map for session
 
     MyCacheManager() throws IOException, ClassNotFoundException {
-        ObjectInputStream objectInputStream = null;
+        ObjectInputStream objectInputStream;
 
         try {
              objectInputStream =
                     new ObjectInputStream(
                             new FileInputStream("db.bin"));
+            this.cache = (Map<String, String>) objectInputStream.readObject();
         } catch (IOException e) {
             e.getMessage();
             this.cache = new HashMap<>();
         }
-        this.cache = (HashMap<String, String>) objectInputStream.readObject();
 
     }
 }
