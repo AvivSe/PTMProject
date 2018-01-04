@@ -6,6 +6,9 @@ public class MySolver implements Solver {
     @Override
     public String solve(String problem) {
 
-        return "0,1,1";
+        return "s-7\n"+
+                " FJ\n"+
+                " Lg\n"+
+                "done";
     }
 }

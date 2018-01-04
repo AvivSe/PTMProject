@@ -3,12 +3,14 @@ package server;
 //TODO: In whole project, use LOGGER!
 //TODO: Using JUNIT to biild testing for the project
 
+import Parts.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MyServer implements Server {
     private final Logger LOGGER = LoggerFactory.getLogger(MyServer.class);
@@ -71,9 +73,8 @@ public class MyServer implements Server {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         MyServer myServer = new MyServer(4200);
-
-        new MyAdministrator(myServer, new MyClientHandler(new MySolver(),new MyCacheManager())).gui();
-
+        myServer.start(new MyClientHandler(new MySolver(),new MyCacheManager()));
+        //new MyAdministrator(myServer, new MyClientHandler(new MySolver(),new MyCacheManager())).gui();
     }
 
 }
