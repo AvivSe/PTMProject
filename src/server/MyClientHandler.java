@@ -100,7 +100,7 @@ public class MyClientHandler implements ClientHandler{
                 /**
                  * Write vector if and only both chars are not equals.
                  * Either way, both will work.
-                 * (iluz gay)
+                 * ---> (iluz gay) <---
                  */
                 if (reqCharsLine[j] != solCharsLien[j]) {
                     res.append(i).append(",").append(j).append(",").append(left.rotate(right)).append("\n");
@@ -110,7 +110,8 @@ public class MyClientHandler implements ClientHandler{
         }
 
         res.append("done");
-        System.out.println("Directions are:\n" + res);
+        System.out.println("Directions are:\n" + res.toString());
+
         return res.toString();
     }
 }

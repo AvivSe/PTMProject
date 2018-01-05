@@ -1,6 +1,18 @@
 package Parts;
 
 public class Pipe extends Part implements Rotateable {
+    private State state;
+
+    State getState() {
+        return this.state;
+    }
+    void setState(State state){
+        this.state=state;
+    }
+    public String toString() {
+        return this.state.toString();
+    }
+
     @Override
     public int rotate(Pipe target) {
         if(this.getClass()!=target.getClass()) {
