@@ -19,6 +19,8 @@ public class MyClientHandler implements ClientHandler{
         while (!request.toString().contains("done")) {
             request.append(in.readLine()).append("\n");
         }
+        System.out.println("Client ask for directions to level: \n"  + request.toString());
+
         String normalizedRequest = normalize(request.toString());
         String solution = this.cacheManager.load(normalizedRequest);
 
@@ -26,7 +28,7 @@ public class MyClientHandler implements ClientHandler{
             solution = solver.solve(normalizedRequest);
             cacheManager.save(normalizedRequest,solution);
         }
-
+        System.out.println("Server - Soltuion is:\n "+ solution);
         out.write(directions(request.toString(),solution));
 
         System.out.print("Client got answer. ");
@@ -66,28 +68,49 @@ public class MyClientHandler implements ClientHandler{
         String[] sol = solution.split("\n");
         StringBuilder res=new StringBuilder();
 
+        for(int i = 0; i < req.length-1; i++) { // (-1) 'cause last line is "done".
+            char[] reqCharsLine = req[i].toCharArray();
+            char[] solCharsLien = sol[i].toCharArray();
 
-        for(int i=0;i<req.length-1;i++){
-            char[] reqChars = req[i].toCharArray();
-            char[] solChars = sol[i].toCharArray();
+            for(int j = 0; j < reqCharsLine.length; j++) {
+                Pipe left = null;
+                Pipe right = null;
 
-                for(int j=0;j<reqChars.length;j++) {
-                    Pipe left = new pipe_L('L');
-                    Pipe right = new pipe_L('L');
+                switch(reqCharsLine[j]) {
+                    case 'L':
+                    case 'J':
+                    case 'F':
+                    case '7':
+                        left = new pipe_L(reqCharsLine[j]);
+                        right = new pipe_L(solCharsLien[j]);
+                        break;
+                    case '|':
+                    case '-':
+                        left = new pipe_I(reqCharsLine[j]);
+                        right = new pipe_I(solCharsLien[j]);
+                        break;
+                    case 's':
+                    case 'g':
+                        break;
 
-                    if (reqChars[j] == 'L' || reqChars[j] == 'J' || reqChars[j] == 'F' || reqChars[j] == '7') {
-                        left = new pipe_L(reqChars[j]);
-                        right = new pipe_L(solChars[j]);
-                    }
-                    else if (reqChars[j] == '-' || reqChars[j] == '|') {
-                    left = new pipe_I(reqChars[j]);
-                    right = new pipe_I(solChars[j]);
-                    }
-                    res.append(i).append(",").append(j).append(",").append(left.rotate(right)+"\n");
+                        default:
+                            System.out.println("Unknown kind of Part. we support: {s,g,L,F,7,J,|,-}");
+
                 }
+                /**
+                 * Write vector if and only both chars are not equals.
+                 * Either way, both will work.
+                 * (iluz gay)
+                 */
+                if (reqCharsLine[j] != solCharsLien[j]) {
+                    res.append(i).append(",").append(j).append(",").append(left.rotate(right)).append("\n");
+                }
+
+            }
         }
+
         res.append("done");
-        System.out.println(res);
+        System.out.println("Directions are:\n" + res);
         return res.toString();
     }
 }

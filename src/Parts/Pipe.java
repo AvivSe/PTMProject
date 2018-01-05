@@ -1,6 +1,6 @@
 package Parts;
 
-public abstract class Pipe extends Part implements Rotateable {
+public class Pipe extends Part implements Rotateable {
     @Override
     public int rotate(Pipe target) {
         if(this.getClass()!=target.getClass()) {
