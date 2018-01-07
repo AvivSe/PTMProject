@@ -1,7 +1,9 @@
 package server;
 
 import java.io.*;
-import Parts.*;
+
+import level.Level;
+import parts.*;
 
 /**
  *
@@ -15,21 +17,29 @@ public class MyClientHandler implements ClientHandler{
         BufferedReader in = new BufferedReader(new InputStreamReader(input));
         PrintWriter out = new PrintWriter(output);
 
-        StringBuilder request = new StringBuilder(in.readLine() + "\n");
-        while (!request.toString().contains("done")) {
-            request.append(in.readLine()).append("\n");
+        StringBuilder req = new StringBuilder(in.readLine() + "\n");
+        while (!req.toString().contains("done")) {
+            req.append(in.readLine()).append("\n");
         }
-        System.out.println("Client ask for directions to level: \n"  + request.toString());
 
-        String normalizedRequest = normalize(request.toString());
-        String solution = this.cacheManager.load(normalizedRequest);
+        String tmp = req.toString();
+        tmp = req.toString().substring(0,tmp.length()-5);
+        Level request = Level.LevelBuilder.build(tmp);
+        System.out.println("Client ask for directions to level: \n"  + tmp);
+        Level normalizedRequest = normalize(request);
 
-        if(solution == null) {
-            solution = solver.solve(normalizedRequest);
-            cacheManager.save(normalizedRequest,solution);
+        String sol = this.cacheManager.load(normalizedRequest.toString());
+
+
+        if(sol == null) {
+            sol = solver.solve(normalizedRequest);
+            cacheManager.save(normalizedRequest.toString(),sol + "\ndone");
         }
+
+        Level solution = Level.LevelBuilder.build(sol.substring(0,sol.length()-5));
+
         System.out.println("Server - Soltuion is:\n "+ solution);
-        out.write(directions(request.toString(),solution));
+        out.write(directions(request ,solution));
 
         System.out.print("Client got answer. ");
 
@@ -44,9 +54,10 @@ public class MyClientHandler implements ClientHandler{
         this.solver = solver;
         this.cacheManager = cacheManager;
     }
-    private String normalize(String original) {
+    private Level normalize(Level original) {
+
         StringBuilder result = new StringBuilder();
-        for(char item: original.toCharArray()) {
+        for(char item: original.toString().toCharArray()) {
             switch(item) {
                 case 'F':
                 case '7':
@@ -61,54 +72,26 @@ public class MyClientHandler implements ClientHandler{
                     break;
             }
         }
-        return result.toString();
+
+        return Level.LevelBuilder.build(result.toString());
     }
-    private String directions(String request,String solution) {
-        String[] req = request.split("\n");
-        String[] sol = solution.split("\n");
-        StringBuilder res=new StringBuilder();
+    private String directions(Level request,Level solution) {
+        StringBuilder res = new StringBuilder();
 
-        for(int i = 0; i < req.length-1; i++) { // (-1) 'cause last line is "done".
-            char[] reqCharsLine = req[i].toCharArray();
-            char[] solCharsLien = sol[i].toCharArray();
-
-            for(int j = 0; j < reqCharsLine.length; j++) {
-                Pipe left = null;
-                Pipe right = null;
-
-                switch(reqCharsLine[j]) {
-                    case 'L':
-                    case 'J':
-                    case 'F':
-                    case '7':
-                        left = new pipe_L(reqCharsLine[j]);
-                        right = new pipe_L(solCharsLien[j]);
-                        break;
-                    case '|':
-                    case '-':
-                        left = new pipe_I(reqCharsLine[j]);
-                        right = new pipe_I(solCharsLien[j]);
-                        break;
-                    case 's':
-                    case 'g':
-                        break;
-
-                        default:
-                            System.out.println("Unknown kind of Part. we support: {s,g,L,F,7,J,|,-}");
-
-                }
+        for(int i = 0; i < request.getNumOfRows(); i++) {
+            for(int j = 0; j < request.getNumOfCol(); j++) {
+                Part left = request.getObject(i,j);
+                Part right =  solution.getObject(i,j);
                 /**
                  * Write vector if and only both chars are not equals.
                  * Either way, both will work.
-                 * ---> (iluz gay) <---
                  */
-                if (reqCharsLine[j] != solCharsLien[j]) {
-                    res.append(i).append(",").append(j).append(",").append(left.rotate(right)).append("\n");
+                if (left.toString() != right.toString()) {
+                    res.append(i).append(",").append(j).append(",").append(((Pipe)left).rotate((Pipe)right)).append("\n");
                 }
 
             }
         }
-
         res.append("done");
         System.out.println("Directions are:\n" + res.toString());
 

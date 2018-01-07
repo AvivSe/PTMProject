@@ -3,7 +3,6 @@ package server;
 //TODO: In whole project, use LOGGER!
 //TODO: Using JUNIT to biild testing for the project
 
-import Parts.*;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package Parts;
+package parts;
 
 public class GoalPoint extends Part {
     public String toString() {

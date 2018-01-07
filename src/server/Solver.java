@@ -1,5 +1,7 @@
 package server;
 
+import level.Level;
+
 public interface Solver {
-    public String solve(String problem);
+    public String solve(Level problem);
 }

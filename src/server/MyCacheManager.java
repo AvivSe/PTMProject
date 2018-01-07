@@ -1,5 +1,7 @@
 package server;
 
+import level.Level;
+
 import java.io.*;
 import java.util.Scanner;
 
@@ -8,11 +10,12 @@ public class MyCacheManager implements CacheManager {
     public String load(String problem) throws IOException {
         try {
             Scanner in = new Scanner(new FileInputStream(path + Integer.toString(problem.hashCode())));
-            String solution=new String();
-            while(!solution.contains("done")){
-                solution+=in.nextLine()+"\n";
+            StringBuilder solution = new StringBuilder();
+
+            while(!solution.toString().contains("done")){
+                solution.append(in.nextLine()).append("\n");
             }
-            return solution;
+            return solution.toString();
         } catch (FileNotFoundException e) {
             System.out.println("..Not in cash..");
         }
