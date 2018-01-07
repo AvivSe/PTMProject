@@ -6,7 +6,9 @@ package server;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import adminstrator.MyAdministrator;
+
+        import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -72,8 +74,8 @@ public class MyServer implements Server {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         MyServer myServer = new MyServer(6400);
-        myServer.start(new MyClientHandler(new MySolver(),new MyCacheManager()));
-        //new MyAdministrator(myServer, new MyClientHandler(new MySolver(),new MyCacheManager())).gui();
+        //myServer.start(new MyClientHandler(new MySolver(),new MyCacheManager()));
+        new MyAdministrator(myServer, new MyClientHandler(new MySolver(),new MyCacheManager())).gui();
     }
 
 }
