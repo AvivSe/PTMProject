@@ -1,9 +1,19 @@
 package search;
 
 public class State<T> {
-    T state;
-    State<T> cameFrom;
-    double cost;
+    private T state;
+    private State<T> cameFrom;
+    private double cost;
+
+    public State(T state) {
+        this.state = state;
+    }
+
+    public State(T state, State<T> cameFrom, double cost) {
+        this.state = state;
+       6
+        this.cost = cost;
+    }
 
     public T getState() {
         return state;
@@ -30,6 +40,6 @@ public class State<T> {
     }
 
     public boolean equals(State<T> toCompare){
-        return this.toString()==toCompare.toString();
+        return this.toString().equals(toCompare.toString());
     }
 }

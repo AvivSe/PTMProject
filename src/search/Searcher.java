@@ -1,4 +1,6 @@
 package search;
 public interface Searcher<T> {
-    Solution search(Searchable<T> searchable);
+    // TODO: return solution instead this shit
+
+    String search(Searchable<T> searchable);
 }

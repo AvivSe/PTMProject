@@ -1,7 +1,5 @@
 package server;
 
-import level.Level;
-
 import java.io.IOException;
 
 public interface CacheManager {

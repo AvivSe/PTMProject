@@ -1,7 +1,5 @@
 package server;
 
-import level.Level;
-
 import java.io.*;
 import java.util.Scanner;
 

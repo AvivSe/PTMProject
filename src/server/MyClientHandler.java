@@ -2,7 +2,7 @@ package server;
 
 import java.io.*;
 
-import level.Level;
+import level.MyLevel;
 import parts.*;
 
 /**
@@ -24,9 +24,9 @@ public class MyClientHandler implements ClientHandler{
 
         String tmp = req.toString();
         tmp = req.toString().substring(0,tmp.length()-5);
-        Level request = Level.LevelBuilder.build(tmp);
+        MyLevel request = MyLevel.LevelBuilder.build(tmp);
         System.out.println("Client ask for directions to level: \n"  + tmp);
-        Level normalizedRequest = normalize(request);
+        MyLevel normalizedRequest = normalize(request);
 
         String sol = this.cacheManager.load(normalizedRequest.toString());
 
@@ -36,7 +36,7 @@ public class MyClientHandler implements ClientHandler{
             cacheManager.save(normalizedRequest.toString(),sol + "\ndone");
         }
 
-        Level solution = Level.LevelBuilder.build(sol.substring(0,sol.length()-5));
+        MyLevel solution = MyLevel.LevelBuilder.build(sol.substring(0,sol.length()-5));
 
         System.out.println("Server - Soltuion is:\n "+ solution);
         out.write(directions(request ,solution));
@@ -54,7 +54,7 @@ public class MyClientHandler implements ClientHandler{
         this.solver = solver;
         this.cacheManager = cacheManager;
     }
-    private Level normalize(Level original) {
+    private MyLevel normalize(MyLevel original) {
 
         StringBuilder result = new StringBuilder();
         for(char item: original.toString().toCharArray()) {
@@ -73,9 +73,9 @@ public class MyClientHandler implements ClientHandler{
             }
         }
 
-        return Level.LevelBuilder.build(result.toString());
+        return MyLevel.LevelBuilder.build(result.toString());
     }
-    private String directions(Level request,Level solution) {
+    private String directions(MyLevel request, MyLevel solution) {
         StringBuilder res = new StringBuilder();
 
         for(int i = 0; i < request.getNumOfRows(); i++) {

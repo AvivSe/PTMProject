@@ -3,14 +3,13 @@ package level;
 import parts.*;
 import java.util.ArrayList;
 
-public class Level{
+public class MyLevel {
     private ArrayList<ArrayList<Part>> matrix;
 
-
-    public Level() {
+    public MyLevel() {
         this.matrix = new ArrayList<>();
     }
-    public Level(ArrayList<ArrayList<Part>> data) {
+    public MyLevel(ArrayList<ArrayList<Part>> data) {
         this.matrix = data;
     }
     public void setObject(int row, int column, Part part) {
@@ -39,8 +38,8 @@ public class Level{
     public int getNumOfCol() { return this.matrix.get(0).size();}
     public static class LevelBuilder {
 
-        public static Level build(String problem) {
-            Level result = new Level();
+        public static MyLevel build(String problem) {
+            MyLevel result = new MyLevel();
             String[] rows = problem.split("\n");
             for (int i = 0; i < rows.length; i++) {
                 result.matrix.add(new ArrayList<Part>());
