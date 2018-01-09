@@ -1,7 +1,7 @@
 package server;
 
-import level.MyLevel;
+import search.Solution;
 
 public interface Solver {
-    public String solve(MyLevel problem);
+    public Solution solve(MyLevel level);
 }

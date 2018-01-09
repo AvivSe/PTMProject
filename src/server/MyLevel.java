@@ -1,10 +1,15 @@
-package level;
+package server;
 
 import parts.*;
+
 import java.util.ArrayList;
 
 public class MyLevel {
     private ArrayList<ArrayList<Part>> matrix;
+
+    public ArrayList<ArrayList<Part>> getMatrix() {
+        return matrix;
+    }
 
     public MyLevel() {
         this.matrix = new ArrayList<>();
@@ -36,8 +41,8 @@ public class MyLevel {
 
     public int getNumOfRows() { return this.matrix.size(); }
     public int getNumOfCol() { return this.matrix.get(0).size();}
+    
     public static class LevelBuilder {
-
         public static MyLevel build(String problem) {
             MyLevel result = new MyLevel();
             String[] rows = problem.split("\n");

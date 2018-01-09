@@ -10,7 +10,7 @@ public class BFS implements Searcher<char[][]> {
     static ArrayList<State> nodes = new ArrayList<>();
 
     @Override
-    public String search(Searchable<char[][]> searchable) {
+    public Solution search(Searchable<char[][]> searchable) {
         State initialState = searchable.getInitialState();
         queue.add(initialState );
         visited.add(initialState );
@@ -18,7 +18,7 @@ public class BFS implements Searcher<char[][]> {
         while(!queue.isEmpty()){
             State item=queue.remove();
             if(searchable.isGoalState(item)) {
-                return item.getState().toString();
+                return new Solution();
             }
             System.out.println("Hi I am: \n" + item.getState().toString() + "\n and my childs are: \n");
             ArrayList<State> dontBeChilds = searchable.getPossibleStates(item);

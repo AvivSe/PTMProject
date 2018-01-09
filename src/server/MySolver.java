@@ -1,18 +1,26 @@
 package server;
 // TODO: Problem may be a class.
 
-import level.MyLevel;
+import search.*;
 
 public class MySolver implements Solver {
 
     // TODO: create algorithms that implements Searcher.
     @Override
-    public String solve(MyLevel problem) {
-       /* Searcher searcher = new BFS();
-        Solution solution = searcher.search(new MySearchable(problem));
-        //return solution;*/
-        return "s7-\n" +
-                "gJ|\ndone";
+    public Solution solve(MyLevel level) {
+       Searcher searcher = new simpleSearcher(); // Could be any type of searcher.
+       Solution solution = searcher.search(new MySearchable(level));
+       return solution;
 
+    }
+
+    public static void main(String[] args) {
+        MySolver mySolver = new MySolver();
+        MyLevel level = MyLevel.LevelBuilder.build("s--|--g");
+        Solution sol = mySolver.solve(level);
+
+        for(String item: sol) {
+            System.out.println(item);
+        }
     }
 }

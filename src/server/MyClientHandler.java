@@ -2,7 +2,6 @@ package server;
 
 import java.io.*;
 
-import level.MyLevel;
 import parts.*;
 
 /**
@@ -32,7 +31,7 @@ public class MyClientHandler implements ClientHandler{
 
 
         if(sol == null) {
-            sol = solver.solve(normalizedRequest);
+            sol = solver.solve(normalizedRequest).toString(); // plaster - remove toString()
             cacheManager.save(normalizedRequest.toString(),sol + "\ndone");
         }
 

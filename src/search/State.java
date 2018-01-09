@@ -11,7 +11,6 @@ public class State<T> {
 
     public State(T state, State<T> cameFrom, double cost) {
         this.state = state;
-       6
         this.cost = cost;
     }
 
