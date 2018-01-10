@@ -3,6 +3,7 @@ package server;
 import java.io.*;
 
 import parts.*;
+import search.Solution;
 
 /**
  *
@@ -27,18 +28,24 @@ public class MyClientHandler implements ClientHandler{
         System.out.println("Client ask for directions to level: \n"  + tmp);
         MyLevel normalizedRequest = normalize(request);
 
-        String sol = this.cacheManager.load(normalizedRequest.toString());
+        Solution sol = this.cacheManager.load(normalizedRequest.toString().hashCode());
+        if (sol != null) {
+            System.out.println("Have it in cache");
+        }
 
 
         if(sol == null) {
-            sol = solver.solve(normalizedRequest).toString(); // plaster - remove toString()
-            cacheManager.save(normalizedRequest.toString(),sol + "\ndone");
+            System.out.println("now solver will try to handle to request..");
+            sol = solver.solve(normalizedRequest);
+            if (sol == null) {
+                System.out.println("Solver cant find a solution!");
+            } else {
+                cacheManager.save(normalizedRequest.toString(), sol.toString());
+            }
         }
 
-        MyLevel solution = MyLevel.LevelBuilder.build(sol.substring(0,sol.length()-5));
-
-        System.out.println("Server - Solution is:\n "+ solution);
-        out.write(directions(request ,solution));
+        System.out.println("\nSolution is:\n"+ sol.toString());
+        out.write(directions(request, sol));
 
         System.out.print("Client got answer. ");
 
@@ -74,18 +81,18 @@ public class MyClientHandler implements ClientHandler{
 
         return MyLevel.LevelBuilder.build(result.toString());
     }
-    private String directions(MyLevel request, MyLevel solution) {
+    private String directions(MyLevel request, Solution solution) {
         StringBuilder res = new StringBuilder();
 
         for(int i = 0; i < request.getNumOfRows(); i++) {
             for(int j = 0; j < request.getNumOfCol(); j++) {
                 Part left = request.getObject(i,j);
-                Part right =  solution.getObject(i,j);
+                Part right =  PartBuilder.build(solution.getChar(i,j));
                 /**
                  * Write vector if and only both chars are not equals.
                  * Either way, both will work.
                  */
-                if (left.toString() != right.toString()) {
+                if (!left.toString().equals(right.toString())) {
                     res.append(i).append(",").append(j).append(",").append(((Pipe)left).rotate((Pipe)right)).append("\n");
                 }
 

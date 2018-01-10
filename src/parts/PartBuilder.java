@@ -18,7 +18,7 @@ public class PartBuilder {
             case ' ':
                 return new EmptyPart();
             default:
-                System.out.println("Unknown kind of Part. we support: {s,g,L,F,7,J,|,-, }");
+                System.out.println("'" + ch + "'" + " is unknown kind of Part. we support: {s,g,L,F,7,J,|,-, }");
                 return null;
 
         }

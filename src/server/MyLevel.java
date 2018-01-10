@@ -41,13 +41,13 @@ public class MyLevel {
 
     public int getNumOfRows() { return this.matrix.size(); }
     public int getNumOfCol() { return this.matrix.get(0).size();}
-    
+
     public static class LevelBuilder {
         public static MyLevel build(String problem) {
             MyLevel result = new MyLevel();
             String[] rows = problem.split("\n");
             for (int i = 0; i < rows.length; i++) {
-                result.matrix.add(new ArrayList<Part>());
+                result.matrix.add(new ArrayList<>());
                 char[] chars = rows[i].toCharArray();
                 for (char aChar : chars) {
                     result.matrix.get(i).add(PartBuilder.build(aChar));

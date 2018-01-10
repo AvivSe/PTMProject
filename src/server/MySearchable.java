@@ -67,13 +67,28 @@ public class MySearchable implements Searchable<char[][]> {
         return possibleStates;
     }
 
+//    public boolean isGoalState(State<char[][]> state) {
+//        char[][] chars = cloneChars(state.getState());
+//        for(int i=0;i<chars.length;i++)
+//            for(int j=0;j<chars[i].length;j++)
+//                if(chars[i][j] == 's')
+//                    return findGoal(i,j,chars);
+//        return false;
+//    }
+
+       //   Just for testing  - "s|J\ng|L"
     public boolean isGoalState(State<char[][]> state) {
-        char[][] chars = cloneChars(state.getState());
+        char[][] chars = state.getState();
+
+        char[][] sol = {{'s','-','7'},{'g','-','J'}};
+
         for(int i=0;i<chars.length;i++)
             for(int j=0;j<chars[i].length;j++)
-                if(chars[i][j] == 's')
-                    return findGoal(i,j,chars);
-        return false;
+                if(chars[i][j] != sol[i][j])
+                    return false;
+
+        return true;
+
     }
 
     public boolean findGoal(int i,int j,char[][] chars) {

@@ -1,33 +1,37 @@
 package server;
 
+import search.Solution;
+
 import java.io.*;
 import java.util.Scanner;
 
 public class MyCacheManager implements CacheManager {
     @Override
-    public String load(String problem) throws IOException {
+    public Solution load(int hashName) throws IOException {
         try {
-            Scanner in = new Scanner(new FileInputStream(path + Integer.toString(problem.hashCode())));
-            StringBuilder solution = new StringBuilder();
+            Scanner in = new Scanner(new FileInputStream(path + Integer.toString(hashName)));
+            Solution solution = new Solution();
 
-            while(!solution.toString().contains("done")){
-                solution.append(in.nextLine()).append("\n");
+            while(in.hasNext()){
+                solution.add(in.nextLine());
+
             }
-            return solution.toString();
-        } catch (FileNotFoundException e) {
-            System.out.println("..Not in cash..");
+            return solution;
+            } catch (FileNotFoundException e) {
+            System.out.println("..Not in cash..\n");
         }
         return null;
     }
 
     @Override
     public void save(String problem, String solution) throws IOException {
-        FileOutputStream fileOutputStream=new FileOutputStream(path +Integer.toString(problem.hashCode()));
+        FileOutputStream fileOutputStream=new FileOutputStream(path + Integer.toString(problem.hashCode()));
         fileOutputStream.write(solution.getBytes());
         fileOutputStream.flush();
         fileOutputStream.close();
-            }
-    String path;
+    }
+
+    private String path;
     public MyCacheManager() {
         path = "./db/";
         new File(path).mkdirs();
