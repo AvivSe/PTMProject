@@ -1,6 +1,10 @@
 package search;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class State<T>  {
+
     private T state;
     private State<T> cameFrom;
     private double cost;
@@ -37,8 +41,19 @@ public class State<T>  {
         this.cost = cost;
     }
 
-    public boolean equals(State<T> toCompare){
-        return state.equals(toCompare);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        State<?> state1 = (State<?>) o;
+        return Double.compare(state1.cost, cost) == 0 &&
+                Objects.equals(state, state1.state) &&
+                Objects.equals(cameFrom, state1.cameFrom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(state, cameFrom, cost);
     }
 
 }

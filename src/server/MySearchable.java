@@ -31,7 +31,6 @@ public class MySearchable implements Searchable<char[][]> {
 
         for(int i = 0; i <chars.length; i++) {
             for(int j = 0; j <chars[i].length; j++) {
-
                 Character toReplaceWith = null;
                 switch (chars[i][j]) {
                     case 'L':
@@ -54,7 +53,6 @@ public class MySearchable implements Searchable<char[][]> {
                         break;
                     default:
                         break;
-
                 }
 
                 if (toReplaceWith != null) {
@@ -62,46 +60,114 @@ public class MySearchable implements Searchable<char[][]> {
                     copy[i][j] = toReplaceWith;
 
                     possibleStates.add(new State<>(copy));
-
                 }
 
             }
         }
-/*        *//****** test *****//*
-        for(State<char[][]> s: possibleStates) {
-            for (char[] row: s.getState()) {
-                for(char item: row) {
-                    System.out.print(item);
-                }
-            }
-            System.out.println();
-        }
-        *//****** end test *****/
         return possibleStates;
     }
 
-    @Override
-    public boolean isGoalState(State<char[][]> specificState) {
-        char[][] chars = specificState.getState();
+    public boolean isGoalState(State<char[][]> state) {
+        char[][] chars = cloneChars(state.getState());
+        for(int i=0;i<chars.length;i++)
+            for(int j=0;j<chars[i].length;j++)
+                if(chars[i][j] == 's')
+                    return findGoal(i,j,chars);
+        return false;
+    }
 
-        for(int i = 0; i <chars.length; i++) {
-            for(int j = 0; j <chars[i].length; j++) {
-                if(chars[i][j] == '|') {
-                    return false;
-                }
+    public boolean findGoal(int i,int j,char[][] chars) {
+        if(chars[i][j] != 0) {
+            char currentPart = chars[i][j];
+            switch (currentPart) {
+                case 's':
+                    chars[i][j] = 0; //SET PART TO NULL
+                    if(chars[i + 1][j] == '7'||chars[i + 1][j] == 'J'||chars[i + 1][j] == '-'||chars[i + 1][j] == 'g'){
+                        return findGoal(i+1,j,chars);
+                    }
+                    if(chars[i - 1][j] == 'L'||chars[i - 1][j] == 'F'||chars[i - 1][j] == '-'||chars[i - 1][j] == 'g'){
+                        return findGoal(i-1,j,chars);
+                    }
+                    if(chars[i][j + 1] == 'L'||chars[i][j + 1] == 'J'||chars[i][j + 1] == '|'||chars[i][j + 1] == 'g'){
+                        return findGoal(i,j+1,chars);
+                    }
+                    if(chars[i][j - 1] == '7'||chars[i][j - 1] == 'F'||chars[i][j - 1] == '|'||chars[i][j - 1] == 'g'){
+                        return findGoal(i,j-1,chars);
+                    }
+                    else
+                        return false;
+                case 'L':
+                    chars[i][j] = 0; //SET PART TO NULL
+                    if(chars[i + 1][j] == '7'||chars[i + 1][j] =='J'||chars[i + 1][j]=='-'||chars[i + 1][j] =='g'){
+                        return findGoal(i+1,j,chars);
+                    }
+                    if(chars[i][j - 1] =='7'||chars[i][j - 1]=='|'||chars[i][j - 1]=='F'||chars[i][j - 1]=='g'){
+                        return findGoal(i,j-1,chars);
+                    }
+                case 'F':
+                    chars[i][j] = 0; //SET PART TO NULL
+                    if(chars[i+1][j]=='7'||chars[i+1][j]=='J'||chars[i+1][j]=='-'||chars[i+1][j]=='g'){
+                        return findGoal(i+1,j,chars);
+                    }
+                    if(chars[i][j+1]=='L'||chars[i][j+1]=='J'||chars[i][j+1]=='|'||chars[i][j+1]=='g'){
+                        return findGoal(i,j+1,chars);
+                    }
+                    else
+                        return false;
+                case 'J':
+                    chars[i][j] = 0; //SET PART TO NULL
+                    if(chars[i][j-1]=='7'||chars[i][j-1]=='F'||chars[i][j-1]=='|'||chars[i][j-1]=='g'){
+                        return findGoal(i,j-1,chars);
+                    }
+                    if(chars[i-1][j]=='L'||chars[i-1][j]=='F'||chars[i-1][j]=='-'||chars[i-1][j]=='g'){
+                        return findGoal(i-1,j,chars);
+                    }
+                    else
+                        return false;
+                case '7':
+                    if(chars[i-1][j]=='L'||chars[i-1][j]=='F'||chars[i-1][j]=='-'||chars[i-1][j]=='g'){
+                        return findGoal(i-1,j,chars);
+                    }
+                    if(chars[i][j+1]=='L'||chars[i][j+1]=='J'||chars[i][j+1]=='|'||chars[i][j+1]=='g'){
+                        return findGoal(1,j+1,chars);
+                    }
+                case '-':
+                    if(chars[i-1][j]=='L'||chars[i-1][j]=='F'||chars[i-1][j]=='-'||chars[i-1][j]=='g'){
+                        return findGoal(i-1,j,chars);
+                    }
+                    if(chars[i+1][j]== '7'||chars[i+1][j]=='J'||chars[i+1][j]=='-'||chars[i+1][j]=='g'){
+                        return findGoal(i+1,j,chars);
+                    }
+                    else
+                        return false;
+                case'|':
+                    if(chars[i][j+1]=='L'||chars[i][j+1]=='J'||chars[i][j+1]=='|'||chars[i][j+1]=='g'){
+                        return findGoal(i,j+1,chars);
+                    }
+                    if(chars[i][j-1]=='7'||chars[i][j-1]=='F'||chars[i][j-1]=='|'||chars[i][j-1]=='g'){
+                        return findGoal(i,j-1,chars);
+                    }
+                    else
+                        return false;
+                case 'g':
+                    return true; // GOAL STATE
             }
         }
-        return true;
+        return false;
     }
+
 
     public static char[][] cloneChars(char[][] src) {
-        char[][] result = new char[src.length][src[0].length];
-        for (char[] item: src) {
-            result[0] = Arrays.copyOf(item, item.length);
+        char[][] chars = new char[src.length][src[0].length];
+
+        for(int i = 0; i <chars.length; i++) {
+            for (int j = 0; j < chars[i].length; j++) {
+                chars[i][j] = src[i][j];
+            }
         }
 
-        return result;
-    }
 
+        return chars;
+    }
 
 }

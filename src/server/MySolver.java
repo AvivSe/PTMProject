@@ -15,7 +15,7 @@ public class MySolver implements Solver {
 
     public static void main(String[] args) {
         MySolver mySolver = new MySolver();
-        MyLevel level = MyLevel.LevelBuilder.build("s|-|g");
+        MyLevel level = MyLevel.LevelBuilder.build("s--\ng-J");
         Solution sol = mySolver.solve(level);
 
 //        for(String item: sol) {

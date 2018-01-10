@@ -1,40 +1,35 @@
 package search;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
+import java.util.*;
 
 
 public class BFS implements Searcher<char[][]> {
    private Queue<State<char[][]>> queue =  new LinkedList<>();;
    private ArrayList<State<char[][]>> visited = new ArrayList<>();
-
    @Override
    public Solution search(Searchable<char[][]> searchable) {
-
        State<char[][]> initialState = searchable.getInitialState();
 
        queue.add(initialState );
 
        while(!queue.isEmpty()){
            State<char[][]> item=queue.remove();
-           if(searchable.isGoalState(item)) {
-               return new Solution();
-           }
-//           System.out.println("Hi I Am:");
-//           //****** test *****//
-//           StringBuilder initCompareable = new StringBuilder();
-//           for(char[] row: item.getState()) {
-//               for (char ch: row) {
-//                   initCompareable.append(ch);
-//               }
+//           if(searchable.isGoalState(item)) {
+//               return new Solution();
 //           }
-//           System.out.println(initCompareable.toString());
-//           visited.add(item);
-//           System.out.println("And my next possible states are:");
-//           //****** end test *****/
+           System.out.println("Visiting at:");
+           //****** test *****//
+           StringBuilder initCompareable = new StringBuilder();
+           for(char[] row: item.getState()) {
+               for (char ch: row) {
+                   initCompareable.append(ch);
+               }
+               initCompareable.append("\n");
+           }
+           System.out.println(initCompareable.toString());
+           visited.add(item);
+           System.out.println("Possible states from here are:");
+           //****** end test *****/
            ArrayList<State<char[][]>> nextPossibleStates = searchable.getPossibleStates(item);
 
            for(State<char[][]> t: nextPossibleStates){
@@ -43,22 +38,31 @@ public class BFS implements Searcher<char[][]> {
                    for (char ch : row) {
                        comparable.append(ch);
                    }
+                   comparable.append("\n");
                }
-               if(!visited.contains(t)) {
+               boolean isClosed = false;
+
+               for(State<char[][]> s: visited) {
+                   if (Arrays.deepEquals(s.getState(), t.getState())) {
+                       isClosed = true;
+                   }
+               }
+
+               if(!isClosed) {
                    t.setCameFrom(item);
-//                   //****** test *****//
-//                   System.out.print(comparable + " came-from " + initCompareable);
-//                   if(searchable.isGoalState(t)) {
-//                       System.out.print(" --->> GOAL !!!!");
-//                   }
-//                   System.out.println();
-//                   //****** end test *****/
+                   //****** test *****//
+                   System.out.print(comparable);
+                   if(searchable.isGoalState(t)) {
+                       System.out.print("!^^^^GOAL^^^^!");
+                   }
+                   System.out.println();
+                   //****** end test *****/
                    queue.add(t);
                    visited.add(t);
                }
            }
            System.out.println("**********************");
-           System.out.println("VISITED TILL NOW: " + visited.size() + " " + visited);
+           System.out.println("VISITED TILL NOW: " + visited.size());
            System.out.println("**********************");
 
        }

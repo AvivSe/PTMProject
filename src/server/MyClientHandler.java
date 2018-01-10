@@ -37,7 +37,7 @@ public class MyClientHandler implements ClientHandler{
 
         MyLevel solution = MyLevel.LevelBuilder.build(sol.substring(0,sol.length()-5));
 
-        System.out.println("Server - Soltuion is:\n "+ solution);
+        System.out.println("Server - Solution is:\n "+ solution);
         out.write(directions(request ,solution));
 
         System.out.print("Client got answer. ");
