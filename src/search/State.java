@@ -8,6 +8,7 @@ public class State<T>  {
     public State(T state, State<T> cameFrom, double cost) {
         this.state = state;
         this.cost = cost;
+
     }
     public State(T state) {
         this.state = state;

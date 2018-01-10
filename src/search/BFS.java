@@ -2,6 +2,7 @@ package search;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 
@@ -16,45 +17,50 @@ public class BFS implements Searcher<char[][]> {
        State<char[][]> initialState = searchable.getInitialState();
 
        queue.add(initialState );
-       visited.add(initialState);
 
        while(!queue.isEmpty()){
            State<char[][]> item=queue.remove();
            if(searchable.isGoalState(item)) {
                return new Solution();
            }
-           System.out.println("Hi I Am:");
-           //****** test *****//
-           for(char[] row: item.getState()) {
-               for (char ch: row) {
-                   System.out.print(ch);
-               }
-           }
-           System.out.println(" And my next possible states are:");
-           //****** end test *****/
+//           System.out.println("Hi I Am:");
+//           //****** test *****//
+//           StringBuilder initCompareable = new StringBuilder();
+//           for(char[] row: item.getState()) {
+//               for (char ch: row) {
+//                   initCompareable.append(ch);
+//               }
+//           }
+//           System.out.println(initCompareable.toString());
+//           visited.add(item);
+//           System.out.println("And my next possible states are:");
+//           //****** end test *****/
            ArrayList<State<char[][]>> nextPossibleStates = searchable.getPossibleStates(item);
 
            for(State<char[][]> t: nextPossibleStates){
-               if(t != null && !visited.contains(t)) {
-
-                   //****** test *****//
-                   for(char[] row: t.getState()) {
-                       for (char ch: row) {
-                           System.out.print(ch);
-                       }
-                       if(searchable.isGoalState(t)) {
-                           System.out.print(" --->> GOAL !!!!");
-                       }
-                       System.out.println();
-
-
+               StringBuilder comparable = new StringBuilder();
+               for(char[] row: t.getState()) {
+                   for (char ch : row) {
+                       comparable.append(ch);
                    }
-                   //****** end test *****/
+               }
+               if(!visited.contains(t)) {
+                   t.setCameFrom(item);
+//                   //****** test *****//
+//                   System.out.print(comparable + " came-from " + initCompareable);
+//                   if(searchable.isGoalState(t)) {
+//                       System.out.print(" --->> GOAL !!!!");
+//                   }
+//                   System.out.println();
+//                   //****** end test *****/
                    queue.add(t);
                    visited.add(t);
                }
            }
            System.out.println("**********************");
+           System.out.println("VISITED TILL NOW: " + visited.size() + " " + visited);
+           System.out.println("**********************");
+
        }
        return null;
    }

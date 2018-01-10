@@ -11,12 +11,11 @@ public class MySolver implements Solver {
        Searcher searcher = new BFS(); // Could be any type of searcher.
        Solution solution = searcher.search(new MySearchable(level));
        return solution;
-
     }
 
     public static void main(String[] args) {
         MySolver mySolver = new MySolver();
-        MyLevel level = MyLevel.LevelBuilder.build("s|||g");
+        MyLevel level = MyLevel.LevelBuilder.build("s|-|g");
         Solution sol = mySolver.solve(level);
 
 //        for(String item: sol) {
