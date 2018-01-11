@@ -2,7 +2,7 @@ package search;
 
 import java.util.*;
 
-public class BFS implements Searcher<char[][]> {
+public class BreadthFirstSearch implements Searcher<char[][]> {
    private Queue<State<char[][]>> queue =  new LinkedList<>();;
    private ArrayList<State<char[][]>> visited = new ArrayList<>();
    @Override

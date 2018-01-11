@@ -56,12 +56,20 @@ public class MySearchable implements Searchable<char[][]> {
 
                 if (toReplaceWith != null) {
                     char[][] copy = cloneChars(chars);
-                    copy[i][j] = toReplaceWith;
+                    //TODO make it switch case
+                            if(     toReplaceWith == '7' && (left(i, j, chars) || down(i, j, chars)) ||
+                                    toReplaceWith == 'J' && (up(i, j, chars) || left(i, j, chars)) ||
+                                    toReplaceWith == 'F' && (right(i, j, chars) || down(i, j, chars)) ||
+                                    toReplaceWith == 'L' && (right(i, j, chars) || up(i, j, chars)) ||
+                                    toReplaceWith == '-' && (right(i, j, chars) || left(i, j, chars)) ||
+                                    toReplaceWith == '|' && (up(i, j, chars) || down(i, j, chars)) || right(i, j, chars) || left(i, j, chars)) {
+                                copy[i][j] = toReplaceWith;
 
-                    possibleStates.add(new State<>(copy));
+                                possibleStates.add(new State<>(copy));
+                            }
+                    }
                 }
             }
-        }
         return possibleStates;
     }
 
