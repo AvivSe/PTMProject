@@ -30,15 +30,15 @@ public class MyClientHandler implements ClientHandler{
 
         Solution sol = this.cacheManager.load(normalizedRequest.toString().hashCode());
         if (sol != null) {
-            System.out.println("Have it in cache");
+            System.out.println("Cache said: I have it in files :)");
         }
 
 
         if(sol == null) {
-            System.out.println("now solver will try to handle to request..");
+            System.out.println("Solver said: maybe I can solve it :)");
             sol = solver.solve(normalizedRequest);
             if (sol == null) {
-                System.out.println("Solver cant find a solution!");
+                System.out.println("Solver said: I cant solve it :(");
             } else {
                 cacheManager.save(normalizedRequest.toString(), sol.toString());
             }

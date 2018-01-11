@@ -1,5 +1,7 @@
 package search;
 
+import java.util.Objects;
+
 public class State<T>  {
 
     private T state;
@@ -38,4 +40,17 @@ public class State<T>  {
         this.cost = cost;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        State<?> state1 = (State<?>) o;
+        return Objects.deepEquals(state, ((State<?>) o).state);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(state);
+    }
 }

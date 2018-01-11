@@ -1,5 +1,7 @@
 package parts;
 
+import java.net.Socket;
+
 public class PartBuilder {
     public static Part build(char ch){
         switch(ch) {
@@ -19,6 +21,9 @@ public class PartBuilder {
                 return new EmptyPart();
             default:
                 System.out.println("'" + ch + "'" + " is unknown kind of Part. we support: {s,g,L,F,7,J,|,-, }");
+                System.out.println("SERVER DOWN BECAUSE OF UNSUPPORTED PART!!");
+
+                System.exit(1);
                 return null;
 
         }

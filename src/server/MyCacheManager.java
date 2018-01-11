@@ -12,13 +12,13 @@ public class MyCacheManager implements CacheManager {
             Scanner in = new Scanner(new FileInputStream(path + Integer.toString(hashName)));
             Solution solution = new Solution();
 
-            while(in.hasNext()){
+            while(in.hasNextLine()){
                 solution.add(in.nextLine());
 
             }
             return solution;
             } catch (FileNotFoundException e) {
-            System.out.println("..Not in cash..\n");
+            System.out.println("Cache said: I dont have it :(\n");
         }
         return null;
     }

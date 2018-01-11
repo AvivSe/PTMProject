@@ -20,6 +20,18 @@ public class Solution extends ArrayList<String> {
         return stringBuilder.toString();
     }
 
-
+    public static class SolutionBuilder {
+        public static Solution build(char[][] chars) {
+            Solution solution = new Solution();
+            for(char[] line: chars) {
+                StringBuilder lineBuilder = new StringBuilder();
+                for(int i = 0; i < line.length; i++) {
+                    lineBuilder.append(line[i]);
+                }
+                solution.add(lineBuilder.toString());
+            }
+            return solution;
+        }
+    }
 
 }

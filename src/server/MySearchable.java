@@ -3,7 +3,6 @@ package server;
 import search.Searchable;
 import search.State;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MySearchable implements Searchable<char[][]> {
 
@@ -61,128 +60,190 @@ public class MySearchable implements Searchable<char[][]> {
 
                     possibleStates.add(new State<>(copy));
                 }
-
             }
         }
         return possibleStates;
     }
 
-//    public boolean isGoalState(State<char[][]> state) {
-//        char[][] chars = cloneChars(state.getState());
-//        for(int i=0;i<chars.length;i++)
-//            for(int j=0;j<chars[i].length;j++)
-//                if(chars[i][j] == 's')
-//                    return findGoal(i,j,chars);
-//        return false;
-//    }
-
-       //   Just for testing  - "s|J\ng|L"
     public boolean isGoalState(State<char[][]> state) {
         char[][] chars = state.getState();
-
-        char[][] sol = {{'s','-','7'},{'g','-','J'}};
-
-        for(int i=0;i<chars.length;i++)
-            for(int j=0;j<chars[i].length;j++)
-                if(chars[i][j] != sol[i][j])
-                    return false;
-
-        return true;
-
+        // Find start point
+        for (int i = 0; i < chars.length; i++) {
+            for (int j = 0; j < chars[i].length; j++) {
+                if (chars[i][j] == 's') {
+                    return findGoal(i, j, chars, CameFrom.start);
+                }
+            }
+        }
+        System.out.println("Cannot find start point.");
+        return false;
     }
 
-    public boolean findGoal(int i,int j,char[][] chars) {
-        if(chars[i][j] != 0) {
-            char currentPart = chars[i][j];
-            switch (currentPart) {
-                case 's':
-                    chars[i][j] = 0; //SET PART TO NULL
-                    if(chars[i + 1][j] == '7'||chars[i + 1][j] == 'J'||chars[i + 1][j] == '-'||chars[i + 1][j] == 'g'){
-                        return findGoal(i+1,j,chars);
-                    }
-                    if(chars[i - 1][j] == 'L'||chars[i - 1][j] == 'F'||chars[i - 1][j] == '-'||chars[i - 1][j] == 'g'){
-                        return findGoal(i-1,j,chars);
-                    }
-                    if(chars[i][j + 1] == 'L'||chars[i][j + 1] == 'J'||chars[i][j + 1] == '|'||chars[i][j + 1] == 'g'){
-                        return findGoal(i,j+1,chars);
-                    }
-                    if(chars[i][j - 1] == '7'||chars[i][j - 1] == 'F'||chars[i][j - 1] == '|'||chars[i][j - 1] == 'g'){
-                        return findGoal(i,j-1,chars);
-                    }
-                    else
-                        return false;
-                case 'L':
-                    chars[i][j] = 0; //SET PART TO NULL
-                    if(chars[i + 1][j] == '7'||chars[i + 1][j] =='J'||chars[i + 1][j]=='-'||chars[i + 1][j] =='g'){
-                        return findGoal(i+1,j,chars);
-                    }
-                    if(chars[i][j - 1] =='7'||chars[i][j - 1]=='|'||chars[i][j - 1]=='F'||chars[i][j - 1]=='g'){
-                        return findGoal(i,j-1,chars);
-                    }
-                case 'F':
-                    chars[i][j] = 0; //SET PART TO NULL
-                    if(chars[i+1][j]=='7'||chars[i+1][j]=='J'||chars[i+1][j]=='-'||chars[i+1][j]=='g'){
-                        return findGoal(i+1,j,chars);
-                    }
-                    if(chars[i][j+1]=='L'||chars[i][j+1]=='J'||chars[i][j+1]=='|'||chars[i][j+1]=='g'){
-                        return findGoal(i,j+1,chars);
-                    }
-                    else
-                        return false;
-                case 'J':
-                    chars[i][j] = 0; //SET PART TO NULL
-                    if(chars[i][j-1]=='7'||chars[i][j-1]=='F'||chars[i][j-1]=='|'||chars[i][j-1]=='g'){
-                        return findGoal(i,j-1,chars);
-                    }
-                    if(chars[i-1][j]=='L'||chars[i-1][j]=='F'||chars[i-1][j]=='-'||chars[i-1][j]=='g'){
-                        return findGoal(i-1,j,chars);
-                    }
-                    else
-                        return false;
-                case '7':
-                    if(chars[i-1][j]=='L'||chars[i-1][j]=='F'||chars[i-1][j]=='-'||chars[i-1][j]=='g'){
-                        return findGoal(i-1,j,chars);
-                    }
-                    if(chars[i][j+1]=='L'||chars[i][j+1]=='J'||chars[i][j+1]=='|'||chars[i][j+1]=='g'){
-                        return findGoal(1,j+1,chars);
-                    }
-                case '-':
-                    if(chars[i-1][j]=='L'||chars[i-1][j]=='F'||chars[i-1][j]=='-'||chars[i-1][j]=='g'){
-                        return findGoal(i-1,j,chars);
-                    }
-                    if(chars[i+1][j]== '7'||chars[i+1][j]=='J'||chars[i+1][j]=='-'||chars[i+1][j]=='g'){
-                        return findGoal(i+1,j,chars);
-                    }
-                    else
-                        return false;
-                case'|':
-                    if(chars[i][j+1]=='L'||chars[i][j+1]=='J'||chars[i][j+1]=='|'||chars[i][j+1]=='g'){
-                        return findGoal(i,j+1,chars);
-                    }
-                    if(chars[i][j-1]=='7'||chars[i][j-1]=='F'||chars[i][j-1]=='|'||chars[i][j-1]=='g'){
-                        return findGoal(i,j-1,chars);
-                    }
-                    else
-                        return false;
-                case 'g':
-                    return true; // GOAL STATE
-            }
+    private enum CameFrom {
+        up,right,down,left,start
+    }
+
+    private static boolean findGoal(int i, int j, char[][] chars, CameFrom cameFrom) {
+        switch (chars[i][j]) {
+            case 'g':
+                return true;
+            case 's':
+                switch (cameFrom) {
+                    case up:
+                        if (right(i, j, chars)) return findGoal(i, j + 1, chars, CameFrom.left);
+                        if (down(i, j, chars)) return findGoal(i + 1, j, chars, CameFrom.up);
+                        if (left(i, j, chars)) return findGoal(i, j - 1, chars, CameFrom.right);
+                        break;
+
+                    case right:
+                        if (up(i, j, chars)) return findGoal(i - 1, j, chars, CameFrom.down);
+                        if (down(i, j, chars)) return findGoal(i + 1, j, chars, CameFrom.up);
+                        if (left(i, j, chars)) return findGoal(i, j - 1, chars, CameFrom.right);
+                        break;
+
+                    case down:
+                        if (up(i, j, chars)) return findGoal(i - 1, j, chars, CameFrom.down);
+                        if (right(i, j, chars)) return findGoal(i, j + 1, chars, CameFrom.left);
+                        if (left(i, j, chars)) return findGoal(i, j - 1, chars, CameFrom.right);
+                        break;
+
+                    case left:
+                        if (up(i, j, chars)) return findGoal(i - 1, j, chars, CameFrom.down);
+                        if (right(i, j, chars)) return findGoal(i, j + 1, chars, CameFrom.left);
+                        if (down(i, j, chars)) return findGoal(i + 1, j, chars, CameFrom.up);
+                        break;
+
+                    case start:
+                        if (up(i, j, chars)) return findGoal(i - 1, j, chars, CameFrom.down);
+                        if (right(i, j, chars)) return findGoal(i, j + 1, chars, CameFrom.left);
+                        if (down(i, j, chars)) return findGoal(i + 1, j, chars, CameFrom.up);
+                        if (left(i, j, chars)) return findGoal(i, j - 1, chars, CameFrom.right);
+                        break;
+                }
+                break;
+            case 'F':
+                if (cameFrom == CameFrom.down)
+                    if (right(i, j, chars)) return findGoal(i, j + 1, chars, CameFrom.left);
+                    else return findGoal(i,j,chars,CameFrom.up);
+                if(cameFrom == CameFrom.right)
+                    if (down(i, j, chars)) return findGoal(i + 1, j, chars, CameFrom.up);
+                    else return findGoal(i,j,chars,CameFrom.left);
+                break;
+            case 'J':
+                if(cameFrom == CameFrom.left)
+                    if (up(i, j, chars)) return findGoal(i - 1, j, chars, CameFrom.down);
+                    else return findGoal(i,j,chars,CameFrom.right);
+                if(cameFrom == CameFrom.up)
+                    if (left(i, j, chars)) return findGoal(i, j - 1, chars, CameFrom.right);
+                    else return findGoal(i,j,chars,CameFrom.down);
+                break;
+            case '7':
+                if(cameFrom == CameFrom.left)
+                    if (down(i, j, chars)) return findGoal(i + 1, j, chars,CameFrom.up);
+                    else return findGoal(i,j,chars,CameFrom.right);
+                if(cameFrom == CameFrom.down)
+                    if (left(i, j, chars)) return findGoal(i, j - 1, chars,CameFrom.right);
+                    else return findGoal(i,j,chars,CameFrom.up);
+                break;
+            case 'L':
+                if(cameFrom == CameFrom.right)
+                    if (up(i, j, chars)) return findGoal(i - 1, j, chars,CameFrom.down);
+                    else return findGoal(i,j,chars,CameFrom.left);
+                if(cameFrom == CameFrom.up)
+                    if (right(i, j, chars)) return findGoal(i, j + 1, chars,CameFrom.left);
+                    else return findGoal(i,j,chars,CameFrom.down);
+                break;
+            case '-':
+                if(cameFrom == CameFrom.right)
+                    if (left(i, j, chars)) return findGoal(i, j - 1, chars,CameFrom.right);
+                    else return findGoal(i,j,chars,CameFrom.left);
+                if(cameFrom == CameFrom.left)
+                    if (right(i, j, chars)) return findGoal(i, j + 1, chars, CameFrom.left);
+                    else return findGoal(i,j,chars,CameFrom.right);
+                break;
+            case '|':
+                if(cameFrom == CameFrom.down)
+                    if (up(i, j, chars)) return findGoal(i - 1, j, chars, CameFrom.down);
+                    else return findGoal(i,j,chars,CameFrom.up);
+                if(cameFrom == CameFrom.up)
+                    if (down(i, j, chars)) return findGoal(i + 1, j, chars, CameFrom.up);
+                    else return findGoal(i,j,chars,CameFrom.down);
+                break;
+
         }
         return false;
     }
 
+    private static boolean up(int i, int j, char[][] chars) {
+        try {
+            switch (chars[i - 1][j]) {
+                case '7':
+                case '|':
+                case 'F':
+                case 'g':
+                case 's':
+                    return true;
+            }
+        } catch (ArrayIndexOutOfBoundsException error) {
+            //System.out.println(error.getMessage());
+        }
+        return false;
+    }
 
-    public static char[][] cloneChars(char[][] src) {
+    private static boolean right(int i, int j, char[][] chars) {
+        try {
+            switch (chars[i][j + 1]) {
+                case '7':
+                case 'J':
+                case '-':
+                case 'g':
+                case 's':
+                    return true;
+            }
+        } catch (ArrayIndexOutOfBoundsException error) {
+            //System.out.println(error.getMessage());
+        }
+        return false;
+    }
+
+    private static boolean left(int i, int j, char[][] chars) {
+        try {
+            switch (chars[i][j - 1]) {
+                case 'F':
+                case 'L':
+                case '-':
+                case 'g':
+                case 's':
+                    return true;
+            }
+        } catch (ArrayIndexOutOfBoundsException error) {
+            //System.out.println(error.getMessage());
+        }
+        return false;
+    }
+
+    private static boolean down(int i, int j, char[][] chars) {
+        try {
+            switch (chars[i + 1][j]) {
+                case 'J':
+                case 'L':
+                case '|':
+                case 'g':
+                case 's':
+                    return true;
+            }
+        } catch (ArrayIndexOutOfBoundsException error) {
+            //System.out.println(error);
+        }
+        return false;
+    }
+
+    private static char[][] cloneChars(char[][] src) {
         char[][] chars = new char[src.length][src[0].length];
 
         for(int i = 0; i <chars.length; i++) {
-            for (int j = 0; j < chars[i].length; j++) {
-                chars[i][j] = src[i][j];
-            }
+            System.arraycopy(src[i], 0, chars[i], 0, chars[i].length);
         }
-
-
         return chars;
     }
-
 }

@@ -2,21 +2,20 @@ package search;
 
 import java.util.*;
 
-
 public class BFS implements Searcher<char[][]> {
    private Queue<State<char[][]>> queue =  new LinkedList<>();;
    private ArrayList<State<char[][]>> visited = new ArrayList<>();
    @Override
    public Solution search(Searchable<char[][]> searchable) {
-       int iterations  = 0;
+       int outerloop = 0;
+       int innerloop  = 0;
        State<char[][]> initialState = searchable.getInitialState();
        queue.add(initialState );
 
+
        while(!queue.isEmpty()){
-           State<char[][]> item=queue.remove();
-           if(searchable.isGoalState(item)) {
-               return new Solution();
-           }
+           outerloop++;
+           State<char[][]> item = queue.remove();
            System.out.println("Visiting at:");
            //  ****** test *****//
            StringBuilder initCompareable = new StringBuilder();
@@ -27,13 +26,19 @@ public class BFS implements Searcher<char[][]> {
                initCompareable.append("\n");
            }
            System.out.println(initCompareable.toString());
+
+           if(searchable.isGoalState(item)) {
+               System.out.println("!!BFS GOAL!! (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") ");
+               return Solution.SolutionBuilder.build(item.getState());
+           }
+
            visited.add(item);
            System.out.println("Possible states from here are:");
            //****** end test *****/
            ArrayList<State<char[][]>> nextPossibleStates = searchable.getPossibleStates(item);
 
            for(State<char[][]> t: nextPossibleStates){
-               iterations++;
+               innerloop++;
                StringBuilder comparable = new StringBuilder();
                for(char[] row: t.getState()) {
                    for (char ch : row) {
@@ -41,34 +46,15 @@ public class BFS implements Searcher<char[][]> {
                    }
                    comparable.append("\n");
                }
-               boolean isClosed = false;
-
-               for(State<char[][]> s: visited) {
-                   if (Arrays.deepEquals(s.getState(), t.getState())) {
-                       isClosed = true;
-                   }
-               }
-
-               //if(!isClosed) {
-                if(!visited.contains(t)) {
+               if(!visited.contains(t)) {
                    t.setCameFrom(item);
                    //****** test *****//
                    System.out.print(comparable);
                    if(searchable.isGoalState(t)) {
-                       System.out.print("!^^^^GOAL FOUND^^^^! (after " + iterations + " iterations)");
-                       Solution solution = new Solution();
-
-
-                       for(char[] line: t.getState()) {
-                           StringBuilder lineBuilder = new StringBuilder();
-                           for(int i = 0; i < line.length; i++) {
-                               lineBuilder.append(line[i]);
-                           }
-                           solution.add(lineBuilder.toString());
-                       }
-
-                       return solution;
-                   }System.out.println();
+                       System.out.println("!!BFS GOAL!! (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") ");
+                       return Solution.SolutionBuilder.build(t.getState());
+                   }
+                   System.out.println();
                    //****** end test *****/
                    queue.add(t);
                    visited.add(t);
@@ -77,11 +63,8 @@ public class BFS implements Searcher<char[][]> {
            System.out.println("**********************");
            System.out.println("VISITED TILL NOW: " + visited.size());
            System.out.println("**********************");
-
        }
-       System.out.println("Goal state not found, after " + iterations + " iterations");
-
+       System.out.println("!!!! GOAL !NOT! FOUND AFTER (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") Iterations");
        return null;
    }
-
 }
