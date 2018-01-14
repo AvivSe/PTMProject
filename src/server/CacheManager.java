@@ -1,6 +1,6 @@
 package server;
 
-import search.Solution;
+import game_server.Solution;
 
 import java.io.IOException;
 

@@ -1,7 +1,7 @@
 package adminstrator;
 
-import server.MyClientHandler;
-import server.MyServer;
+import pipe_game_server.MyClientHandler;
+import pipe_game_server.MyServer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

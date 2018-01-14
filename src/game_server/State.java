@@ -1,4 +1,4 @@
-package search;
+package game_server;
 
 import java.util.Objects;
 

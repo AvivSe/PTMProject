@@ -1,7 +1,8 @@
 package server;
 
-import search.Solution;
+import pipe_game_server.PgLevel;
+import game_server.Solution;
 
 public interface Solver {
-    public Solution solve(MyLevel level);
+    public Solution solve(PgLevel level);
 }
