@@ -2,6 +2,11 @@ package parts;
 
 public class StartPoint extends Part {
     public String toString() {
-        return "s";
+        return ""+charface();
+    }
+
+    @Override
+    public Character charface() {
+        return 's';
     }
 }

@@ -1,23 +1,37 @@
 package pipe_game_server;
 // TODO: Problem may be a class.
 
-import game_server.*;
-import server.Solver;
+import common_searchers.BFS;
+import searcher_interface.*;
+import game_server_interface.Solver;
 
 public class PgSolver implements Solver {
 
     // TODO: create algorithms that implements Searcher.
     @Override
-    public Solution solve(PgLevel level) {
-       Searcher searcher = new BreadthFirstSearch(); // Could be any type of searcher.
-        return searcher.search(new PgSearchable(level));
+    public PgDirections solve(PgLevel level) {
+        Searcher<PgLevel> searcher = new BFS<>();
+        Searchable searchable = new PgSearchable(level);
+        PgDirections pgDirections = new PgDirections();
+        Solution<PgLevel> solution = searcher.search(searchable);
+
+        pgDirections.add(solution.toString());
+        return pgDirections;
     }
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
-        PgLevel level = PgLevel.LevelBuilder.build("s|J\n  -\n FL\n g ");
-        Solution sol = mySolver.solve(level);
-        System.out.println("\nAnd the solution is: \n" + sol);
+        PgLevel level = PgLevel.LevelBuilder.build("s|J\n  -\n  g");
+
+        PgDirections directions = mySolver.solve(level);
+
+        System.out.println("\nAnd the direction are: \n");
+
+
+        for(String item: directions) {
+            System.out.println(item);
+            System.out.println();
+        }
 
     }
 }

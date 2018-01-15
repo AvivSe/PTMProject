@@ -1,10 +1,8 @@
-package server;
-
-import game_server.Solution;
+package game_server_interface;
 
 import java.io.IOException;
 
 public interface CacheManager {
-    Solution load(int hashName) throws IOException;
+    Directions load(int hashName) throws IOException;
     void save(String problem, String solution) throws IOException;
 }

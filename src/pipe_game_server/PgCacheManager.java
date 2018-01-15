@@ -1,22 +1,22 @@
 package pipe_game_server;
 
-import server.CacheManager;
+import game_server_interface.CacheManager;
 
 import java.io.*;
 import java.util.Scanner;
 
 public class PgCacheManager implements CacheManager {
     @Override
-    public Solution load(int hashName) throws IOException {
+    public PgDirections load(int hashName) throws IOException {
         try {
             Scanner in = new Scanner(new FileInputStream(path + Integer.toString(hashName)));
-            Solution solution = new Solution();
+            PgDirections directions = new PgDirections();
 
             while(in.hasNextLine()){
-                solution.add(in.nextLine());
-
+                directions.add(in.nextLine());
             }
-            return solution;
+
+            return directions;
             } catch (FileNotFoundException e) {
             System.out.println("Cache said: I dont have it :(\n");
         }

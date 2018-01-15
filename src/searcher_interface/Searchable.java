@@ -1,4 +1,4 @@
-package game_server;
+package searcher_interface;
 
 import java.util.ArrayList;
 

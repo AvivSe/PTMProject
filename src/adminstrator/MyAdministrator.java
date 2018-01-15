@@ -1,7 +1,8 @@
 package adminstrator;
 
-import pipe_game_server.MyClientHandler;
-import pipe_game_server.MyServer;
+
+import pipe_game_server.PgClientHandler;
+import pipe_game_server.PgServer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,9 +10,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class MyAdministrator {
-    private MyServer remote;
-    private MyClientHandler clientHandler;
-    public MyAdministrator(MyServer remote, MyClientHandler clientHandler) {
+    private PgServer remote;
+    private PgClientHandler clientHandler;
+    public MyAdministrator(PgServer remote, PgClientHandler clientHandler) {
         this.remote = remote;
         this.clientHandler = clientHandler;
     }

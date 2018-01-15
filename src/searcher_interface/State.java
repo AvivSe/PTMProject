@@ -1,4 +1,6 @@
-package game_server;
+package searcher_interface;
+
+import pipe_game_server.PgLevel;
 
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ public class State<T>  {
     public State(T state) {
         this.state = state;
     }
+
     public T getState() {
         return state;
     }
@@ -44,13 +47,24 @@ public class State<T>  {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        State<?> state1 = (State<?>) o;
         return Objects.deepEquals(state, ((State<?>) o).state);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(state);
+    }
+
+    @Override
+    public String toString() {
+        return this.state.toString();
+    }
+
+    public static void main(String[] args) {
+        State<PgLevel> state = new State<PgLevel>(PgLevel.LevelBuilder.build("s|J\n  -\n FL\n g "));
+        Solution<PgLevel> sol = new Solution<>();
+        sol.add(state.getState());
+        sol.add(state.getState());
+        System.out.println(sol);
     }
 }

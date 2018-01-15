@@ -2,6 +2,11 @@ package parts;
 
 public class GoalPoint extends Part {
     public String toString() {
-        return "g";
+        return ""+charface();
+    }
+
+    @Override
+    public Character charface() {
+        return 'g';
     }
 }

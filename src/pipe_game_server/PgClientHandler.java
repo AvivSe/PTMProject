@@ -2,11 +2,7 @@ package pipe_game_server;
 
 import java.io.*;
 
-import game_server.Solution;
-import parts.*;
-import server.CacheManager;
-import server.ClientHandler;
-import server.Solver;
+import game_server_interface.ClientHandler;
 
 /**
  *
@@ -29,26 +25,28 @@ public class PgClientHandler implements ClientHandler {
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevel.LevelBuilder.build(tmp);
         System.out.println("Client ask for directions to level: \n"  + tmp);
-        PgLevel normalizedRequest = normalize(request);
+        //PgLevel normalizedRequest = normalize(request);
+        PgLevel normalizedRequest = request;
 
-        Solution sol = this.cacheManager.load(normalizedRequest.toString().hashCode());
-        if (sol != null) {
+        PgDirections pgDirections = this.cacheManager.load(normalizedRequest.toString().hashCode());
+        if (pgDirections != null) {
             System.out.println("Cache said: I have it in files :)");
         }
 
 
-        if(sol == null) {
+        if(pgDirections == null) {
             System.out.println("Solver said: maybe I can solve it :)");
-            sol = solver.solve(normalizedRequest);
-            if (sol == null) {
+            pgDirections = solver.solve(normalizedRequest);
+            if (pgDirections == null) {
                 System.out.println("Solver said: I cant solve it :(");
             } else {
-                cacheManager.save(normalizedRequest.toString(), sol.toString());
+                cacheManager.save(normalizedRequest.toString(), pgDirections.toString());
             }
         }
 
-        System.out.println("\nSolution is:\n"+ sol.toString());
-        out.write(directions(request, sol));
+        System.out.println("\nSolution is:\n"+ pgDirections.toString());
+
+        out.write(pgDirections.toString());
 
         System.out.print("Client got answer. ");
 
@@ -56,10 +54,10 @@ public class PgClientHandler implements ClientHandler {
         out.close();
     }
 
-    private Solver solver;
-    private CacheManager cacheManager;
+    private PgSolver solver;
+    private PgCacheManager cacheManager;
 
-    PgClientHandler(Solver solver, CacheManager cacheManager) {
+    PgClientHandler(PgSolver solver, PgCacheManager cacheManager) {
         this.solver = solver;
         this.cacheManager = cacheManager;
     }
@@ -84,26 +82,26 @@ public class PgClientHandler implements ClientHandler {
 
         return PgLevel.LevelBuilder.build(result.toString());
     }
-    private String directions(PgLevel request, Solution solution) {
-        StringBuilder res = new StringBuilder();
-
-        for(int i = 0; i < request.getNumOfRows(); i++) {
-            for(int j = 0; j < request.getNumOfCol(); j++) {
-                Part left = request.getObject(i,j);
-                Part right =  PartBuilder.build(solution.getChar(i,j));
-                /**
-                 * Write vector if and only both chars are not equals.
-                 * Either way, both will work.
-                 */
-                if (!left.toString().equals(right.toString())) {
-                    res.append(i).append(",").append(j).append(",").append(((Pipe)left).rotate((Pipe)right)).append("\n");
-                }
-
-            }
-        }
-        res.append("done");
-        System.out.println("Directions are:\n" + res.toString());
-
-        return res.toString();
-    }
+//    private String directions(PgLevel request, Solution solution) {
+//        StringBuilder res = new StringBuilder();
+//
+//        for(int i = 0; i < request.getNumOfRows(); i++) {
+//            for(int j = 0; j < request.getNumOfCol(); j++) {
+//                Part left = request.getObject(i,j);
+//                Part right =  PartBuilder.build(solution.getChar(i,j));
+//                /**
+//                 * Write vector if and only both chars are not equals.
+//                 * Either way, both will work.
+//                 */
+//                if (!left.toString().equals(right.toString())) {
+//                    res.append(i).append(",").append(j).append(",").append(((Pipe)left).rotate((Pipe)right)).append("\n");
+//                }
+//
+//            }
+//        }
+//        res.append("done");
+//        System.out.println("Directions are:\n" + res.toString());
+//
+//        return res.toString();
+//    }
 }

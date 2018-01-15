@@ -7,8 +7,8 @@ package pipe_game_server;
 //import org.slf4j.LoggerFactory;
 
 import adminstrator.MyAdministrator;
-import server.ClientHandler;
-import server.Server;
+import game_server_interface.ClientHandler;
+import game_server_interface.Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;

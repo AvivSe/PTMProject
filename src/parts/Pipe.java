@@ -3,15 +3,16 @@ package parts;
 public abstract class Pipe extends Part implements Rotateable {
     private Rotation rotation;
 
-    Rotation getRotation() {
+    public Rotation getRotation() {
         return this.rotation;
     }
-    void setRotation(Rotation rotation){
+    public void setRotation(Rotation rotation){
         this.rotation = rotation;
     }
     public String toString() {
         return this.rotation.toString();
     }
+
 
     @Override
     public int rotate(Pipe target) {
