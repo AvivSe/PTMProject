@@ -13,7 +13,6 @@ public class BFS<T> implements Searcher<T> {
    public Solution<T> search(Searchable<T> searchable) {
        int outerloop = 0;
        int innerloop  = 0;
-       Solution<T> sol = new Solution<>();
        State<T> initialState = searchable.getInitialState();
        queue.add(initialState );
        while(!queue.isEmpty()){
@@ -21,8 +20,7 @@ public class BFS<T> implements Searcher<T> {
            State<T> item = queue.remove();
            if(searchable.isGoalState(item)) {
                System.out.println("!!BFS GOAL!! (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") ");
-               sol.add(item.getState());
-               return sol;
+               return backtrace(item);
            }
            visited.add(item);
            ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(item);
@@ -32,8 +30,8 @@ public class BFS<T> implements Searcher<T> {
                    t.setCameFrom(item);
                    if(searchable.isGoalState(t)) {
                        System.out.println("!!BFS GOAL!! (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") ");
-                       sol.add(t.getState());
-                       return sol;
+
+                       return backtrace(t);
                    }
                    queue.add(t);
                    visited.add(t);
@@ -42,5 +40,17 @@ public class BFS<T> implements Searcher<T> {
        }
        System.out.println("!!!! GOAL !NOT! FOUND AFTER (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") Iterations");
        return null;
+   }
+
+   private Solution<T> backtrace(State<T> s) {
+       Solution<T> sol = new Solution<>();
+       sol.add(s.getState());
+       while (s.getCameFrom().hasCameFrom()) {
+           sol.add(s.getCameFrom().getState());
+           s = s.getCameFrom();
+       }
+
+       Collections.reverse(sol);
+       return sol;
    }
 }

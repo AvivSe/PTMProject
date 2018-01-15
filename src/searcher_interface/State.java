@@ -2,6 +2,7 @@ package searcher_interface;
 
 import pipe_game_server.PgLevel;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 public class State<T>  {
@@ -15,8 +16,10 @@ public class State<T>  {
         this.cost = cost;
 
     }
+
     public State(T state) {
         this.state = state;
+        this.cameFrom = null;
     }
 
     public T getState() {
@@ -43,6 +46,8 @@ public class State<T>  {
         this.cost = cost;
     }
 
+    public boolean hasCameFrom() { return this.cameFrom != null; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,4 +72,6 @@ public class State<T>  {
         sol.add(state.getState());
         System.out.println(sol);
     }
+
+
 }

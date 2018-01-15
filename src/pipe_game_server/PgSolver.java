@@ -11,27 +11,16 @@ public class PgSolver implements Solver {
     @Override
     public PgDirections solve(PgLevel level) {
         Searcher<PgLevel> searcher = new BFS<>();
-        Searchable searchable = new PgSearchable(level);
-        PgDirections pgDirections = new PgDirections();
-        Solution<PgLevel> solution = searcher.search(searchable);
-
-        pgDirections.add(solution.toString());
-        return pgDirections;
+        return new PgDirections(searcher.search(new PgSearchable(level)), level);
     }
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
         PgLevel level = PgLevel.LevelBuilder.build("s|J\n  -\n  g");
-
+        System.out.println("You ask for solution to: ");
+        System.out.println(level);
         PgDirections directions = mySolver.solve(level);
-
-        System.out.println("\nAnd the direction are: \n");
-
-
-        for(String item: directions) {
-            System.out.println(item);
-            System.out.println();
-        }
-
+        System.out.println("\nAnd the direction are:");
+        System.out.println(directions.toString());
     }
 }
