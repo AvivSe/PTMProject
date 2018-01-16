@@ -16,13 +16,16 @@ public class PgSolver implements Solver {
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
-        PgLevel level = PgLevel.LevelBuilder.build(
-                "s-J \n" +
-                         "7F|L\n" +
-                         " g -");
+        PgLevel level = PgLevel.LevelBuilder.build(" 7- \n" +
+                "Fs-7\n" +
+                "7-g ");
         System.out.println("You ask for solution to: ");
         System.out.println(level);
+        long startTime = System.nanoTime();
         PgDirections vectors = mySolver.solve(level);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000 ;
+        System.out.println("LOG: " + duration + "ms");
         System.out.println("\nThe vectors backtrace is:");
         System.out.println(vectors.toString());
 

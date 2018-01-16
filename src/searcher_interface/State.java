@@ -52,12 +52,16 @@ public class State<T>  {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return Objects.deepEquals(state, ((State<?>) o).state);
+        State<?> state1 = (State<?>) o;
+        return Double.compare(state1.cost, cost) == 0 &&
+                Objects.equals(state, state1.state) &&
+                Objects.equals(cameFrom, state1.cameFrom);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state);
+
+        return Objects.hash(state, cameFrom, cost);
     }
 
     @Override

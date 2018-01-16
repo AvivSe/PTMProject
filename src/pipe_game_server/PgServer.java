@@ -76,8 +76,8 @@ public class PgServer implements Server {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         PgServer myServer = new PgServer(6400);
-        myServer.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
-        //new MyAdministrator(myServer, new PgClientHandler(new PgSolver(),new PgCacheManager())).gui();
+        //myServer.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
+        new MyAdministrator(myServer, new PgClientHandler(new PgSolver(),new PgCacheManager())).gui();
     }
 
 }

@@ -7,37 +7,36 @@ import searcher_interface.State;
 import java.util.*;
 
 public class BFS<T> implements Searcher<T> {
-   private Queue<State<T>> queue =  new LinkedList<>();
-   private ArrayList<State<T>> visited = new ArrayList<>();
+    State<T> initialState;
    @Override
    public Solution<T> search(Searchable<T> searchable) {
-       int outerloop = 0;
-       int innerloop  = 0;
-       State<T> initialState = searchable.getInitialState();
-       queue.add(initialState );
-       while(!queue.isEmpty()){
-           outerloop++;
-           State<T> item = queue.remove();
-           if(searchable.isGoalState(item)) {
-               System.out.println("(outerloop)!!BFS GOAL!! (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") ");
-               return backtrace(item);
-           }
-           visited.add(item);
-           ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(item);
-           for(State<T> t: nextPossibleStates){
-               innerloop++;
-               if(!visited.contains(t)) {
-                   t.setCameFrom(item);
-                   if(searchable.isGoalState(t)) {
-                       System.out.println("(innerloop)!!BFS GOAL!! (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") ");
-                       return backtrace(t);
-                   }
-                   queue.add(t);
-                   visited.add(t);
-               }
-           }
+       //TODO: REMOVE NEXT LINE AND BUILD A CONSTRUCTOR
+       initialState = searchable.getInitialState();
+
+       // CHECK IF INITIAL STATE IS THE GOAL //
+       if(searchable.isGoalState(initialState)) {
+           return backtrace(initialState);
        }
-       System.out.println("!!!! GOAL !NOT! FOUND AFTER (outerloop,innerloop,visited) = ("+outerloop+","+innerloop+"," +visited.size()+") Iterations");
+
+       Queue<State<T>> queue =  new LinkedList<>();
+       ArrayList<State<T>> visited = new ArrayList<>();
+       queue.add(initialState );
+       visited.add(initialState);
+
+       while(!queue.isEmpty()){
+           State<T> current = queue.remove();
+               if (searchable.isGoalState(current)) {
+                   return backtrace(current);
+               } else {
+                   ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
+                   if (nextPossibleStates.isEmpty()) {
+                       return null;
+                   } else {
+                       queue.addAll(nextPossibleStates);
+                   }
+                   visited.add(current);
+               }
+       }
        return null;
    }
 

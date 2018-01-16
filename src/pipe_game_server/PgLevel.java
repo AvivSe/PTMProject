@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.lang.invoke.LambdaConversionException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -24,6 +25,27 @@ public class PgLevel {
     }
     public void setObject(int row, int column, Part part) {
         this.matrix.get(row).set(column,part);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PgLevel pgLevel = (PgLevel) o;
+        for(int i = 0; i < matrix.size(); i++) {
+            for(int j=0; j<matrix.get(i).size(); j++) {
+                if (this.matrix.get(i).get(j).charface() != this.matrix.get(i).get(j).charface()) {
+                    return false;
+                }
+            }
+        }
+        return Objects.deepEquals(matrix, pgLevel.matrix) && Objects.equals(matrix, pgLevel.matrix);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(matrix);
     }
 
     public Part getObject(int row, int column) {
