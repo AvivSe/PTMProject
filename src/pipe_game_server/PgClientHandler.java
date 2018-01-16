@@ -25,10 +25,16 @@ public class PgClientHandler implements ClientHandler {
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevel.LevelBuilder.build(tmp);
         System.out.println("Client ask for directions to level: \n"  + tmp);
+        System.out.println("Problem is: ");
+        System.out.println(tmp);
         //PgLevel normalizedRequest = normalize(request);
         PgLevel normalizedRequest = request;
+        System.out.println("it is equales this?");
+        System.out.println(request);
+        System.out.println("and this?");
+        System.out.println(normalizedRequest);
 
-        PgDirections pgDirections = this.cacheManager.load(normalizedRequest.toString().hashCode());
+        PgDirections pgDirections = this.cacheManager.load(tmp);
         if (pgDirections != null) {
             System.out.println("Cache said: I have it in files :)");
         }
@@ -40,7 +46,7 @@ public class PgClientHandler implements ClientHandler {
             if (pgDirections == null) {
                 System.out.println("Solver said: I cant solve it :(");
             } else {
-                cacheManager.save(normalizedRequest.toString(), pgDirections.toString());
+                cacheManager.save(tmp , pgDirections.toString()+"done");
             }
         }
 

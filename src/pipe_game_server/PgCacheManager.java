@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class PgCacheManager implements CacheManager {
     @Override
-    public PgDirections load(int hashName) throws IOException {
+    public PgDirections load(String request) throws IOException {
         try {
-            Scanner in = new Scanner(new FileInputStream(path + Integer.toString(hashName)));
+            Scanner in = new Scanner(new FileInputStream(path + Integer.toString(request.hashCode())));
             PgDirections directions = new PgDirections();
 
             while(in.hasNextLine()){
@@ -26,6 +26,8 @@ public class PgCacheManager implements CacheManager {
     @Override
     public void save(String problem, String solution) throws IOException {
         FileOutputStream fileOutputStream=new FileOutputStream(path + Integer.toString(problem.hashCode()));
+        System.out.println("Save this: ");
+        System.out.println(problem);
         fileOutputStream.write(solution.getBytes());
         fileOutputStream.flush();
         fileOutputStream.close();

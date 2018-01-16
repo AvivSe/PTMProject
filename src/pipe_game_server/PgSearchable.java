@@ -35,12 +35,22 @@ public class PgSearchable implements Searchable<PgLevel> {
                 Class<?>[] interfaces = p.getClass().getSuperclass().getInterfaces();
                 for(Class<?> anInterface : interfaces) {
                     if (anInterface.toString().contains("Rotateable")) {
-                        PgLevel lvlCopy = level.copy();
                         Pipe pCopy = ((Pipe)PartBuilder.build(p.toString().charAt(0)));
                         pCopy.getRotation().changeRotation(pCopy);
-                        lvlCopy.setObject(i, j, pCopy);
-                        possibleStates.add(new State<>(lvlCopy));
-                        break;
+                        Character toReplaceWith = pCopy.charface();
+                            if(     toReplaceWith == '7' && (left(i, j, level) || down(i, j, level)) ||
+                                    toReplaceWith == 'J' && (up(i, j, level) || left(i, j, level))   ||
+                                    toReplaceWith == 'F' && (right(i, j, level) || down(i, j, level))||
+                                    toReplaceWith == 'L' && (right(i, j, level) || up(i, j, level))  ||
+                                    toReplaceWith == '-' && (right(i, j, level) || left(i, j, level))||
+                                    toReplaceWith == '|' && (up(i, j, level) || down(i, j, level))   ||
+                                    /* FOR ANYTHING ELSE, check if you can go somewhere. */
+                                    right(i, j, level) || left(i, j, level) || up(i,j,level) || down(i,j,level)) {
+
+                                PgLevel lvlCopy = level.copy();
+                                lvlCopy.setObject(i, j, pCopy);
+                                possibleStates.add(new State<>(lvlCopy));
+                            }
                     }
                 }
             }
@@ -76,11 +86,12 @@ public class PgSearchable implements Searchable<PgLevel> {
 //                    Character[][] copy = cloneChars(chars);
 //                    //TODO make it switch case
 //                            if(     toReplaceWith == '7' && (left(i, j, chars) || down(i, j, chars)) ||
-//                                    toReplaceWith == 'J' && (up(i, j, chars) || left(i, j, chars)) ||
-//                                    toReplaceWith == 'F' && (right(i, j, chars) || down(i, j, chars)) ||
-//                                    toReplaceWith == 'L' && (right(i, j, chars) || up(i, j, chars)) ||
-//                                    toReplaceWith == '-' && (right(i, j, chars) || left(i, j, chars)) ||
-//                                    toReplaceWith == '|' && (up(i, j, chars) || down(i, j, chars)) || right(i, j, chars) || left(i, j, chars)) {
+//                                    toReplaceWith == 'J' && (up(i, j, chars) || left(i, j, chars))   ||
+//                                    toReplaceWith == 'F' && (right(i, j, chars) || down(i, j, chars))||
+//                                    toReplaceWith == 'L' && (right(i, j, chars) || up(i, j, chars))  ||
+//                                    toReplaceWith == '-' && (right(i, j, chars) || left(i, j, chars))||
+//                                    toReplaceWith == '|' && (up(i, j, chars) || down(i, j, chars))   ||
+//                                    right(i, j, chars) || left(i, j, chars)) {
 //                                copy[i][j] = toReplaceWith;
 //
 //                                possibleStates.add(new State<>(copy));

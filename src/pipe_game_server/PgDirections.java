@@ -27,7 +27,6 @@ public class PgDirections extends ArrayList<String> implements Directions {
         }
     }
 
-
     // Vectors
     public PgDirections(Solution<PgLevel> solution, PgLevel request) {
         PgLevel finalState = solution.get(solution.size()-1);

@@ -16,11 +16,15 @@ public class PgSolver implements Solver {
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
-        PgLevel level = PgLevel.LevelBuilder.build("s|J\n  -\n  g");
+        PgLevel level = PgLevel.LevelBuilder.build(
+                "s-J \n" +
+                         "7F|L\n" +
+                         " g -");
         System.out.println("You ask for solution to: ");
         System.out.println(level);
-        PgDirections directions = mySolver.solve(level);
-        System.out.println("\nAnd the direction are:");
-        System.out.println(directions.toString());
+        PgDirections vectors = mySolver.solve(level);
+        System.out.println("\nThe vectors backtrace is:");
+        System.out.println(vectors.toString());
+
     }
 }
