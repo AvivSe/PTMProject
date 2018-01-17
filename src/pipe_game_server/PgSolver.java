@@ -11,7 +11,7 @@ public class PgSolver implements Solver {
     @Override
     public PgDirections solve(PgLevel level) {
         Searcher<PgLevel> searcher = new BFS<>();
-        return new PgDirections(searcher.search(new PgSearchable(level)), level);
+        return new PgDirections(searcher.search(new PgSearchable(level,false)), level);
     }
 
     public static void main(String[] args) {
@@ -24,8 +24,12 @@ public class PgSolver implements Solver {
         long startTime = System.nanoTime();
         PgDirections vectors = mySolver.solve(level);
         long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000 ;
-        System.out.println("LOG: " + duration + "ms");
+
+        long duration = (endTime - startTime);
+        Long ms = duration / 1000000;
+        Double sec = (double) duration / 1000000000.0;
+
+        System.out.println("LOG: " + ms + "ms" + " ("+sec+"sec)");
         System.out.println("\nThe vectors backtrace is:");
         System.out.println(vectors.toString());
 

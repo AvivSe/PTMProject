@@ -1,5 +1,6 @@
 package pipe_game_server;
 
+import parts.EmptyPart;
 import parts.Part;
 import parts.PartBuilder;
 import parts.Pipe;
@@ -11,10 +12,16 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class PgSearchable implements Searchable<PgLevel> {
+    private boolean optimize;
 
     private State<PgLevel> initialState;
 
     PgSearchable(PgLevel level) {
+        this.optimize = false;
+        this.initialState = new State<>(level);
+    }
+    PgSearchable(PgLevel level, boolean optimize) {
+        this.optimize = optimize;
         this.initialState = new State<>(level);
     }
 
@@ -38,16 +45,8 @@ public class PgSearchable implements Searchable<PgLevel> {
                     if (interfaces.length > 0) {
                         Pipe pCopy = ((Pipe) PartBuilder.build(p.charface()));
                         pCopy.getRotation().changeRotation(pCopy);
-                        Character toReplaceWith = pCopy.charface();
-                        if (toReplaceWith == '7' && (left(i, j, level) || down(i, j, level)) ||
-                                toReplaceWith == 'J' && (up(i, j, level) || left(i, j, level)) ||
-                                toReplaceWith == 'F' && (right(i, j, level) || down(i, j, level)) ||
-                                toReplaceWith == 'L' && (right(i, j, level) || up(i, j, level)) ||
-                                toReplaceWith == '-' && (right(i, j, level) || left(i, j, level)) ||
-                                toReplaceWith == '|' && (up(i, j, level) || down(i, j, level)) ||
-                                /* FOR ANYTHING ELSE, check if you can go somewhere. */
-                                right(i, j, level) || left(i, j, level) || up(i, j, level) || down(i, j, level)) {
-
+                        char toReplaceWith = pCopy.charface();
+                        if (canDoSomeOneNextStep(i,j,level,toReplaceWith)) {
                             PgLevel lvlCopy = level.copy();
                             lvlCopy.setObject(i, j, pCopy);
                             possibleStates.add(new State<>(lvlCopy));
@@ -58,9 +57,59 @@ public class PgSearchable implements Searchable<PgLevel> {
         }
         return possibleStates;
     }
+    private boolean canDoSomeOneNextStep(int i, int j,PgLevel level , char toReplaceWith) {
+        if (!optimize) return true;
+        if (
+        toReplaceWith == '7' && (left(i, j, level) || down(i, j, level)) ||
+                toReplaceWith == 'J' && (up(i, j, level) || left(i, j, level)) ||
+                toReplaceWith == 'F' && (right(i, j, level) || down(i, j, level)) ||
+                toReplaceWith == 'L' && (right(i, j, level) || up(i, j, level)) ||
+                toReplaceWith == '-' && (right(i, j, level) || left(i, j, level)) ||
+                toReplaceWith == '|' && (up(i, j, level) || down(i, j, level)) ||
+                /* FOR ANYTHING ELSE, check if you can go somewhere. */
+                right(i, j, level) || left(i, j, level) || up(i, j, level) || down(i, j, level)
+                ) {
+            return true;
+        }
+        return false;
+    }
 
-    public boolean canGoToStart(int i, int j, PgLevel level) {
-        return true;
+    private boolean canGoToStart(int i, int j, PgLevel original) {
+        if (!optimize) {
+            return true;
+        }
+        PgLevel level = original.copy();
+        char c = level.getObject(i, j).charface();
+        level.setObject(i,j ,new EmptyPart());
+        switch (c) {
+            case 's':
+                return true;
+            case 'L':
+                if (up(i,j,level)) return canGoToStart(i-1, j, level);
+                else if (right(i,j,level)) return canGoToStart(i, j+1, level);
+                break;
+            case 'F':
+                if (right(i,j,level)) return canGoToStart(i, j+1, level);
+                else if (down(i,j,level)) return canGoToStart(i+1, j, level);
+            case '7':
+                if (down(i,j,level)) return canGoToStart(i+1, j, level);
+                else if (left(i,j,level)) return canGoToStart(i, j-1, level);
+            case 'J':
+                if (up(i,j,level)) return canGoToStart(i-1, j, level);
+                else if (left(i,j,level)) return canGoToStart(i, j-1, level);
+            case '|':
+                if (up(i,j,level)) return canGoToStart(i-1, j, level);
+                else if (down(i,j,level)) return canGoToStart(i+1, j, level);
+            case '-':
+                if (left(i,j,level)) return canGoToStart(i, j-1, level);
+                else if (right(i,j,level)) return canGoToStart(i, j+1, level);
+            case 'g':
+                if (up(i, j, level)) return canGoToStart(i-1, j, level);
+                if (right(i, j, level)) return canGoToStart(i, j+1, level);
+                if (down(i, j, level)) return canGoToStart(i+1, j, level);
+                if (left(i, j, level)) return canGoToStart(i, j-1, level);
+        }
+        return false;
     }
 
     public boolean isGoalState(State<PgLevel> state) {
