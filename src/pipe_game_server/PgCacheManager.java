@@ -18,7 +18,7 @@ public class PgCacheManager implements CacheManager {
 
             return directions;
             } catch (FileNotFoundException e) {
-            System.out.println("Cache said: I dont have it :(\n");
+            System.out.println("Cache said: I don't have it :(\n");
         }
         return null;
     }
@@ -26,8 +26,6 @@ public class PgCacheManager implements CacheManager {
     @Override
     public void save(String problem, String solution) throws IOException {
         FileOutputStream fileOutputStream=new FileOutputStream(path + Integer.toString(problem.hashCode()));
-        System.out.println("Save this: ");
-        System.out.println(problem);
         fileOutputStream.write(solution.getBytes());
         fileOutputStream.flush();
         fileOutputStream.close();

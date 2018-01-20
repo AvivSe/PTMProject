@@ -45,7 +45,7 @@ public class PgServer implements Server {
     public boolean stop;
     private int port;
 
-    private PgServer(int port) throws IOException {
+    public PgServer(int port) throws IOException {
         this.port = port;
         this.server = null;
         this.stop = true;

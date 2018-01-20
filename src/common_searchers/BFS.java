@@ -6,12 +6,16 @@ import searcher_interface.Solution;
 import searcher_interface.State;
 import java.util.*;
 
-public class BFS<T> implements Searcher<T> {
-    State<T> initialState;
-   @Override
+public class BFS<T> extends CommonSearcher implements Searcher<T> {
+    public BFS() {
+        System.out.println("BFS is initialized..");
+    }
+
+    @Override
    public Solution<T> search(Searchable<T> searchable) {
-       //TODO: REMOVE NEXT LINE AND BUILD A CONSTRUCTOR
-       initialState = searchable.getInitialState();
+       System.out.println("BFS took it on him..");
+       long startTime = System.nanoTime();
+       State<T> initialState = searchable.getInitialState();
 
        // CHECK IF INITIAL STATE IS THE GOAL //
        if(searchable.isGoalState(initialState)) {
@@ -21,11 +25,16 @@ public class BFS<T> implements Searcher<T> {
        Queue<State<T>> queue =  new LinkedList<>();
        ArrayList<State<T>> visited = new ArrayList<>();
        queue.add(initialState );
-       visited.add(initialState);
 
        while(!queue.isEmpty()){
            State<T> current = queue.remove();
+           if (!visited.contains(current)) {
                if (searchable.isGoalState(current)) {
+                   long endTime = System.nanoTime();
+                   long duration = (endTime - startTime);
+                   Long ms = duration / 1000000;
+                   Double sec = (double) duration / 1000000000.0;
+                   System.out.println("BFS GOAL IN: " + ms + "ms" + " ("+sec+"sec)");
                    return backtrace(current);
                } else {
                    ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
@@ -36,19 +45,8 @@ public class BFS<T> implements Searcher<T> {
                    }
                    visited.add(current);
                }
+           }
        }
        return null;
-   }
-
-   private Solution<T> backtrace(State<T> s) {
-       Solution<T> sol = new Solution<>();
-       sol.add(s.getState());
-
-       while (s.hasCameFrom()) {
-           sol.add(s.getCameFrom().getState());
-           s = s.getCameFrom();
-       }
-       Collections.reverse(sol);
-       return sol;
    }
 }

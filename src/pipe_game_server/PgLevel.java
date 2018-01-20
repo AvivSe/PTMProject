@@ -32,20 +32,12 @@ public class PgLevel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PgLevel pgLevel = (PgLevel) o;
-        for(int i = 0; i < matrix.size(); i++) {
-            for(int j=0; j<matrix.get(i).size(); j++) {
-                if (this.matrix.get(i).get(j).charface() != this.matrix.get(i).get(j).charface()) {
-                    return false;
-                }
-            }
-        }
-        return Objects.deepEquals(matrix, pgLevel.matrix) && Objects.equals(matrix, pgLevel.matrix);
+        return matrix.hashCode() == ((PgLevel) o).matrix.hashCode();
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(matrix);
+        return Objects.hash(matrix.toString());
     }
 
     public Part getObject(int row, int column) {

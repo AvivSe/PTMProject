@@ -16,7 +16,7 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     private State<PgLevel> initialState;
 
-    PgSearchable(PgLevel level) {
+    public PgSearchable(PgLevel level) {
         this.optimize = false;
         this.initialState = new State<>(level);
     }
@@ -39,7 +39,7 @@ public class PgSearchable implements Searchable<PgLevel> {
         for(int i = 0; i < level.getNumOfRows(); i++) {
             for (int j = 0; j < level.getNumOfCol(); j++) {
                 /* first if - check legal from i,j to start. */
-                if(canGoToStart(i,j,level)) {
+               // if(canGoToStart(i,j,level)) {
                     Part p = level.getObject(i, j);
                     Class<?>[] interfaces = p.getClass().getSuperclass().getInterfaces();
                     if (interfaces.length > 0) {
@@ -51,7 +51,7 @@ public class PgSearchable implements Searchable<PgLevel> {
                             lvlCopy.setObject(i, j, pCopy);
                             possibleStates.add(new State<>(lvlCopy));
                         }
-                    }
+                    //}
                 }
             }
         }
@@ -75,6 +75,7 @@ public class PgSearchable implements Searchable<PgLevel> {
     }
 
     private boolean canGoToStart(int i, int j, PgLevel original) {
+        // TODO: FIX THIS OPTIMIZATION
         if (!optimize) {
             return true;
         }
@@ -113,13 +114,12 @@ public class PgSearchable implements Searchable<PgLevel> {
     }
 
     public boolean isGoalState(State<PgLevel> state) {
-        PgLevel level = state.getState();
-        Point start = level.getStart();
-        // Find start point
+      PgLevel level = state.getState();
+      Point start = level.getStart();
         return findGoal(start.x, start.y, level, CameFrom.start);
 
-       // System.out.println("Cannot find start point.");
-       // return false;
+//        Point goal = level.getGoal();
+//        return canGoToStart(goal.x, goal.y, state.getState());
     }
 
     private enum CameFrom {
@@ -287,16 +287,25 @@ public class PgSearchable implements Searchable<PgLevel> {
 
 
     public static void main(String[] args) {
-        PgLevel level = PgLevel.LevelBuilder.build("s-7\n  g");
+        PgLevel level = PgLevel.LevelBuilder.build(
+                "s-7 \n" +
+                         " |L7\n" +
+                         "-F |\n" +
+                         "7F-J\n" +
+                         " g -");
+
+        System.out.println(level);
 
         PgSearchable searchable = new PgSearchable(level);
 
+        System.out.println(searchable.isGoalState(new State<PgLevel>(level)));
+
         ArrayList<State<PgLevel>> list = searchable.getPossibleStates(new State<>(level));
 
-        for(State<PgLevel> item: list) {
-            System.out.println(item);
-            System.out.println();
-        }
+//        for(State<PgLevel> item: list) {
+//            System.out.println(item);
+//            System.out.println();
+//        }
 
     }
 }

@@ -1,7 +1,9 @@
 package searcher_interface;
 
 import pipe_game_server.PgLevel;
+import pipe_game_server.PgSearchable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -49,18 +51,13 @@ public class State<T>  {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        State<?> state1 = (State<?>) o;
-        return Double.compare(state1.cost, cost) == 0 &&
-                Objects.equals(state, state1.state) &&
-                Objects.equals(cameFrom, state1.cameFrom);
+        return this.getState().hashCode() == ((State<T>)o).getState().hashCode();
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(state, cameFrom, cost);
+        return Objects.hash(state.hashCode());
     }
 
     @Override
@@ -69,11 +66,18 @@ public class State<T>  {
     }
 
     public static void main(String[] args) {
-        State<PgLevel> state = new State<PgLevel>(PgLevel.LevelBuilder.build("s|J\n  -\n FL\n g "));
-        Solution<PgLevel> sol = new Solution<>();
-        sol.add(state.getState());
-        sol.add(state.getState());
-        System.out.println(sol);
+        State<PgLevel> state = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L \n" +
+                " -LL\n" +
+                "-F |\n" +
+                "FF-J\n" +
+                " g -"));
+        System.out.println("You ask: ");
+        System.out.println(state.getState());
+        System.out.println("his childs: ");
+        PgSearchable searchable = new PgSearchable(state.getState());
+        System.out.println(searchable.getPossibleStates(state));
+
+
     }
 
 

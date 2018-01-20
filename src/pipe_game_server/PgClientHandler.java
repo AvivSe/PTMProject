@@ -2,7 +2,10 @@ package pipe_game_server;
 
 import java.io.*;
 
+import game_server_interface.CacheManager;
 import game_server_interface.ClientHandler;
+import game_server_interface.Directions;
+import game_server_interface.Solver;
 
 /**
  *
@@ -25,16 +28,16 @@ public class PgClientHandler implements ClientHandler {
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevel.LevelBuilder.build(tmp);
         System.out.println("Client ask for directions to level: \n"  + tmp);
-        System.out.println("Problem is: ");
-        System.out.println(tmp);
+//        System.out.println("Problem is: ");
+//        System.out.println(tmp);
         //PgLevel normalizedRequest = normalize(request);
         PgLevel normalizedRequest = request;
-        System.out.println("it is equales this?");
-        System.out.println(request);
-        System.out.println("and this?");
-        System.out.println(normalizedRequest);
+//        System.out.println("it is equales this?");
+//        System.out.println(request);
+//        System.out.println("and this?");
+//        System.out.println(normalizedRequest);
 
-        PgDirections pgDirections = this.cacheManager.load(tmp);
+        Directions pgDirections = this.cacheManager.load(tmp);
         if (pgDirections != null) {
             System.out.println("Cache said: I have it in files :)");
         }
@@ -46,7 +49,7 @@ public class PgClientHandler implements ClientHandler {
             if (pgDirections == null) {
                 System.out.println("Solver said: I cant solve it :(");
             } else {
-                cacheManager.save(tmp , pgDirections.toString()+"done");
+                cacheManager.save(tmp , pgDirections.toString());
             }
         }
 
@@ -60,10 +63,10 @@ public class PgClientHandler implements ClientHandler {
         out.close();
     }
 
-    private PgSolver solver;
-    private PgCacheManager cacheManager;
+    private Solver solver;
+    private CacheManager cacheManager;
 
-    PgClientHandler(PgSolver solver, PgCacheManager cacheManager) {
+    public PgClientHandler(PgSolver solver, PgCacheManager cacheManager) {
         this.solver = solver;
         this.cacheManager = cacheManager;
     }

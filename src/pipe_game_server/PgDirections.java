@@ -17,7 +17,7 @@ public class PgDirections extends ArrayList<String> implements Directions {
         for(String item: this) {
             stringBuilder.append(item).append("\n");
         }
-        return stringBuilder.toString();
+        return stringBuilder.append("done").toString();
     }
 
     // Visual
