@@ -13,7 +13,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
 
     @Override
    public Solution<T> search(Searchable<T> searchable) {
-       System.out.println("BFS took it on him..");
+       System.out.println("BFS took it on himself..");
        long startTime = System.nanoTime();
        State<T> initialState = searchable.getInitialState();
 

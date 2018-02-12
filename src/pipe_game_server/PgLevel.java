@@ -1,73 +1,75 @@
 package pipe_game_server;
 
-import parts.*;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.lang.invoke.LambdaConversionException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class PgLevel {
-    private ArrayList<ArrayList<Part>> matrix;
-
-    public ArrayList<ArrayList<Part>> getMatrix() {
+    private char[][] matrix;
+    public char[][] getMatrix() {
         return matrix;
     }
 
-    public PgLevel() {
-        this.matrix = new ArrayList<>();
+    public PgLevel(char[][] data) {
+        this.matrix = data.clone();
     }
-    public PgLevel(ArrayList<ArrayList<Part>> data) {
-        this.matrix = data;
-    }
-    public void setObject(int row, int column, Part part) {
-        this.matrix.get(row).set(column,part);
+
+    public PgLevel(int numRows, int numColumns) {
+        this.matrix = new char[numRows][numColumns];
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PgLevel pgLevel = (PgLevel) o;
-        return matrix.hashCode() == ((PgLevel) o).matrix.hashCode();
+        PgLevel pgLevel2 = (PgLevel) o;
+        for (int i = 0; i < getNumOfRows(); i++) {
+            for (int j = 0; j < getNumOfCol(); j++) {
+                if (matrix[i][j] != pgLevel2.matrix[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(matrix.toString());
+
+    public void setObject(int row, int column, char c) {
+        this.matrix[row][column] = c;
     }
 
-    public Part getObject(int row, int column) {
-        return this.matrix.get(row).get(column);
+    public char getObject(int row, int column) {
+        return this.matrix[row][column];
     }
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-
-        for(ArrayList<Part> row: matrix) {
-            for (Part col : row) {
-                result.append(col);
+        for(int i = 0; i < getNumOfRows(); i++) {
+            for(int j = 0; j < getNumOfCol(); j++) {
+                result.append(matrix[i][j]);
             }
             result.append("\n");
         }
+
         String resultString = result.toString();
         int len = resultString.length();
-
         return resultString.substring(0,len-1); // remove last \n
     }
 
-    public int getNumOfRows() { return this.matrix.size(); }
+    public int getNumOfRows() { return this.matrix.length; }
 
-    public int getNumOfCol() { return this.matrix.get(0).size();}
+    public int getNumOfCol() { return this.matrix[0].length;}
 
     public Point getStart() {
         for (int i = 0; i < getNumOfRows(); i++) {
             for (int j = 0; j < getNumOfCol(); j++) {
-                if (matrix.get(i).get(j).getClass().toString().contains("StartPoint")) {
+                if (matrix[i][j] == 's') {
                     return new Point(i, j);
                 }
             }
@@ -78,7 +80,7 @@ public class PgLevel {
     public Point getGoal() {
         for (int i = 0; i < getNumOfRows(); i++) {
             for (int j = 0; j < getNumOfCol(); j++) {
-                if (matrix.get(i).get(j).getClass().toString().contains("GoalPoint")) {
+                if (matrix[i][j] == 'g') {
                     return new Point(i, j);
                 }
             }
@@ -86,37 +88,41 @@ public class PgLevel {
         return null;
     }
 
-    interface FunciMonkey {
-        void action(Object obj);
-    }
+//    interface FunciMonkey {
+//        void action(Object obj);
+//    }
 
-    public void foreach(FunciMonkey funciMonkey, Predicate predicate) {
-        for(ArrayList<Part> row: matrix) {
-            for (Part part : row) {
-                if (predicate.test(part)){
-                    funciMonkey.action(part);
-                }
-            }
-        }
-    }
+//    public void foreach(FunciMonkey funciMonkey, Predicate predicate) {
+//        for(ArrayList<Part> row: matrix) {
+//            for (Part part : row) {
+//                if (predicate.test(part)){
+//                    funciMonkey.action(part);
+//                }
+//            }
+//        }
+//    }
 
-    public void foreach(FunciMonkey funciMonkey) {
-        for(ArrayList<Part> row: matrix) {
-            for (Part part : row) {
-                    funciMonkey.action(part);
-            }
-        }
-    }
+//    public void foreach(FunciMonkey funciMonkey) {
+//        for(ArrayList<Part> row: matrix) {
+//            for (Part part : row) {
+//                    funciMonkey.action(part);
+//            }
+//        }
+//    }
 
     public static class LevelBuilder {
+
         public static PgLevel build(String problem) {
-            PgLevel result = new PgLevel();
             String[] rows = problem.split("\n");
-            for (int i = 0; i < rows.length; i++) {
-                result.matrix.add(new ArrayList<>());
+            int numRows = rows.length;
+            int numColumns = rows[0].length();
+
+            PgLevel result = new PgLevel(numRows,numColumns);
+
+            for (int i = 0; i < result.getNumOfRows(); i++) {
                 char[] chars = rows[i].toCharArray();
-                for (char aChar : chars) {
-                    result.matrix.get(i).add(PartBuilder.build(aChar));
+                for (int j = 0; j < result.getNumOfCol(); j++) {
+                    result.matrix[i][j] = chars[j];
                 }
             }
             return result;
@@ -126,9 +132,9 @@ public class PgLevel {
     protected PgLevel copy() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for(ArrayList<Part> line: this.getMatrix()) {
-            for(Part p: line) {
-                stringBuilder.append(p.toString());
+        for(char[] line: this.getMatrix()) {
+            for(char c: line) {
+                stringBuilder.append(c);
             }
             stringBuilder.append("\n");
         }
@@ -139,13 +145,8 @@ public class PgLevel {
     public static void main(String[] args) {
         PgLevel level = LevelBuilder.build("s-7\n|-g");
         System.out.println(level);
-        try {
-            System.out.println(level.getObject(5, 5).getClass().toString());
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println(e.getMessage());
-        }
-        System.out.println(level.getStart());
-        System.out.println(level.getGoal());
+        //System.out.println(level.getStart());
+        //System.out.println(level.getGoal());
     }
 
 }

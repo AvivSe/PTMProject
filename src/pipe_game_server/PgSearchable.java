@@ -1,9 +1,6 @@
 package pipe_game_server;
 
-import parts.EmptyPart;
-import parts.Part;
-import parts.PartBuilder;
-import parts.Pipe;
+
 import searcher_interface.Searchable;
 import searcher_interface.State;
 
@@ -38,23 +35,39 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         for(int i = 0; i < level.getNumOfRows(); i++) {
             for (int j = 0; j < level.getNumOfCol(); j++) {
-                /* first if - check legal from i,j to start. */
-               // if(canGoToStart(i,j,level)) {
-                    Part p = level.getObject(i, j);
-                    Class<?>[] interfaces = p.getClass().getSuperclass().getInterfaces();
-                    if (interfaces.length > 0) {
-                        Pipe pCopy = ((Pipe) PartBuilder.build(p.charface()));
-                        pCopy.getRotation().changeRotation(pCopy);
-                        char toReplaceWith = pCopy.charface();
-                        if (canDoSomeOneNextStep(i,j,level,toReplaceWith)) {
-                            PgLevel lvlCopy = level.copy();
-                            lvlCopy.setObject(i, j, pCopy);
+                    char c = level.getObject(i, j);
+                    PgLevel lvlCopy = level.copy();
+                    char toReplaceWith = ' ';
+
+                    if (c != ' ' && c != 's' && c != 'g') {
+                        switch (c) {
+                            case '|':
+                                toReplaceWith = '-';
+                                break;
+                            case '-':
+                                toReplaceWith = '|';
+                                break;
+                            case 'L':
+                                toReplaceWith = 'F';
+                                break;
+                            case 'F':
+                                toReplaceWith = '7';
+                                break;
+                            case '7':
+                                toReplaceWith = 'J';
+                                break;
+                            case 'J':
+                                toReplaceWith = 'L';
+                                break;
+
+                        }
+                        if (toReplaceWith != ' ') {
+                            lvlCopy.setObject(i, j, toReplaceWith);
                             possibleStates.add(new State<>(lvlCopy));
                         }
-                    //}
+                    }
                 }
             }
-        }
         return possibleStates;
     }
     private boolean canDoSomeOneNextStep(int i, int j,PgLevel level , char toReplaceWith) {
@@ -80,8 +93,8 @@ public class PgSearchable implements Searchable<PgLevel> {
             return true;
         }
         PgLevel level = original.copy();
-        char c = level.getObject(i, j).charface();
-        level.setObject(i,j ,new EmptyPart());
+        char c = level.getObject(i, j);
+        level.setObject(i,j , ' ');
         switch (c) {
             case 's':
                 return true;
@@ -128,7 +141,7 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     private static boolean findGoal(int i, int j, PgLevel level, CameFrom cameFrom) {
         try {
-            switch (level.getObject(i, j).charface()) {
+            switch (level.getObject(i, j)) {
                 case 'g':
                     return true;
                 case 's':
@@ -223,7 +236,7 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     private static boolean up(int i, int j, PgLevel level) {
         try {
-            switch (level.getObject(i-1,j).charface()) {
+            switch (level.getObject(i-1,j)) {
                 case '7':
                 case '|':
                 case 'F':
@@ -239,7 +252,7 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     private static boolean right(int i, int j, PgLevel level) {
         try {
-            switch (level.getObject(i,j+1).toString().charAt(0)) {
+            switch (level.getObject(i,j+1)) {
                 case '7':
                 case 'J':
                 case '-':
@@ -255,7 +268,7 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     private static boolean left(int i, int j, PgLevel level) {
         try {
-            switch (level.getObject(i,j-1).charface()) {
+            switch (level.getObject(i,j-1)) {
                 case 'F':
                 case 'L':
                 case '-':
@@ -271,7 +284,7 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     private static boolean down(int i, int j, PgLevel level) {
         try {
-            switch (level.getObject(i+1,j).charface()) {
+            switch (level.getObject(i+1,j)) {
                 case 'J':
                 case 'L':
                 case '|':
@@ -302,10 +315,10 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         ArrayList<State<PgLevel>> list = searchable.getPossibleStates(new State<>(level));
 
-//        for(State<PgLevel> item: list) {
-//            System.out.println(item);
-//            System.out.println();
-//        }
+        for(State<PgLevel> item: list) {
+            System.out.println(item);
+            System.out.println();
+        }
 
     }
 }
