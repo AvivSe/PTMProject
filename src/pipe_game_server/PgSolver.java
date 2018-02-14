@@ -17,26 +17,34 @@ public class PgSolver implements Solver {
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
-        PgLevel level = PgLevel.LevelBuilder.build("s|J-\n" +
-                "  F7\n" +
-                " JgJ");
+        PgLevel level = PgLevel.LevelBuilder.build(
+                "s-J \n" +
+                        " |L7\n" +
+                        "-F |\n" +
+                        "7F-J\n" +
+                        " g -");
 
         System.out.println("You ask for solution to: ");
         System.out.println(level);
 
-        long startTime = System.nanoTime();
-        PgDirections vectors = mySolver.solve(level);
-        long endTime = System.nanoTime();
+        try {
+            long startTime = System.nanoTime();
+            PgDirections vectors = mySolver.solve(level);
+            long endTime = System.nanoTime();
 
-        long duration = (endTime - startTime);
-        Long ms = duration / 1000000;
-        Double sec = (double) duration / 1000000000.0;
+            long duration = (endTime - startTime);
+            Long ms = duration / 1000000;
+            Double sec = (double) duration / 1000000000.0;
 
-        System.out.println("TOTAL: " + ms + "ms" + " ("+sec+"sec)");
-        System.out.println("\nThe vectors backtrace is:");
-        if (vectors != null) {
-            System.out.println(vectors.toString());
-        }
+            System.out.println("TOTAL: " + ms + "ms" + " ("+sec+"sec)");
+            System.out.println("\nThe vectors backtrace is:");
+            if (vectors != null) {
+                System.out.println(vectors.toString());
+            }
+        } catch (NullPointerException ignored){}
+
+
+
 
     }
 }

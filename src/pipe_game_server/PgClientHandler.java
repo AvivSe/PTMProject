@@ -28,35 +28,41 @@ public class PgClientHandler implements ClientHandler {
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevel.LevelBuilder.build(tmp);
         System.out.println("Client ask for directions to level: \n"  + tmp);
-//        System.out.println("Problem is: ");
-//        System.out.println(tmp);
-        //PgLevel normalizedRequest = normalize(request);
-        PgLevel normalizedRequest = request;
-//        System.out.println("it is equales this?");
-//        System.out.println(request);
-//        System.out.println("and this?");
-//        System.out.println(normalizedRequest);
 
-        Directions pgDirections = this.cacheManager.load(tmp);
-        if (pgDirections != null) {
+
+        try {
+            out.write(this.cacheManager.load(tmp).toString());
             System.out.println("Cache said: I have it in files :)");
-        }
-
-
-        if(pgDirections == null) {
-            System.out.println("Solver said: maybe I can solve it :)");
-            pgDirections = solver.solve(normalizedRequest);
-            if (pgDirections == null) {
-                System.out.println("Solver said: I cant solve it :(");
-            } else {
+        } catch (NullPointerException error) {
+            try {
+                System.out.println("Solver said: maybe I can solve it :)");
+                Directions pgDirections = solver.solve(request);
                 cacheManager.save(tmp , pgDirections.toString());
+                System.out.println("\nSolution is:\n"+ pgDirections.toString());
+                out.write(pgDirections.toString());
+            } catch (NullPointerException error2) {
+                System.out.println("Solver said: I cant solve it :(");
+                System.out.print("Client did not got an answer. ");
+                out.write("done");
             }
         }
-
-        System.out.println("\nSolution is:\n"+ pgDirections.toString());
-
-        out.write(pgDirections.toString());
-
+//        Directions pgDirections = this.cacheManager.load(tmp);
+//        if (pgDirections != null) {
+//            System.out.println("Cache said: I have it in files :)");
+//            out.write(pgDirections.toString());
+//        } else {
+//            System.out.println("Solver said: maybe I can solve it :)");
+//            try {
+//                pgDirections = solver.solve(request);
+//                cacheManager.save(tmp , pgDirections.toString());
+//                System.out.println("\nSolution is:\n"+ pgDirections.toString());
+//                out.write(pgDirections.toString());
+//            }  catch (NullPointerException error) {
+//                System.out.println("Solver said: I cant solve it :(");
+//                System.out.print("Client did not got an answer. ");
+//                out.write("done");
+//            }
+//        }
         System.out.print("Client got answer. ");
 
         out.flush();
@@ -70,47 +76,4 @@ public class PgClientHandler implements ClientHandler {
         this.solver = solver;
         this.cacheManager = cacheManager;
     }
-    private PgLevel normalize(PgLevel original) {
-
-        StringBuilder result = new StringBuilder();
-        for(char item: original.toString().toCharArray()) {
-            switch(item) {
-                case 'F':
-                case '7':
-                case 'J':
-                    result.append('L');
-                    break;
-                case '-':
-                    result.append('|');
-                    break;
-                default:
-                    result.append(item);
-                    break;
-            }
-        }
-
-        return PgLevel.LevelBuilder.build(result.toString());
-    }
-//    private String directions(PgLevel request, Solution solution) {
-//        StringBuilder res = new StringBuilder();
-//
-//        for(int i = 0; i < request.getNumOfRows(); i++) {
-//            for(int j = 0; j < request.getNumOfCol(); j++) {
-//                Part left = request.getObject(i,j);
-//                Part right =  PartBuilder.build(solution.getChar(i,j));
-//                /**
-//                 * Write vector if and only both chars are not equals.
-//                 * Either way, both will work.
-//                 */
-//                if (!left.toString().equals(right.toString())) {
-//                    res.append(i).append(",").append(j).append(",").append(((Pipe)left).rotate((Pipe)right)).append("\n");
-//                }
-//
-//            }
-//        }
-//        res.append("done");
-//        System.out.println("Directions are:\n" + res.toString());
-//
-//        return res.toString();
-//    }
 }

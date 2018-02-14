@@ -50,8 +50,10 @@ public class PgLevel {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for(int i = 0; i < getNumOfRows(); i++) {
-            for(int j = 0; j < getNumOfCol(); j++) {
+        int lengthRows = getNumOfRows();
+        int lengthCols = getNumOfCol();
+        for(int i = 0; i < lengthRows; i++) {
+            for(int j = 0; j < lengthCols; j++) {
                 result.append(matrix[i][j]);
             }
             result.append("\n");

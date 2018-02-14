@@ -1,10 +1,8 @@
 package searcher_interface;
 
-import pipe_game_server.PgLevel;
-import pipe_game_server.PgSearchable;
+import pipe_game_server.PgLevel; // only for test! this class is generic.
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Objects;
 
 public class State<T>  {
@@ -98,15 +96,15 @@ public class State<T>  {
         state6.setCameFrom(state4);
 
         System.out.println(state4.getCost() + "/" + state.getCost());
-        System.out.println("1. state equals state2? all (false): " + (state.equals(state2)));
-        System.out.println("2. state equals state3? chars (true): "+ (state.equals(state3)));
-        System.out.println("3. state equals state4? cost (false): "+ (state.equals(state4)));
-        System.out.println("4. state equals state5? camefrom (false): "+ (state.equals(state5)));
-        System.out.println("5. state5 equals state6? camefrom (true): "+ (state6.equals(state5)));
-
+        System.out.println("1. state equals state2? all (false): " + (state.equals(state2)) + "\t\t\t ~~> " + (!(state.equals(state2))));
+        System.out.println("2. state equals state3? chars (true): "+ (state.equals(state3)) + "\t\t\t ~~> " + ((state.equals(state3))));
+        System.out.println("3. state equals state4? cost (false): "+ (state.equals(state4)) + "\t\t\t ~~> " + (!(state.equals(state4))));
+        System.out.println("4. state equals state5? camefrom (false): "+ (state.equals(state5)) + "\t\t ~~> " + (!(state.equals(state5))));
+        System.out.println("5. state5 equals state6? camefrom (true): "+ (state6.equals(state5)) + "\t\t ~~> " + ((state6.equals(state5))));
+        System.out.println("6. state6 equals state5? camefrom (true): "+ (state5.equals(state6)) + "\t\t ~~> " + ((state5.equals(state6))));
         ArrayList<State> stateList = new ArrayList<>();
         stateList.add(state);
-        System.out.println("6. statelist contains? (true): "+stateList.contains(state3));
+        System.out.println("6. statelist contains? (true): "+stateList.contains(state3) + "\t\t\t\t\t ~~> " + stateList.contains(state3));
 
 
     }

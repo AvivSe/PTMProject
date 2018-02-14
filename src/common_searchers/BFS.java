@@ -39,6 +39,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
                } else {
                    ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
                    if (nextPossibleStates.isEmpty()) {
+                       System.out.println("BFS: No path.");
                        return null;
                    } else {
                        queue.addAll(nextPossibleStates);
@@ -49,4 +50,6 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
        }
        return null;
    }
+
+
 }

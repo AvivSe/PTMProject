@@ -111,7 +111,7 @@ public class PgDirections extends ArrayList<String> implements Directions {
         PgLevel source = PgLevel.LevelBuilder.build("LLL\nFFF\nJJJ\n777");
 
         Solution<PgLevel> sol = new Solution<>();
-        State<PgLevel> targerState = new State<PgLevel>(PgLevel.LevelBuilder.build("FJ7\nJ7F\n7LF\nLFJ"));
+        State<PgLevel> targerState = new State<PgLevel>(PgLevel.LevelBuilder.build("F7J\n7JL\nLF7\nJLF"));
         sol.add(targerState.getState());
         PgDirections directions = new PgDirections(sol, source);
 

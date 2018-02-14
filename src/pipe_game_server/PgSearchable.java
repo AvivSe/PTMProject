@@ -6,7 +6,6 @@ import searcher_interface.State;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 public class PgSearchable implements Searchable<PgLevel> {
     private boolean optimize;
@@ -38,7 +37,6 @@ public class PgSearchable implements Searchable<PgLevel> {
                     char c = level.getObject(i, j);
                     PgLevel lvlCopy = level.copy();
                     char toReplaceWith = ' ';
-
                     if (c != ' ' && c != 's' && c != 'g') {
                         switch (c) {
                             case '|':
@@ -63,7 +61,9 @@ public class PgSearchable implements Searchable<PgLevel> {
                         }
                         if (toReplaceWith != ' ') {
                             lvlCopy.setObject(i, j, toReplaceWith);
-                            possibleStates.add(new State<>(lvlCopy));
+                          // if(findStart(i,j,lvlCopy)) // optimization
+                               possibleStates.add(new State<>(lvlCopy));
+
                         }
                     }
                 }
@@ -83,153 +83,6 @@ public class PgSearchable implements Searchable<PgLevel> {
                 right(i, j, level) || left(i, j, level) || up(i, j, level) || down(i, j, level)
                 ) {
             return true;
-        }
-        return false;
-    }
-
-    private boolean canGoToStart(int i, int j, PgLevel original) {
-        // TODO: FIX THIS OPTIMIZATION
-        if (!optimize) {
-            return true;
-        }
-        PgLevel level = original.copy();
-        char c = level.getObject(i, j);
-        level.setObject(i,j , ' ');
-        switch (c) {
-            case 's':
-                return true;
-            case 'L':
-                if (up(i,j,level)) return canGoToStart(i-1, j, level);
-                else if (right(i,j,level)) return canGoToStart(i, j+1, level);
-                break;
-            case 'F':
-                if (right(i,j,level)) return canGoToStart(i, j+1, level);
-                else if (down(i,j,level)) return canGoToStart(i+1, j, level);
-            case '7':
-                if (down(i,j,level)) return canGoToStart(i+1, j, level);
-                else if (left(i,j,level)) return canGoToStart(i, j-1, level);
-            case 'J':
-                if (up(i,j,level)) return canGoToStart(i-1, j, level);
-                else if (left(i,j,level)) return canGoToStart(i, j-1, level);
-            case '|':
-                if (up(i,j,level)) return canGoToStart(i-1, j, level);
-                else if (down(i,j,level)) return canGoToStart(i+1, j, level);
-            case '-':
-                if (left(i,j,level)) return canGoToStart(i, j-1, level);
-                else if (right(i,j,level)) return canGoToStart(i, j+1, level);
-            case 'g':
-                if (up(i, j, level)) return canGoToStart(i-1, j, level);
-                if (right(i, j, level)) return canGoToStart(i, j+1, level);
-                if (down(i, j, level)) return canGoToStart(i+1, j, level);
-                if (left(i, j, level)) return canGoToStart(i, j-1, level);
-        }
-        return false;
-    }
-
-    public boolean isGoalState(State<PgLevel> state) {
-      PgLevel level = state.getState();
-      Point start = level.getStart();
-        return findGoal(start.x, start.y, level, CameFrom.start);
-
-//        Point goal = level.getGoal();
-//        return canGoToStart(goal.x, goal.y, state.getState());
-    }
-
-    private enum CameFrom {
-        up,right,down,left,start
-    }
-
-    private static boolean findGoal(int i, int j, PgLevel level, CameFrom cameFrom) {
-        try {
-            switch (level.getObject(i, j)) {
-                case 'g':
-                    return true;
-                case 's':
-                    switch (cameFrom) {
-                        case up:
-                            if (right(i, j, level)) return findGoal(i, j + 1, level, CameFrom.left);
-                            if (down(i, j, level)) return findGoal(i + 1, j, level, CameFrom.up);
-                            if (left(i, j, level)) return findGoal(i, j - 1, level, CameFrom.right);
-                            break;
-
-                        case right:
-                            if (up(i, j, level)) return findGoal(i - 1, j, level, CameFrom.down);
-                            if (down(i, j, level)) return findGoal(i + 1, j, level, CameFrom.up);
-                            if (left(i, j, level)) return findGoal(i, j - 1, level, CameFrom.right);
-                            break;
-
-                        case down:
-                            if (up(i, j, level)) return findGoal(i - 1, j, level, CameFrom.down);
-                            if (right(i, j, level)) return findGoal(i, j + 1, level, CameFrom.left);
-                            if (left(i, j, level)) return findGoal(i, j - 1, level, CameFrom.right);
-                            break;
-
-                        case left:
-                            if (up(i, j, level)) return findGoal(i - 1, j, level, CameFrom.down);
-                            if (right(i, j, level)) return findGoal(i, j + 1, level, CameFrom.left);
-                            if (down(i, j, level)) return findGoal(i + 1, j, level, CameFrom.up);
-                            break;
-
-                        case start:
-                            if (up(i, j, level)) return findGoal(i - 1, j, level, CameFrom.down);
-                            if (right(i, j, level)) return findGoal(i, j + 1, level, CameFrom.left);
-                            if (down(i, j, level)) return findGoal(i + 1, j, level, CameFrom.up);
-                            if (left(i, j, level)) return findGoal(i, j - 1, level, CameFrom.right);
-                            break;
-                    }
-                    break;
-                case 'F':
-                    if (cameFrom == CameFrom.down)
-                        if (right(i, j, level)) return findGoal(i, j + 1, level, CameFrom.left);
-                        else return findGoal(i, j, level, CameFrom.up);
-                    if (cameFrom == CameFrom.right)
-                        if (down(i, j, level)) return findGoal(i + 1, j, level, CameFrom.up);
-                        else return findGoal(i, j, level, CameFrom.left);
-                    break;
-                case 'J':
-                    if (cameFrom == CameFrom.left)
-                        if (up(i, j, level)) return findGoal(i - 1, j, level, CameFrom.down);
-                        else return findGoal(i, j, level, CameFrom.right);
-                    if (cameFrom == CameFrom.up)
-                        if (left(i, j, level)) return findGoal(i, j - 1, level, CameFrom.right);
-                        else return findGoal(i, j, level, CameFrom.down);
-                    break;
-                case '7':
-                    if (cameFrom == CameFrom.left)
-                        if (down(i, j, level)) return findGoal(i + 1, j, level, CameFrom.up);
-                        else return findGoal(i, j, level, CameFrom.right);
-                    if (cameFrom == CameFrom.down)
-                        if (left(i, j, level)) return findGoal(i, j - 1, level, CameFrom.right);
-                        else return findGoal(i, j, level, CameFrom.up);
-                    break;
-                case 'L':
-                    if (cameFrom == CameFrom.right)
-                        if (up(i, j, level)) return findGoal(i - 1, j, level, CameFrom.down);
-                        else return findGoal(i, j, level, CameFrom.left);
-                    if (cameFrom == CameFrom.up)
-                        if (right(i, j, level)) return findGoal(i, j + 1, level, CameFrom.left);
-                        else return findGoal(i, j, level, CameFrom.down);
-                    break;
-                case '-':
-                    if (cameFrom == CameFrom.right)
-                        if (left(i, j, level)) return findGoal(i, j - 1, level, CameFrom.right);
-                        else return findGoal(i, j, level, CameFrom.left);
-                    if (cameFrom == CameFrom.left)
-                        if (right(i, j, level)) return findGoal(i, j + 1, level, CameFrom.left);
-                        else return findGoal(i, j, level, CameFrom.right);
-                    break;
-                case '|':
-                    if (cameFrom == CameFrom.down)
-                        if (up(i, j, level)) return findGoal(i - 1, j, level, CameFrom.down);
-                        else return findGoal(i, j, level, CameFrom.up);
-                    if (cameFrom == CameFrom.up)
-                        if (down(i, j, level)) return findGoal(i + 1, j, level, CameFrom.up);
-                        else return findGoal(i, j, level, CameFrom.down);
-                    break;
-
-            }
-        } catch(IndexOutOfBoundsException | StackOverflowError error) {
-
         }
         return false;
     }
@@ -298,27 +151,123 @@ public class PgSearchable implements Searchable<PgLevel> {
         return false;
     }
 
+    public boolean isGoalState(State<PgLevel> state) {
+        PgLevel level = state.getState();
+        Point start = level.getStart();
+        return findGoal(start  .x, start.y, level);
+    }
+    private static boolean findGoal(int i, int j, PgLevel level) {
+        level = level.copy();
+        char c = level.getObject(i, j);
+        level.setObject(i, j, ' ');
+        switch (c) {
+            case 'g':
+                return true;
+            case 's':
+                return  up(i, j, level) && findGoal(i - 1, j, level) ||
+                        down(i, j, level) && findGoal(i + 1, j, level) ||
+                        right(i, j, level) && findGoal(i, j + 1, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            case '|':
+                return  up(i, j, level) && findGoal(i - 1, j, level) ||
+                        down(i, j, level) && findGoal(i + 1, j, level);
+            case '-':
+                return  right(i, j, level) && findGoal(i, j + 1, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            case 'L':
+                return  up(i, j, level) && findGoal(i - 1, j, level) ||
+                        right(i, j, level) && findGoal(i, j + 1, level);
+            case 'F':
+                return  down(i, j, level) && findGoal(i + 1, j, level) ||
+                        right(i, j, level) && findGoal(i, j + 1, level);
+            case '7':
+                return  down(i, j, level) && findGoal(i + 1, j, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            case 'J':
+                return  up(i, j, level) && findGoal(i - 1, j, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            default:
+                return false;
+        }
+    }
+
+    private static boolean findStart(int i, int j, PgLevel level) {
+        level = level.copy();
+        char c = level.getObject(i, j);
+        level.setObject(i, j, ' ');
+        switch (c) {
+            case 's':
+                return true;
+            case 'g':
+                return  up(i, j, level) && findStart(i - 1, j, level) ||
+                        down(i, j, level) && findStart(i + 1, j, level) ||
+                        right(i, j, level) && findStart(i, j + 1, level) ||
+                        left(i, j, level) && findStart(i, j - 1, level);
+            case '|':
+                return  up(i, j, level) && findStart(i - 1, j, level) ||
+                        down(i, j, level) && findStart(i + 1, j, level);
+            case '-':
+                return  right(i, j, level) && findStart(i, j + 1, level) ||
+                        left(i, j, level) && findStart(i, j - 1, level);
+            case 'L':
+                return  up(i, j, level) && findStart(i - 1, j, level) ||
+                        right(i, j, level) && findStart(i, j + 1, level);
+            case 'F':
+                return  down(i, j, level) && findStart(i + 1, j, level) ||
+                        right(i, j, level) && findStart(i, j + 1, level);
+            case '7':
+                return  down(i, j, level) && findStart(i + 1, j, level) ||
+                        left(i, j, level) && findStart(i, j - 1, level);
+            case 'J':
+                return  up(i, j, level) && findStart(i - 1, j, level) ||
+                        left(i, j, level) && findStart(i, j - 1, level);
+            default:
+                return false;
+        }
+    }
+
 
     public static void main(String[] args) {
         PgLevel level = PgLevel.LevelBuilder.build(
-                "s-7 \n" +
-                         " |L7\n" +
-                         "-F |\n" +
-                         "7F-J\n" +
-                         " g -");
+                "s-F \n" +
+                        " |L7\n" +
+                        "-F |\n" +
+                        "7F-J\n" +
+                        " g -");
 
         System.out.println(level);
-
+        /* Is goals state + time */
         PgSearchable searchable = new PgSearchable(level);
 
+//        long startTime = System.nanoTime();
+//        System.out.println(searchable.isGoalState(new State<PgLevel>(level)));
+//        long endTime = System.nanoTime();
+//        long duration = (endTime - startTime);
+//        Long ms = duration / 1000000;
+//        Double sec = (double) duration / 1000000000.0;
+//        System.out.println("isGoalState took: " + ms + "ms" + " ("+sec+"sec)");
+
+        System.out.println("---------------------------");
+
+        long startTime2 = System.nanoTime();
         System.out.println(searchable.isGoalState(new State<PgLevel>(level)));
+        long endTime2 = System.nanoTime();
+        long duration2 = (endTime2 - startTime2);
+        Long ms2 = duration2 / 1000000;
+        Double sec2 = (double) duration2 / 1000000000.0;
 
-        ArrayList<State<PgLevel>> list = searchable.getPossibleStates(new State<>(level));
+        System.out.println("isGoalState took: " + ms2 + "ms" + " ("+sec2+"sec)");
 
-        for(State<PgLevel> item: list) {
-            System.out.println(item);
-            System.out.println();
-        }
+        System.out.println(findStart(3,1,level));
+
+        /* Print only next possible states */
+//        ArrayList<State<PgLevel>> list = searchable.getPossibleStates(new State<>(level));
+//        for(State<PgLevel> item: list) {
+//            System.out.println(item);
+//            System.out.println();
+//        }
 
     }
+
+
 }
