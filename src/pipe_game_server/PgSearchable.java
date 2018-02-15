@@ -5,6 +5,7 @@ import searcher_interface.Searchable;
 import searcher_interface.State;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class PgSearchable implements Searchable<PgLevel> {
@@ -28,46 +29,45 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     @Override
     public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
-        ArrayList<State<PgLevel>> possibleStates= new ArrayList<>();
-
+        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
         PgLevel level = state.getState();
+
+
 
         for(int i = 0; i < level.getNumOfRows(); i++) {
             for (int j = 0; j < level.getNumOfCol(); j++) {
-                    char c = level.getObject(i, j);
-                    PgLevel lvlCopy = level.copy();
-                    char toReplaceWith = ' ';
-                    if (c != ' ' && c != 's' && c != 'g') {
-                        switch (c) {
-                            case '|':
-                                toReplaceWith = '-';
-                                break;
-                            case '-':
-                                toReplaceWith = '|';
-                                break;
-                            case 'L':
-                                toReplaceWith = 'F';
-                                break;
-                            case 'F':
-                                toReplaceWith = '7';
-                                break;
-                            case '7':
-                                toReplaceWith = 'J';
-                                break;
-                            case 'J':
-                                toReplaceWith = 'L';
-                                break;
+                char c = level.getObject(i, j);
+                char toReplaceWith = ' ';
+                if (c != ' ' && c != 's' && c != 'g') {
+                    switch (c) {
+                        case '|':
+                            toReplaceWith = '-';
+                            break;
+                        case '-':
+                            toReplaceWith = '|';
+                            break;
+                        case 'L':
+                            toReplaceWith = 'F';
+                            break;
+                        case 'F':
+                            toReplaceWith = '7';
+                            break;
+                        case '7':
+                            toReplaceWith = 'J';
+                            break;
+                        case 'J':
+                            toReplaceWith = 'L';
+                            break;
 
-                        }
-                        if (toReplaceWith != ' ') {
-                            lvlCopy.setObject(i, j, toReplaceWith);
-                          // if(findStart(i,j,lvlCopy)) // optimization
-                               possibleStates.add(new State<>(lvlCopy));
-
-                        }
+                    }
+                    if (canDoSomeOneNextStep(i,j, level,toReplaceWith)) {
+                        PgLevel lvlCopy = level.copy();
+                        lvlCopy.setObject(i, j, toReplaceWith);
+                        possibleStates.add(new State<>(lvlCopy));
                     }
                 }
             }
+        }
         return possibleStates;
     }
     private boolean canDoSomeOneNextStep(int i, int j,PgLevel level , char toReplaceWith) {
@@ -191,45 +191,11 @@ public class PgSearchable implements Searchable<PgLevel> {
         }
     }
 
-    private static boolean findStart(int i, int j, PgLevel level) {
-        level = level.copy();
-        char c = level.getObject(i, j);
-        level.setObject(i, j, ' ');
-        switch (c) {
-            case 's':
-                return true;
-            case 'g':
-                return  up(i, j, level) && findStart(i - 1, j, level) ||
-                        down(i, j, level) && findStart(i + 1, j, level) ||
-                        right(i, j, level) && findStart(i, j + 1, level) ||
-                        left(i, j, level) && findStart(i, j - 1, level);
-            case '|':
-                return  up(i, j, level) && findStart(i - 1, j, level) ||
-                        down(i, j, level) && findStart(i + 1, j, level);
-            case '-':
-                return  right(i, j, level) && findStart(i, j + 1, level) ||
-                        left(i, j, level) && findStart(i, j - 1, level);
-            case 'L':
-                return  up(i, j, level) && findStart(i - 1, j, level) ||
-                        right(i, j, level) && findStart(i, j + 1, level);
-            case 'F':
-                return  down(i, j, level) && findStart(i + 1, j, level) ||
-                        right(i, j, level) && findStart(i, j + 1, level);
-            case '7':
-                return  down(i, j, level) && findStart(i + 1, j, level) ||
-                        left(i, j, level) && findStart(i, j - 1, level);
-            case 'J':
-                return  up(i, j, level) && findStart(i - 1, j, level) ||
-                        left(i, j, level) && findStart(i, j - 1, level);
-            default:
-                return false;
-        }
-    }
 
 
     public static void main(String[] args) {
         PgLevel level = PgLevel.LevelBuilder.build(
-                "s-F \n" +
+                "s-7 \n" +
                         " |L7\n" +
                         "-F |\n" +
                         "7F-J\n" +
@@ -258,7 +224,6 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         System.out.println("isGoalState took: " + ms2 + "ms" + " ("+sec2+"sec)");
 
-        System.out.println(findStart(3,1,level));
 
         /* Print only next possible states */
 //        ArrayList<State<PgLevel>> list = searchable.getPossibleStates(new State<>(level));

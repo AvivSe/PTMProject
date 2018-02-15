@@ -18,10 +18,10 @@ public class PgSolver implements Solver {
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
         PgLevel level = PgLevel.LevelBuilder.build(
-                "s-J \n" +
-                        " |L7\n" +
-                        "-F |\n" +
-                        "7F-J\n" +
+                "s|F \n" +
+                        " L77\n" +
+                        "LF |\n" +
+                        " 7-7\n" +
                         " g -");
 
         System.out.println("You ask for solution to: ");
