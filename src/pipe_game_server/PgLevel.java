@@ -1,29 +1,38 @@
 package pipe_game_server;
 
-
 import java.awt.*;
-import java.awt.geom.Point2D;
-import java.lang.invoke.LambdaConversionException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class PgLevel {
     private char[][] matrix;
+    Point position;
+
+
     public char[][] getMatrix() {
         return matrix;
     }
 
     public PgLevel(char[][] data) {
         this.matrix = data.clone();
+        this.position = getStart();
+    }
+
+    public PgLevel(PgLevel level) {
+        this.matrix = new char[level.getNumOfRows()][level.getNumOfCol()];
+
+        for (int i = 0; i < getNumOfRows(); i++) {
+            for (int j = 0; j < getNumOfCol(); j++) {
+                this.matrix[i][j] = level.matrix[i][j];
+            }
+        }
+        this.position = new Point(level.position.x, level.position.y);
     }
 
     public PgLevel(int numRows, int numColumns) {
         this.matrix = new char[numRows][numColumns];
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -35,7 +44,8 @@ public class PgLevel {
                 }
             }
         }
-        return true;
+
+        return position.x == ((PgLevel) o).position.x && position.y == ((PgLevel) o).position.y;
     }
 
 
@@ -43,9 +53,14 @@ public class PgLevel {
         this.matrix[row][column] = c;
     }
 
-    public char getObject(int row, int column) {
-        return this.matrix[row][column];
+    public void setObjectOnPosition(char c) {
+        this.matrix[position.x][position.y] = c;
     }
+
+    public char getObject(int row, int column) {
+            return this.matrix[row][column];
+    }
+
 
     @Override
     public String toString() {
@@ -90,6 +105,54 @@ public class PgLevel {
         return null;
     }
 
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(position);
+        result = 31 * result + Arrays.hashCode(matrix);
+        return result;
+    }
+
+//    private boolean findPaths(int i, int j) {
+//
+//        char c = getObject(i, j);
+//        setObject(i, j, ' ');
+//
+//        boolean tmp;
+//
+//        switch (c) {
+//            case 'g':
+//                return true;
+//            case 's':
+//                tmp = up(i, j, this) && findPaths(i - 1, j) ||
+//                        down(i, j, this) && findPaths(i + 1, j) ||
+//                        right(i, j, this) && findPaths(i, j + 1) ||
+//                        left(i, j, this) && findPaths(i, j - 1);
+//                if (tmp) switchPotenitial(i,j);
+//                return tmp;
+//            case '|':
+//                return  up(i, j, this) && findPaths(i - 1, j) ||
+//                        down(i, j, this) && findPaths(i + 1, j);
+//            case '-':
+//                return  right(i, j, this) && findPaths(i, j + 1) ||
+//                        left(i, j, this) && findPaths(i, j - 1);
+//            case 'L':
+//                return  up(i, j, this) && findPaths(i - 1, j) ||
+//                        right(i, j, this) && findPaths(i, j + 1);
+//            case 'F':
+//                return  down(i, j, this) && findPaths(i + 1, j) ||
+//                        right(i, j, this) && findPaths(i, j + 1);
+//            case '7':
+//                return  down(i, j, this) && findPaths(i + 1, j) ||
+//                        left(i, j, this) && findPaths(i, j - 1);
+//            case 'J':
+//                return  up(i, j, this) && findPaths(i - 1, j) ||
+//                        left(i, j, this) && findPaths(i, j - 1);
+//            default:
+//                return false;
+//        }
+//    }
+
 //    interface FunciMonkey {
 //        void action(Object obj);
 //    }
@@ -127,6 +190,8 @@ public class PgLevel {
                     result.matrix[i][j] = chars[j];
                 }
             }
+
+            result.position = result.getStart();
             return result;
         }
     }
@@ -141,12 +206,35 @@ public class PgLevel {
             stringBuilder.append("\n");
         }
         String result = stringBuilder.toString();
-        return LevelBuilder.build(result.substring(0, result.length()-1));
+        PgLevel copied = LevelBuilder.build(result.substring(0, result.length()-1));
+        return copied;
+    }
+
+    protected PgLevel copy(Point newPosition) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(char[] line: this.getMatrix()) {
+            for(char c: line) {
+                stringBuilder.append(c);
+            }
+            stringBuilder.append("\n");
+        }
+
+        position = new Point(5,5);
+
+        String result = stringBuilder.toString();
+        PgLevel copied = LevelBuilder.build(result.substring(0, result.length()-1));
+        return copied;
     }
 
     public static void main(String[] args) {
         PgLevel level = LevelBuilder.build("s-7\n|-g");
         System.out.println(level);
+
+       // level.findPaths(0,0);
+
+
+
         //System.out.println(level.getStart());
         //System.out.println(level.getGoal());
     }

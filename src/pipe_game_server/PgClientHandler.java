@@ -29,10 +29,9 @@ public class PgClientHandler implements ClientHandler {
         PgLevel request = PgLevel.LevelBuilder.build(tmp);
         System.out.println("Client ask for directions to level: \n"  + tmp);
 
-
         try {
-            out.write(this.cacheManager.load(tmp).toString());
-            System.out.println("Cache said: I have it in files :)");
+                out.write(this.cacheManager.load(tmp).toString());
+                System.out.println("Cache said: I have it in files :)");
         } catch (NullPointerException error) {
             try {
                 System.out.println("Solver said: maybe I can solve it :)");

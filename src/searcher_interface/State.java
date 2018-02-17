@@ -3,13 +3,15 @@ package searcher_interface;
 import pipe_game_server.PgLevel; // only for test! this class is generic.
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 
 public class State<T>  {
-
     private T state;
     private State<T> cameFrom;
     private double cost;
+
 
     public State(T state, State<T> cameFrom, double cost) {
         this.state = state;
@@ -60,7 +62,6 @@ public class State<T>  {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(state, cameFrom, cost);
     }
 
@@ -85,14 +86,14 @@ public class State<T>  {
 //        System.out.println(searchable.getPossibleStates(state));
 
         /* Equals test: */
-        State<PgLevel> state = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L"));
-        State<PgLevel> state2 = new State<PgLevel>(PgLevel.LevelBuilder.build("s|L"));
-        State<PgLevel> state3 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L"));
-        State<PgLevel> state4 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L"));
+        State<PgLevel> state = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L\nJ-g"));
+        State<PgLevel> state2 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L\nJ|g"));
+        State<PgLevel> state3 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L\nJ-g"));
+        State<PgLevel> state4 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L\nJ-g"));
         state4.setCost(5);
-        State<PgLevel> state5 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L"));
+        State<PgLevel> state5 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L\nJ-g"));
         state5.setCameFrom(state4);
-        State<PgLevel> state6 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L"));
+        State<PgLevel> state6 = new State<PgLevel>(PgLevel.LevelBuilder.build("s-L\nJ-g"));
         state6.setCameFrom(state4);
 
         System.out.println(state4.getCost() + "/" + state.getCost());
@@ -104,10 +105,11 @@ public class State<T>  {
         System.out.println("6. state6 equals state5? camefrom (true): "+ (state5.equals(state6)) + "\t\t ~~> " + ((state5.equals(state6))));
         ArrayList<State> stateList = new ArrayList<>();
         stateList.add(state);
-        System.out.println("6. statelist contains? (true): "+stateList.contains(state3) + "\t\t\t\t\t ~~> " + stateList.contains(state3));
+        System.out.println("6. state list contains? (true): "+stateList.contains(state3) + "\t\t\t\t\t ~~> " + stateList.contains(state3));
 
 
     }
 
 
 }
+

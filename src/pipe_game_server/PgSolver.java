@@ -11,19 +11,24 @@ public class PgSolver implements Solver {
     // TODO: create algorithms that implements Searcher.
     @Override
     public PgDirections solve(PgLevel level) {
-        Searcher<PgLevel> searcher = new BFS<>();
+        //Searcher<PgLevel> searcher = new BFS<>();
+        Searcher<PgLevel> searcher = new DFS<>();
         return new PgDirections(searcher.search(new PgSearchable(level,true)), level);
     }
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
         PgLevel level = PgLevel.LevelBuilder.build(
-                "s|F \n" +
-                        " L77\n" +
-                        "LF |\n" +
-                        " 7-7\n" +
+                "s|J \n" +
+                        "--F7\n" +
+                        "-L |\n" +
+                        "7F|L\n" +
                         " g -");
-
+//        "s|F \n" +
+//                " L77\n" +
+//                "LF |\n" +
+//                " 7-7\n" +
+//                " g -"
         System.out.println("You ask for solution to: ");
         System.out.println(level);
 

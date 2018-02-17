@@ -16,14 +16,8 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
 
     @Override
     public Solution search(Searchable<T> searchable) {
-        System.out.println("DFS took it on him..");
         long startTime = System.nanoTime();
         State<T> initialState = searchable.getInitialState();
-
-        // CHECK IF INITIAL STATE IS THE GOAL //
-        if(searchable.isGoalState(initialState)) {
-            return backtrace(initialState);
-        }
 
         ArrayList<State<T>> visited = new ArrayList<>();
         Stack<State<T>> stack = new Stack<>();
@@ -32,19 +26,17 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
         visited.add(initialState);
 
         while(!stack.isEmpty()) {
-            State<T> node = (State<T>) stack.peek();
-            if(searchable.isGoalState(node)) {
-                return backtrace(node);
+            State<T> state = stack.pop();
+            if(searchable.isGoalState(state)) {
+                return backtrace(state);
             }
 
-            ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(node);
-
-                for (State<T> child : searchable.getPossibleStates(node)) {
-                    if (!visited.contains(child)) {
-                        visited.add(child);
-                        stack.push(child);
-                    }
+            for (State<T> neighbor : searchable.getPossibleStates(state)) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    stack.push(neighbor);
                 }
+            }
 
         }
 
