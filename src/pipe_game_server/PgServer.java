@@ -1,10 +1,9 @@
+/**
+ * PgServer - This class implements server for Pipe Game.
+ * Aviv Segal 12/2017
+ */
 
 package pipe_game_server;
-//TODO: In whole project, use LOGGER!
-//TODO: Using JUNIT to biild testing for the project
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 import adminstrator.MyAdministrator;
 import game_server_interface.ClientHandler;
@@ -16,14 +15,14 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class PgServer implements Server {
-   // private final Logger LOGGER = LoggerFactory.getLogger(MyServer.class);
+
 
     @Override
     public void start(ClientHandler clientHandler) throws IOException {
         this.server = new ServerSocket(port);
         stop = false;
         System.out.println("Server is alive and running on port " + server.getLocalPort());
-       // LOGGER.info("Server is alive and running on port {}", server.getLocalPort());
+
         server.setSoTimeout(1000);
 
         new Thread(()-> {
@@ -76,8 +75,8 @@ public class PgServer implements Server {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         PgServer myServer = new PgServer(6400);
-        //myServer.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
-        new MyAdministrator(myServer, new PgClientHandler(new PgSolver(),new PgCacheManager())).gui();
+        myServer.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
+        //new MyAdministrator(myServer, new PgClientHandler(new PgSolver(),new PgCacheManager())).gui();
     }
 
 }

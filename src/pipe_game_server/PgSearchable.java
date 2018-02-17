@@ -1,34 +1,37 @@
+/**
+ * In order to use my abstract algorithms, I created an object adapter to my Pipe Game problem.
+ * This class is kind of the heart of this project, this is the bridge between the Pipe Game problem and -
+ * - the "Black Box" algorithms classes.
+ * Aviv Segal
+ */
 package pipe_game_server;
-
 import searcher_interface.Searchable;
 import searcher_interface.State;
-
 import java.awt.*;
 import java.util.*;
 
 public class PgSearchable implements Searchable<PgLevel> {
-    private boolean optimize;
     private State<PgLevel> initialState;
-    static ArrayList<State<PgLevel>> pool = new ArrayList<>();
+    private static HashMap<Integer, State<PgLevel>> pool = new HashMap<>();
 
 
-    public PgSearchable(PgLevel level) {
-        this.optimize = false;
+    PgSearchable(PgLevel level) {
         this.initialState = new State<>(level);
     }
-    PgSearchable(PgLevel level, boolean optimize) {
-        this.optimize = optimize;
-        this.initialState = new State<>(level);
-    }
+
 
     @Override
     public State<PgLevel> getInitialState() {
         return initialState;
     }
 
-    public void AnalyzePossibleState(ArrayList<State<PgLevel>> list, State<PgLevel> state, Point position, String move) {
-        if (position.x < 0 || position.x >= state.getState().getNumOfRows() ||
-                position.y < 0 || position.y >= state.getState().getNumOfCol())
+    private boolean isOutOfBound(int i, int j) {
+        return (i < 0 || i >= initialState.getState().getNumOfRows() ||
+                j < 0 || j >= initialState.getState().getNumOfCol());
+    }
+
+    private void AnalyzePossibleState(ArrayList<State<PgLevel>> list, State<PgLevel> state, Point position, String move) {
+        if (isOutOfBound(position.x, position.y))
             return;
 
         PgLevel level = state.getState();
@@ -112,8 +115,12 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         while(!queue.isEmpty()) {
             State<PgLevel> current = queue.remove();
-            if (!pool.contains(current)) {
+            if (!pool.containsKey(current.hashCode())) {
+                current.setCameFrom(state);
+                pool.put(current.hashCode(), current);
                 list.add(current);
+            } else {
+                list.add(pool.get(current.hashCode()));
             }
         }
     }
@@ -123,6 +130,8 @@ public class PgSearchable implements Searchable<PgLevel> {
         ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
         int row = state.getState().position.x;
         int col = state.getState().position.y;
+
+        //        pool.add(state);
 
         for (String move : nextSteps(state.getState())) {
             switch (move) {
@@ -140,25 +149,13 @@ public class PgSearchable implements Searchable<PgLevel> {
                     break;
             }
         }
-            return possibleStates;
+
+//        for(State<PgLevel> s: possibleStates) {
+//            s.setCameFrom(state);
+//        }
+        return possibleStates;
     }
 
-    private boolean canDoSomeOneNextStep(int i, int j,PgLevel level , char toReplaceWith) {
-        if (!optimize) return true;
-        if (
-        toReplaceWith == '7' && (left(i, j, level) || down(i, j, level)) ||
-                toReplaceWith == 'J' && (up(i, j, level) || left(i, j, level)) ||
-                toReplaceWith == 'F' && (right(i, j, level) || down(i, j, level)) ||
-                toReplaceWith == 'L' && (right(i, j, level) || up(i, j, level)) ||
-                toReplaceWith == '-' && (right(i, j, level) || left(i, j, level)) ||
-                toReplaceWith == '|' && (up(i, j, level) || down(i, j, level)) ||
-                /* FOR ANYTHING ELSE, check if you can go somewhere. */
-                right(i, j, level) || left(i, j, level) || up(i, j, level) || down(i, j, level)
-                ) {
-            return true;
-        }
-        return false;
-    }
 
     private ArrayList<String> nextSteps(PgLevel level) {
 
@@ -204,9 +201,9 @@ public class PgSearchable implements Searchable<PgLevel> {
         return result;
     }
 
-    static boolean up(int i, int j, PgLevel level) {
-        try {
-            switch (level.getObject(i-1,j)) {
+    private boolean up(int i, int j, PgLevel level) {
+        if(!isOutOfBound(i-1,j)) {
+            switch (level.getObject(i - 1, j)) {
                 case '7':
                 case '|':
                 case 'F':
@@ -214,57 +211,49 @@ public class PgSearchable implements Searchable<PgLevel> {
                 case 's':
                     return true;
             }
-        } catch (IndexOutOfBoundsException | StackOverflowError error) {
-            //System.out.println(error.getMessage());
         }
         return false;
     }
 
-    static boolean right(int i, int j, PgLevel level) {
-        try {
-            switch (level.getObject(i,j+1)) {
-                case '7':
-                case 'J':
-                case '-':
-                case 'g':
-                case 's':
-                    return true;
-            }
-        } catch (IndexOutOfBoundsException | StackOverflowError error) {
-            //System.out.println(error.getMessage());
-        }
+     private boolean right(int i, int j, PgLevel level) {
+         if(!isOutOfBound(i,j + 1)) {
+             switch (level.getObject(i, j + 1)) {
+                 case '7':
+                 case 'J':
+                 case '-':
+                 case 'g':
+                 case 's':
+                     return true;
+             }
+         }
         return false;
     }
 
-    static boolean left(int i, int j, PgLevel level) {
-        try {
-            switch (level.getObject(i,j-1)) {
-                case 'F':
-                case 'L':
-                case '-':
-                case 'g':
-                case 's':
-                    return true;
-            }
-        } catch (IndexOutOfBoundsException | StackOverflowError error) {
-            //System.out.println(error.getMessage());
-        }
+     private boolean left(int i, int j, PgLevel level) {
+         if(!isOutOfBound(i,j-1)) {
+             switch (level.getObject(i, j - 1)) {
+                 case 'F':
+                 case 'L':
+                 case '-':
+                 case 'g':
+                 case 's':
+                     return true;
+             }
+         }
         return false;
     }
 
-    static boolean down(int i, int j, PgLevel level) {
-        try {
-            switch (level.getObject(i+1,j)) {
-                case 'J':
-                case 'L':
-                case '|':
-                case 'g':
-                case 's':
-                    return true;
-            }
-        } catch (IndexOutOfBoundsException | StackOverflowError error) {
-            //System.out.println(error);
-        }
+     private boolean down(int i, int j, PgLevel level) {
+         if(!isOutOfBound(i+1,j)) {
+             switch (level.getObject(i + 1, j)) {
+                 case 'J':
+                 case 'L':
+                 case '|':
+                 case 'g':
+                 case 's':
+                     return true;
+             }
+         }
         return false;
     }
 
@@ -273,7 +262,7 @@ public class PgSearchable implements Searchable<PgLevel> {
         Point start = level.getStart();
         return findGoal(start.x, start.y, level);
     }
-    private static boolean findGoal(int i, int j, PgLevel level) {
+    private boolean findGoal(int i, int j, PgLevel level) {
         level = level.copy();
         char c = level.getObject(i, j);
         level.setObject(i, j, ' ');
@@ -312,24 +301,11 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     public static void main(String[] args) {
         PgLevel level = PgLevel.LevelBuilder.build(
-                "J-F-7   J-|-J   \n" +
-                        " -g L-7  -7 L-7 \n" +
-                        "-|L7-|L-7|L7-|L7\n" +
-                        "-F |-F ||F |-F |\n" +
-                        "-F-J7F-J|F-J7F-J\n" +
-                        "J||-JLL-L-7- J -\n" +
-                        "J-|-J F J-|-JF  \n" +
-                        " -7 L-7JL-L-7-7 \n" +
-                        "-|L7-|L7-|L7||L7\n" +
-                        "-F |-F-|-FJ||F |\n" +
-                        "-F-J7F-J-F-JL7-J\n" +
-                        "J||-   -J||- s -");
+                "s||g");
 
         System.out.println(level);
         /* Is goals state + time */
         PgSearchable searchable = new PgSearchable(level);
-
-
 
         long startTime = System.nanoTime();
         System.out.println(searchable.isGoalState(new State<>(level)));
@@ -371,25 +347,18 @@ public class PgSearchable implements Searchable<PgLevel> {
 //            }
 //        }
 
-//        /* next steps test */
-//        for(String str: searchable.nextSteps(level)) {
-//            System.out.println(str);
-//        }
+        /* next steps test */
+        for(String str: searchable.nextSteps(level)) {
+            System.out.println(str);
+        }
 
+        State<PgLevel> state = new State<>(level);
+        System.out.println(state.getCameFrom());
 
-
-//        level.position = new Point(1,2);
-//        for(State<PgLevel> state: searchable.getPossibleStates(new State<>(level))) {
-//            System.out.println("**"+ state.getState().position +"****");
-//            System.out.println(state.getState());
-//            for(State<PgLevel> state2: searchable.getPossibleStates(new State<>(state.getState()))) {
-//                System.out.println("**"+ state2.getState().position +"****");
-//                System.out.println(state2.getState());
-//                if(searchable.isGoalState(state2)) {
-//                    System.out.println("Goooal");
-//                }
-//            }
-//        }
+        for(State<PgLevel> s: searchable.getPossibleStates(state)) {
+            System.out.println(s.getState());
+            System.out.println(s.getCameFrom().getState().position);
+        }
 
 
     }

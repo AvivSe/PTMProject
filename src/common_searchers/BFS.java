@@ -29,7 +29,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
                     long duration = (endTime - startTime);
                     Long ms = duration / 1000000;
                     Double sec = (double) duration / 1000000000.0;
-
+                    System.out.println("BFS GOAL: " + ms + "ms " +sec+"sec");
                     return backtrace(current);
                 } else {
                     ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);

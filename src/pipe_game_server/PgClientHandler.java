@@ -12,6 +12,8 @@ import game_server_interface.Solver;
  * The purpose of this kind of ClientHandler is to solve level in our Pipe-Game Project,
  * We adapt some algorithms for this goal, using our levels solver,
  * old requests (and their solutions) are stored in the cache manager.
+ *
+ * Aviv Segal
  */
 public class PgClientHandler implements ClientHandler {
     @Override

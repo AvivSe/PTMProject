@@ -1,3 +1,4 @@
+
 package common_searchers;
 
 import searcher_interface.Searchable;

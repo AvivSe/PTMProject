@@ -1,3 +1,8 @@
+/**
+ * In case client request solution that already request in past, it will found on files.
+ * Aviv Segal
+ */
+
 package pipe_game_server;
 
 import game_server_interface.CacheManager;
@@ -18,7 +23,7 @@ public class PgCacheManager implements CacheManager {
 
             return directions;
             } catch (FileNotFoundException e) {
-            System.out.println("Cache said: I don't have it :(\n");
+            System.out.println("Cache: Don't have it in DB.\n");
         }
         return null;
     }
@@ -36,6 +41,5 @@ public class PgCacheManager implements CacheManager {
         path = "./db/";
         new File(path).mkdirs();
     }
-    // TODO: Dont load whole solutions to memory. keep it on files and load specific solution when asked. in addition, it better save eace solution in sperated file.
-    // TODO: save on HDD, but create hash map for session
+
 }

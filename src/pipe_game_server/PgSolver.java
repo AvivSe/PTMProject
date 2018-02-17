@@ -1,19 +1,23 @@
-package pipe_game_server;
-// TODO: Problem may be a class.
+/**
+ * PgSolver - This class implements solver for Pipe Game.
+ * Solver may use algorithms as BFS / DFS / Best-FirstSearch / A Star / HillClimbing
+ * In my project I use those abstract algorithms, adjacent to their pseudo code.
+ * The idea is to use those alg' as a black box, we only have to create the right adapter in order to use them.
+ * Aviv Segal 12/2017
+ */
 
-import common_searchers.BFS;
-import common_searchers.DFS;
+package pipe_game_server;
+
+import common_searchers.*;
 import searcher_interface.*;
 import game_server_interface.Solver;
 
 public class PgSolver implements Solver {
-
-    // TODO: create algorithms that implements Searcher.
     @Override
     public PgDirections solve(PgLevel level) {
-        //Searcher<PgLevel> searcher = new BFS<>();
-        Searcher<PgLevel> searcher = new DFS<>();
-        return new PgDirections(searcher.search(new PgSearchable(level,true)), level);
+        Searcher<PgLevel> searcher = new BFS<>();
+        //Searcher<PgLevel> searcher = new DFS<>();
+        return new PgDirections(searcher.search(new PgSearchable(level)), level);
     }
 
     public static void main(String[] args) {
@@ -24,11 +28,7 @@ public class PgSolver implements Solver {
                         "-L |\n" +
                         "7F|L\n" +
                         " g -");
-//        "s|F \n" +
-//                " L77\n" +
-//                "LF |\n" +
-//                " 7-7\n" +
-//                " g -"
+
         System.out.println("You ask for solution to: ");
         System.out.println(level);
 

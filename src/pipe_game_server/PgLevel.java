@@ -1,3 +1,10 @@
+/**
+ * This class describes my Pipe Game problem.
+ * in this game we have water flow from 's' to 'g', its a n*m grid and the water have to flow trow the pipes.
+ * so in this case, Position symbols the location in the grid of the water, to describe various of 'states' we -
+ * can both rotate the pipe and change the position.
+ * Aviv Segal
+ */
 package pipe_game_server;
 
 import java.awt.*;
@@ -61,6 +68,10 @@ public class PgLevel {
             return this.matrix[row][column];
     }
 
+    public char getObjectOnPosition() {
+        return this.matrix[position.x][position.y];
+    }
+
 
     @Override
     public String toString() {
@@ -94,86 +105,13 @@ public class PgLevel {
         return null;
     }
 
-    public Point getGoal() {
-        for (int i = 0; i < getNumOfRows(); i++) {
-            for (int j = 0; j < getNumOfCol(); j++) {
-                if (matrix[i][j] == 'g') {
-                    return new Point(i, j);
-                }
-            }
-        }
-        return null;
-    }
-
     @Override
     public int hashCode() {
-
         int result = Objects.hash(position);
         result = 31 * result + Arrays.hashCode(matrix);
         return result;
     }
 
-//    private boolean findPaths(int i, int j) {
-//
-//        char c = getObject(i, j);
-//        setObject(i, j, ' ');
-//
-//        boolean tmp;
-//
-//        switch (c) {
-//            case 'g':
-//                return true;
-//            case 's':
-//                tmp = up(i, j, this) && findPaths(i - 1, j) ||
-//                        down(i, j, this) && findPaths(i + 1, j) ||
-//                        right(i, j, this) && findPaths(i, j + 1) ||
-//                        left(i, j, this) && findPaths(i, j - 1);
-//                if (tmp) switchPotenitial(i,j);
-//                return tmp;
-//            case '|':
-//                return  up(i, j, this) && findPaths(i - 1, j) ||
-//                        down(i, j, this) && findPaths(i + 1, j);
-//            case '-':
-//                return  right(i, j, this) && findPaths(i, j + 1) ||
-//                        left(i, j, this) && findPaths(i, j - 1);
-//            case 'L':
-//                return  up(i, j, this) && findPaths(i - 1, j) ||
-//                        right(i, j, this) && findPaths(i, j + 1);
-//            case 'F':
-//                return  down(i, j, this) && findPaths(i + 1, j) ||
-//                        right(i, j, this) && findPaths(i, j + 1);
-//            case '7':
-//                return  down(i, j, this) && findPaths(i + 1, j) ||
-//                        left(i, j, this) && findPaths(i, j - 1);
-//            case 'J':
-//                return  up(i, j, this) && findPaths(i - 1, j) ||
-//                        left(i, j, this) && findPaths(i, j - 1);
-//            default:
-//                return false;
-//        }
-//    }
-
-//    interface FunciMonkey {
-//        void action(Object obj);
-//    }
-
-//    public void foreach(FunciMonkey funciMonkey, Predicate predicate) {
-//        for(ArrayList<Part> row: matrix) {
-//            for (Part part : row) {
-//                if (predicate.test(part)){
-//                    funciMonkey.action(part);
-//                }
-//            }
-//        }
-//    }
-
-//    public void foreach(FunciMonkey funciMonkey) {
-//        for(ArrayList<Part> row: matrix) {
-//            for (Part part : row) {
-//                    funciMonkey.action(part);
-//            }
-//        }
-//    }
 
     public static class LevelBuilder {
 
@@ -210,33 +148,11 @@ public class PgLevel {
         return copied;
     }
 
-    protected PgLevel copy(Point newPosition) {
-        StringBuilder stringBuilder = new StringBuilder();
 
-        for(char[] line: this.getMatrix()) {
-            for(char c: line) {
-                stringBuilder.append(c);
-            }
-            stringBuilder.append("\n");
-        }
-
-        position = new Point(5,5);
-
-        String result = stringBuilder.toString();
-        PgLevel copied = LevelBuilder.build(result.substring(0, result.length()-1));
-        return copied;
-    }
 
     public static void main(String[] args) {
         PgLevel level = LevelBuilder.build("s-7\n|-g");
         System.out.println(level);
-
-       // level.findPaths(0,0);
-
-
-
-        //System.out.println(level.getStart());
-        //System.out.println(level.getGoal());
     }
 
 }

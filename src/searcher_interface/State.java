@@ -3,8 +3,6 @@ package searcher_interface;
 import pipe_game_server.PgLevel; // only for test! this class is generic.
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 
 public class State<T>  {
@@ -56,8 +54,8 @@ public class State<T>  {
         if (o == null || getClass() != o.getClass()) return false;
         State<?> state1 = (State<?>) o;
         return Double.compare(state1.cost, cost) == 0 &&
-                Objects.equals(state, state1.state) &&
-                Objects.equals(cameFrom, state1.cameFrom);
+                Objects.equals(state, state1.state); //&&
+                //Objects.equals(cameFrom, state1.cameFrom);
     }
 
     @Override

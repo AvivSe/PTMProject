@@ -4,9 +4,9 @@ import searcher_interface.Searchable;
 import searcher_interface.Searcher;
 import searcher_interface.Solution;
 import searcher_interface.State;
-
 import java.util.ArrayList;
 import java.util.Stack;
+
 public class DFS<T> extends CommonSearcher implements Searcher<T> {
 
     public DFS() {
@@ -16,6 +16,7 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
 
     @Override
     public Solution search(Searchable<T> searchable) {
+
         long startTime = System.nanoTime();
         State<T> initialState = searchable.getInitialState();
 
@@ -28,13 +29,14 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
         while(!stack.isEmpty()) {
             State<T> state = stack.pop();
             if(searchable.isGoalState(state)) {
+
                 return backtrace(state);
             }
 
-            for (State<T> neighbor : searchable.getPossibleStates(state)) {
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    stack.push(neighbor);
+            for (State<T> child : searchable.getPossibleStates(state)) {
+                if (!visited.contains(child)) {
+                    visited.add(child);
+                    stack.push(child);
                 }
             }
 
