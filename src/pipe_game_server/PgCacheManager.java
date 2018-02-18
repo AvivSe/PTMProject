@@ -20,7 +20,8 @@ public class PgCacheManager implements CacheManager {
             while(in.hasNextLine()){
                 directions.add(in.nextLine());
             }
-
+            // TODO: return directions / null to enable / disable cahshmanger.
+            //return null;
             return directions;
             } catch (FileNotFoundException e) {
             System.out.println("Cache: Don't have it in DB.\n");

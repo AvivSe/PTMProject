@@ -3,9 +3,16 @@ package common_searchers;
 import searcher_interface.Solution;
 import searcher_interface.State;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 class CommonSearcher<T>   {
+    ArrayList<State<T>> closeList;
+
+    CommonSearcher() {
+        closeList = new ArrayList<>();
+    }
+
     Solution<T> backtrace(State<T> s) {
         System.out.println("Building backtrace..");
         Solution<T> sol = new Solution<>();

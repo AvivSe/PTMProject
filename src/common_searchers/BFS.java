@@ -7,7 +7,11 @@ import searcher_interface.State;
 import java.util.*;
 
 public class BFS<T> extends CommonSearcher implements Searcher<T> {
+    private Queue<State<T>> queue;
+
     public BFS() {
+        super();
+        queue =  new LinkedList<>();
         System.out.println("BFS is initialized..");
     }
 
@@ -16,28 +20,23 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
         long startTime = System.nanoTime();
         State<T> initialState = searchable.getInitialState();
 
-        Queue<State<T>> queue =  new LinkedList<>();
-        ArrayList<State<T>> visited = new ArrayList<>();
-
         queue.add(initialState);
 
         while(!queue.isEmpty()){
             State<T> current = queue.remove();
-            if (!visited.contains(current)) {
+            if (!closeList.contains(current)) {
                 if (searchable.isGoalState(current)) {
-                    long endTime = System.nanoTime();
-                    long duration = (endTime - startTime);
-                    Long ms = duration / 1000000;
-                    Double sec = (double) duration / 1000000000.0;
-                    System.out.println("BFS GOAL: " + ms + "ms " +sec+"sec");
+                    System.out.println("BFS: GOAL!");
+                    System.out.println("Cost: " + current.getCost());
                     return backtrace(current);
                 } else {
                     ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
                         queue.addAll(nextPossibleStates);
-                    visited.add(current);
+                    closeList.add(current);
                 }
             }
         }
+
         System.out.println("BFS: Can't find path.");
         return null;
     }

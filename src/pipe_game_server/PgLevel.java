@@ -14,6 +14,8 @@ import java.util.Objects;
 public class PgLevel {
     private char[][] matrix;
     Point position;
+    Point start;
+    Point end;
 
 
     public char[][] getMatrix() {
@@ -22,7 +24,9 @@ public class PgLevel {
 
     public PgLevel(char[][] data) {
         this.matrix = data.clone();
-        this.position = getStart();
+        this.position = initStart();
+        this.start = position;
+        this.end = initEnd();
     }
 
     public PgLevel(PgLevel level) {
@@ -33,6 +37,8 @@ public class PgLevel {
                 this.matrix[i][j] = level.matrix[i][j];
             }
         }
+        initStart();
+        initEnd();
         this.position = new Point(level.position.x, level.position.y);
     }
 
@@ -94,11 +100,24 @@ public class PgLevel {
 
     public int getNumOfCol() { return this.matrix[0].length;}
 
-    public Point getStart() {
+    public Point initStart() {
         for (int i = 0; i < getNumOfRows(); i++) {
             for (int j = 0; j < getNumOfCol(); j++) {
                 if (matrix[i][j] == 's') {
-                    return new Point(i, j);
+                    start = new Point(i, j);
+                    return start;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Point initEnd() {
+        for (int i = 0; i < getNumOfRows(); i++) {
+            for (int j = 0; j < getNumOfCol(); j++) {
+                if (matrix[i][j] == 'g') {
+                    end = new Point(i, j);
+                    return end;
                 }
             }
         }
@@ -128,15 +147,14 @@ public class PgLevel {
                     result.matrix[i][j] = chars[j];
                 }
             }
-
-            result.position = result.getStart();
+            result.position = result.initStart();
+            result.initEnd();
             return result;
         }
     }
 
     protected PgLevel copy() {
         StringBuilder stringBuilder = new StringBuilder();
-
         for(char[] line: this.getMatrix()) {
             for(char c: line) {
                 stringBuilder.append(c);
@@ -145,6 +163,8 @@ public class PgLevel {
         }
         String result = stringBuilder.toString();
         PgLevel copied = LevelBuilder.build(result.substring(0, result.length()-1));
+        copied.end = this.end;
+        copied.start = this.start;
         return copied;
     }
 

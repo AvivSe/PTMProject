@@ -5,6 +5,7 @@
  * Aviv Segal
  */
 package pipe_game_server;
+
 import searcher_interface.Searchable;
 import searcher_interface.State;
 import java.awt.*;
@@ -117,6 +118,7 @@ public class PgSearchable implements Searchable<PgLevel> {
             State<PgLevel> current = queue.remove();
             if (!pool.containsKey(current.hashCode())) {
                 current.setCameFrom(state);
+                current.setCost(state.getCost() + 1);
                 pool.put(current.hashCode(), current);
                 list.add(current);
             } else {
@@ -259,9 +261,14 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     public boolean isGoalState(State<PgLevel> state) {
         PgLevel level = state.getState();
-        Point start = level.getStart();
-        return findGoal(start.x, start.y, level);
+        return findGoal(level.start.x, level.start.y, level);
     }
+
+    @Override
+    public double getStateEvaluation(State<PgLevel> state) {
+        return PgHeuristic(state,1);
+    }
+
     private boolean findGoal(int i, int j, PgLevel level) {
         level = level.copy();
         char c = level.getObject(i, j);
@@ -298,12 +305,44 @@ public class PgSearchable implements Searchable<PgLevel> {
         }
     }
 
+     static double PgHeuristic(State<PgLevel> s, int kind) {
+        double movement_cost = s.getCost(); // TODO: Should be a better grade;
+        int nodeX = s.getState().position.x;
+        int nodeY = s.getState().position.y;
+        int endX = s.getState().end.x;
+        int endY = s.getState().end.y;
+
+        switch (kind) {
+            case 1:
+                /** 1.
+                 * The Manhattan Distance is taking the distance from going all the way on the X axis and adding that to the distance all the way on the Y axis to go from point A to point B.
+                 * This heuristic should usually be used whenever the AI can only move in the 4 cardinal directions.
+                 */
+                return movement_cost * (Math.abs(nodeX - endX) + Math.abs(nodeY - endY));
+            case 2:
+                /** 2.
+                 * The Pythagorean Distance is the most common form of distance, and is used when you can move in all directions.
+                 */
+                return movement_cost * Math.sqrt((nodeX - endX) ^ 2 + (nodeY - endY) ^ 2);
+            case 3:
+                /** 3.
+                 * The Chebyshev Distance is used whenever you're allowed to move in diagonally, so in 8 directions.
+                 * Assuming both straight and diagonals cost the same, this code should work sufficiently.
+                 */
+                return movement_cost * Math.max(Math.abs(nodeX - endX), Math.abs(nodeY - endY));
+
+                default:
+                    // Manhattan Distance is default
+                    return movement_cost * (Math.abs(nodeX - endX) + Math.abs(nodeY - endY));
+        }
+    }
+
 
     public static void main(String[] args) {
         PgLevel level = PgLevel.LevelBuilder.build(
-                "s||g");
+                "s--g");
 
-        System.out.println(level);
+        System.out.println(level.start);
         /* Is goals state + time */
         PgSearchable searchable = new PgSearchable(level);
 
@@ -354,12 +393,6 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         State<PgLevel> state = new State<>(level);
         System.out.println(state.getCameFrom());
-
-        for(State<PgLevel> s: searchable.getPossibleStates(state)) {
-            System.out.println(s.getState());
-            System.out.println(s.getCameFrom().getState().position);
-        }
-
 
     }
 

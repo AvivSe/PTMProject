@@ -14,11 +14,12 @@ public class State<T>  {
     public State(T state, State<T> cameFrom, double cost) {
         this.state = state;
         this.cost = cost;
+        this.cameFrom = cameFrom;
     }
 
     public State(T state) {
         this.state = state;
-        this.cost = Double.POSITIVE_INFINITY;
+        this.cost = 0;
         this.cameFrom = null;
     }
 
@@ -53,15 +54,13 @@ public class State<T>  {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         State<?> state1 = (State<?>) o;
-        return Double.compare(state1.cost, cost) == 0 &&
-                Objects.equals(state, state1.state); //&&
-                //Objects.equals(cameFrom, state1.cameFrom);
+        return Objects.equals(state, state1.state);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(state, cameFrom, cost);
-    }
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(state, cameFrom, cost);
+//    }
 
     @Override
     public String toString() {
