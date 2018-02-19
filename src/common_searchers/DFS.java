@@ -27,16 +27,19 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
         while(!stack.isEmpty()){
             State<T> current = stack.pop();
             if (!closeList.contains(current)) {
+                System.out.println("exploring..");
                 if (searchable.isGoalState(current)) {
                     System.out.println("DFS: GOAL!");
                     System.out.println("Cost: " + current.getCost());
                     return backtrace(current);
                 } else {
-                    ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
-                    stack.addAll(nextPossibleStates);
+                    stack.addAll(searchable.getPossibleStates(current));
+                    System.out.println("Stack: " + stack.size());
                     closeList.add(current);
                 }
-            } 
+            } else {
+                System.out.println("Dupli Prevented");
+            }
         }
 
         System.out.println("DFS: Can't find path.");

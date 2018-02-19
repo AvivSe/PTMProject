@@ -13,13 +13,11 @@ import java.util.*;
 
 public class PgSearchable implements Searchable<PgLevel> {
     private State<PgLevel> initialState;
-    private static HashMap<Integer, State<PgLevel>> pool = new HashMap<>();
 
 
     PgSearchable(PgLevel level) {
         this.initialState = new State<>(level);
     }
-
 
     @Override
     public State<PgLevel> getInitialState() {
@@ -29,6 +27,14 @@ public class PgSearchable implements Searchable<PgLevel> {
     private boolean isOutOfBound(int i, int j) {
         return (i < 0 || i >= initialState.getState().getNumOfRows() ||
                 j < 0 || j >= initialState.getState().getNumOfCol());
+    }
+
+    boolean ringCheck(State<PgLevel> s) {
+        return recursiveRingCheck(s,s);
+    }
+    boolean recursiveRingCheck(State<PgLevel> s1, State<PgLevel> s2) {
+        return s2.hasCameFrom() && recursiveRingCheck(s1, s2.getCameFrom());
+
     }
 
     private void AnalyzePossibleState(ArrayList<State<PgLevel>> list, State<PgLevel> state, Point position, String move) {
@@ -116,14 +122,9 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         while(!queue.isEmpty()) {
             State<PgLevel> current = queue.remove();
-            if (!pool.containsKey(current.hashCode())) {
                 current.setCameFrom(state);
                 current.setCost(state.getCost() + 1);
-                pool.put(current.hashCode(), current);
                 list.add(current);
-            } else {
-                list.add(pool.get(current.hashCode()));
-            }
         }
     }
 

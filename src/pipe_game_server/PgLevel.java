@@ -13,6 +13,11 @@ import java.util.Objects;
 
 public class PgLevel {
     private char[][] matrix;
+
+    public Point getPosition() {
+        return position;
+    }
+
     Point position;
     Point start;
     Point end;
@@ -37,6 +42,7 @@ public class PgLevel {
                 this.matrix[i][j] = level.matrix[i][j];
             }
         }
+
         initStart();
         initEnd();
         this.position = new Point(level.position.x, level.position.y);
@@ -44,21 +50,6 @@ public class PgLevel {
 
     public PgLevel(int numRows, int numColumns) {
         this.matrix = new char[numRows][numColumns];
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        PgLevel pgLevel2 = (PgLevel) o;
-        for (int i = 0; i < getNumOfRows(); i++) {
-            for (int j = 0; j < getNumOfCol(); j++) {
-                if (matrix[i][j] != pgLevel2.matrix[i][j]) {
-                    return false;
-                }
-            }
-        }
-
-        return position.x == ((PgLevel) o).position.x && position.y == ((PgLevel) o).position.y;
     }
 
 
@@ -123,6 +114,25 @@ public class PgLevel {
         }
         return null;
     }
+    @Override
+    public boolean equals(Object o) {
+        PgLevel other = ((PgLevel)o);
+
+        if (getObjectOnPosition() != other.getObjectOnPosition()) {
+            return false;
+        }
+
+        PgLevel pgLevel2 = (PgLevel) o;
+        for (int i = 0; i < getNumOfRows(); i++) {
+            for (int j = 0; j < getNumOfCol(); j++) {
+                if (matrix[i][j] != pgLevel2.matrix[i][j]) {
+                    return false;
+                }
+            }
+        }
+       // return true;
+        return this.position.x == other.position.x && position.y == other.position.y;
+    }
 
     @Override
     public int hashCode() {
@@ -167,8 +177,6 @@ public class PgLevel {
         copied.start = this.start;
         return copied;
     }
-
-
 
     public static void main(String[] args) {
         PgLevel level = LevelBuilder.build("s-7\n|-g");

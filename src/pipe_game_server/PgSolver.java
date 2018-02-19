@@ -15,8 +15,8 @@ import game_server_interface.Solver;
 public class PgSolver implements Solver {
     @Override
     public PgDirections solve(PgLevel level) {
-        //Searcher<PgLevel> searcher = new BFS<>();
-        Searcher<PgLevel> searcher = new DFS<>();
+        Searcher<PgLevel> searcher = new BFS<>();
+        //Searcher<PgLevel> searcher = new DFS<>();
         //Searcher<PgLevel> searcher = new BestFirstSearch<>();
         return new PgDirections(searcher.search(new PgSearchable(level)), level);
     }
@@ -24,8 +24,9 @@ public class PgSolver implements Solver {
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
         PgLevel level = PgLevel.LevelBuilder.build(
-                "s7777\n" +
-                        "7777g");
+                "F-|g \n" +
+                        "L-7  \n" +
+                        "s-J  ");
 
         System.out.println("You ask for solution to: ");
         System.out.println(level);

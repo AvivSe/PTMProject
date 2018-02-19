@@ -57,10 +57,10 @@ public class State<T>  {
         return Objects.equals(state, state1.state);
     }
 
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(state, cameFrom, cost);
-//    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(state);
+    }
 
     @Override
     public String toString() {

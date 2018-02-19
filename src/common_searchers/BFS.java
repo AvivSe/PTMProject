@@ -16,7 +16,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
     }
 
     @Override
-    public Solution search(Searchable<T> searchable) {
+    public Solution<State<T>> search(Searchable<T> searchable) {
         long startTime = System.nanoTime();
         State<T> initialState = searchable.getInitialState();
 
@@ -27,6 +27,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
             if (!closeList.contains(current)) {
                 if (searchable.isGoalState(current)) {
                     System.out.println("BFS: GOAL!");
+                    System.out.println(current.getState());
                     System.out.println("Cost: " + current.getCost());
                     return backtrace(current);
                 } else {
