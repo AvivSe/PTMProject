@@ -43,14 +43,15 @@ public class PgDirections extends ArrayList<String> implements Directions {
         int M = request.getNumOfCol();
 
 //        if(solution.size() < M*N) {
-            for (PgLevel solu : solution) {
-                int x = solu.position.x;
-                int y = solu.position.y;
-                char c = solu.getObjectOnPosition();
-                char c2 = request.getObject(x, y);
-                if (c != ' ' && c != 's' && c != 'g' && c != c2) {
-                    add(x + "," + y + "," + timesToRotate(c2, c));
-                }
+        for (PgLevel solu : solution) {
+            int x = solu.position.x;
+            int y = solu.position.y;
+            char c = solu.getObjectOnPosition();
+            char c2 = request.getObject(x, y);
+            //System.out.println("**("+x+","+y+")**\n"+solu.toString()+"\n*****");
+            if (c != ' ' && c != 's' && c != 'g') {
+                add(x + "," + y + "," + timesToRotate(c2, c));
+                //}
             }
 //        } else {
 //            PgLevel finalState = solution.get(solution.size()-1);
@@ -68,6 +69,7 @@ public class PgDirections extends ArrayList<String> implements Directions {
 //            }
 //        }
 
+        }
     }
 
     private int timesToRotate(char left, char right) {

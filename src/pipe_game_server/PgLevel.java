@@ -53,8 +53,9 @@ public class PgLevel {
     }
 
 
-    public void setObject(int row, int column, char c) {
+    public PgLevel setObject(int row, int column, char c) {
         this.matrix[row][column] = c;
+        return this;
     }
 
     public void setObjectOnPosition(char c) {
@@ -114,33 +115,77 @@ public class PgLevel {
         }
         return null;
     }
+
+
+    /* ILUZ TIME TO ROTATE */
+    public int rotate(char A, char B) {
+        if (A == B)
+            return 0;
+        switch (A) {
+            case 'L':
+                return 1 + rotate('F', B);
+            case 'F':
+                return 1 + rotate('7', B);
+            case '7':
+                return 1 + rotate('J', B);
+            case 'J':
+                return 1 + rotate('L', B);
+            case '|':
+                return 1 + rotate('-', B);
+            case '-':
+                return 1 + rotate('|', B);
+        }
+        return 0;
+    }
+
+    public PgLevel rotate(int row,int column) {
+        switch (this.matrix[row][column]) {
+            case 'L':
+                this.setObject(row,column,'F');
+                break;
+            case 'F':
+                this.setObject(row,column,'7');
+                break;
+            case '7':
+                this.setObject(row,column,'J');
+                break;
+            case 'J':
+                this.setObject(row,column,'L');
+                break;
+            case '-':
+                this.setObject(row,column,'|');
+                break;
+            case '|':
+                this.setObject(row,column,'-');
+                break;
+        }
+        return this;
+    }
+
+    PgLevel setPosition(int i,int j) {
+        position.x = i;
+        position.y = j;
+        return this;
+    }
+
+
+    /* END OF ILUZ */
     @Override
     public boolean equals(Object o) {
-        PgLevel other = ((PgLevel)o);
-
-        if (getObjectOnPosition() != other.getObjectOnPosition()) {
-            return false;
-        }
-
-        PgLevel pgLevel2 = (PgLevel) o;
-        for (int i = 0; i < getNumOfRows(); i++) {
-            for (int j = 0; j < getNumOfCol(); j++) {
-                if (matrix[i][j] != pgLevel2.matrix[i][j]) {
-                    return false;
-                }
-            }
-        }
-       // return true;
-        return this.position.x == other.position.x && position.y == other.position.y;
+        return equals((PgLevel)o);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(position);
-        result = 31 * result + Arrays.hashCode(matrix);
-        return result;
-    }
+        StringBuilder result = new StringBuilder();
 
+        for(int i = 0; i < getNumOfRows(); i++) {
+            for(int j=0; j < getNumOfCol(); j++) {
+                result.append(matrix[i][j]);
+            }
+        }
+        return result.toString().hashCode();
+    }
 
     public static class LevelBuilder {
 
@@ -175,6 +220,7 @@ public class PgLevel {
         PgLevel copied = LevelBuilder.build(result.substring(0, result.length()-1));
         copied.end = this.end;
         copied.start = this.start;
+        copied.position = new Point(position.x, position.y);
         return copied;
     }
 

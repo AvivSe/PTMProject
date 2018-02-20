@@ -33,19 +33,22 @@ public class PgClientHandler implements ClientHandler {
 
         try {
             // TODO: Turen on cash manger by uncommet thus lines.
-                out.write(this.cacheManager.load(tmp).toString());
+                out.print(this.cacheManager.load(tmp).toString());
                 System.out.println("Cache said: I have it in files :)");
+                out.flush();
         } catch (NullPointerException error) {
             try {
                 System.out.println("Solver said: maybe I can solve it :)");
                 Directions pgDirections = solver.solve(request);
                 cacheManager.save(tmp , pgDirections.toString());
                 System.out.println("\nSolution is:\n"+ pgDirections.toString());
-                out.write(pgDirections.toString());
+                out.print(pgDirections.toString());
+                out.flush();
             } catch (NullPointerException error2) {
                 System.out.println("Solver said: I cant solve it :(");
                 System.out.print("Client did not got an answer. ");
-                out.write("done");
+                out.print("done");
+                out.flush();
             }
         }
 //        Directions pgDirections = this.cacheManager.load(tmp);

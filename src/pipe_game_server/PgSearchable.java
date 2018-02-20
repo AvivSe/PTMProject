@@ -13,10 +13,11 @@ import java.util.*;
 
 public class PgSearchable implements Searchable<PgLevel> {
     private State<PgLevel> initialState;
-
+    private ArrayList<PgLevel> visited;
 
     PgSearchable(PgLevel level) {
         this.initialState = new State<>(level);
+        visited = new ArrayList<>();
     }
 
     @Override
@@ -29,17 +30,10 @@ public class PgSearchable implements Searchable<PgLevel> {
                 j < 0 || j >= initialState.getState().getNumOfCol());
     }
 
-    boolean ringCheck(State<PgLevel> s) {
-        return recursiveRingCheck(s,s);
-    }
-    boolean recursiveRingCheck(State<PgLevel> s1, State<PgLevel> s2) {
-        return s2.hasCameFrom() && recursiveRingCheck(s1, s2.getCameFrom());
-
-    }
-
     private void AnalyzePossibleState(ArrayList<State<PgLevel>> list, State<PgLevel> state, Point position, String move) {
         if (isOutOfBound(position.x, position.y))
             return;
+
 
         PgLevel level = state.getState();
         PgLevel tmp = new PgLevel(level);
@@ -54,14 +48,14 @@ public class PgSearchable implements Searchable<PgLevel> {
                     case 'F':
                     case '7':
                         tmp.setObject(position.x,position.y, 'F');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         tmp.setObject(position.x,position.y, '7');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         break;
                     case '-':
                     case '|':
                         tmp.setObject(position.x,position.y, '|');
-                        queue.add(new State<>(new PgLevel(tmp)));;
+                        queue.add(new State<>(tmp.copy()));;
                         break;
                 } break;
 
@@ -72,14 +66,14 @@ public class PgSearchable implements Searchable<PgLevel> {
                     case 'F':
                     case '7':
                         tmp.setObject(position.x,position.y, 'J');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         tmp.setObject(position.x,position.y, 'L');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         break;
                     case '-':
                     case '|':
                         tmp.setObject(position.x,position.y, '|');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         break;
                 } break;
 
@@ -90,14 +84,14 @@ public class PgSearchable implements Searchable<PgLevel> {
                     case 'F':
                     case '7':
                         tmp.setObject(position.x,position.y, 'J');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         tmp.setObject(position.x,position.y, '7');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         break;
                     case '-':
                     case '|':
                         tmp.setObject(position.x,position.y, '-');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         break;
                 } break;
 
@@ -107,15 +101,15 @@ public class PgSearchable implements Searchable<PgLevel> {
                     case 'J':
                     case 'F':
                     case '7':
-                        tmp.setObject(position.x,position.y, 'F');
-                        queue.add(new State<>(new PgLevel(tmp)));
                         tmp.setObject(position.x,position.y, 'L');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
+                        tmp.setObject(position.x,position.y, 'F');
+                        queue.add(new State<>(tmp.copy()));
                         break;
                     case '-':
                     case '|':
                         tmp.setObject(position.x,position.y, '-');
-                        queue.add(new State<>(new PgLevel(tmp)));
+                        queue.add(new State<>(tmp.copy()));
                         break;
                 } break;
         }
@@ -127,48 +121,85 @@ public class PgSearchable implements Searchable<PgLevel> {
                 list.add(current);
         }
     }
-
-    @Override
-    public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
-        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
-        int row = state.getState().position.x;
-        int col = state.getState().position.y;
-
-        //        pool.add(state);
-
-        for (String move : nextSteps(state.getState())) {
-            switch (move) {
-                case "Move Up":
-                    AnalyzePossibleState(possibleStates, state, new Point(row - 1, col), move);
-                    break;
-                case "Move Right":
-                    AnalyzePossibleState(possibleStates, state, new Point(row, col + 1), move);
-                    break;
-                case "Move Left":
-                    AnalyzePossibleState(possibleStates, state, new Point(row, col - 1), move);
-                    break;
-                case "Move Down":
-                    AnalyzePossibleState(possibleStates, state, new Point(row + 1 , col), move);
-                    break;
-            }
-        }
-
-//        for(State<PgLevel> s: possibleStates) {
-//            s.setCameFrom(state);
+//
+//    @Override
+//    public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
+//        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
+//        int row = state.getState().position.x;
+//        int col = state.getState().position.y;
+//
+//
+//
+//        for (String move : nextSteps(state.getState())) {
+//            switch (move) {
+//                case "Move Up":
+//                    AnalyzePossibleState(possibleStates, state, new Point(row - 1, col), move);
+//                    break;
+//                case "Move Right":
+//                    AnalyzePossibleState(possibleStates, state, new Point(row, col + 1), move);
+//                    break;
+//                case "Move Left":
+//                    AnalyzePossibleState(possibleStates, state, new Point(row, col - 1), move);
+//                    break;
+//                case "Move Down":
+//                    AnalyzePossibleState(possibleStates, state, new Point(row + 1 , col), move);
+//                    break;
+//            }
 //        }
-        return possibleStates;
-    }
-
-
-    private ArrayList<String> nextSteps(PgLevel level) {
+//
+////        for(State<PgLevel> s: possibleStates) {
+////            s.setCameFrom(state);
+////        }
+//        return possibleStates;
+//    }
+//
+//
+//    private ArrayList<String> nextSteps(PgLevel level) {
+//
+//        ArrayList<String> result = new ArrayList<>();
+//
+//        int i = level.position.x;
+//        int j = level.position.y;
+//
+//        char c = level.getObject(i,j);
+//
+//        switch (c) {
+//            case 's':
+//                result.add("Move Up");
+//                result.add("Move Right");
+//                result.add("Move Down");
+//                result.add("Move Left");
+//                break;
+//            case 'L':
+//                result.add("Move Up");
+//                result.add("Move Right");
+//                break;
+//            case 'F':
+//                result.add("Move Down");
+//                result.add("Move Right");
+//                break;
+//            case '7':
+//                result.add("Move Down");
+//                result.add("Move Left");
+//                break;
+//            case 'J':
+//                result.add("Move Up");
+//                result.add("Move Left");
+//                break;
+//            case '|':
+//                result.add("Move Down");
+//                result.add("Move Up");
+//                break;
+//            case '-':
+//                result.add("Move Left");
+//                result.add("Move Right");
+//                break;
+//        }
+//        return result;
+//    }
+    private ArrayList<String> nextSteps(char c) {
 
         ArrayList<String> result = new ArrayList<>();
-
-        int i = level.position.x;
-        int j = level.position.y;
-
-        char c = level.getObject(i,j);
-
         switch (c) {
             case 's':
                 result.add("Move Up");
@@ -211,7 +242,6 @@ public class PgSearchable implements Searchable<PgLevel> {
                 case '|':
                 case 'F':
                 case 'g':
-                case 's':
                     return true;
             }
         }
@@ -225,7 +255,6 @@ public class PgSearchable implements Searchable<PgLevel> {
                  case 'J':
                  case '-':
                  case 'g':
-                 case 's':
                      return true;
              }
          }
@@ -239,7 +268,6 @@ public class PgSearchable implements Searchable<PgLevel> {
                  case 'L':
                  case '-':
                  case 'g':
-                 case 's':
                      return true;
              }
          }
@@ -253,7 +281,6 @@ public class PgSearchable implements Searchable<PgLevel> {
                  case 'L':
                  case '|':
                  case 'g':
-                 case 's':
                      return true;
              }
          }
@@ -264,6 +291,78 @@ public class PgSearchable implements Searchable<PgLevel> {
         PgLevel level = state.getState();
         return findGoal(level.start.x, level.start.y, level);
     }
+
+    /* MERON CODE */
+    @Override
+    public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
+        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
+
+
+        for (int i = 0; i < state.getState().getNumOfRows(); i++) {
+            for (int j = 0; j < state.getState().getNumOfCol(); j++) {
+                int times = 0;
+
+                switch (state.getState().getObject(i,j)) {
+                    case 'L':
+                    case 'F':
+                    case 'J':
+                    case '7':
+                        times = 4;
+                        break;
+                    case '-':
+                    case '|':
+                        times = 2;
+                        break;
+                }
+
+                State<PgLevel> s = new State<> (new PgLevel(state.getState()));
+                s.setCameFrom(new State<PgLevel>(state.getState()));
+                for(int k = 0; k < times+1; k++) {
+
+                    s.getState().rotate(i,j).setPosition(i,j);
+                    if(!visited.contains(s.getState()) && findGoal(i,j,new PgLevel(s.getState()).setObject(state.getState().start.x,state.getState().start.y,' '))) {
+//                        System.out.println(s.getState());
+//                        System.out.println(s.getState().getPosition().x);
+//                        System.out.println(s.getState().getPosition().y);
+                        possibleStates.add(s);
+                        visited.add(s.getState());
+                    }
+
+                }
+            }
+        }
+        //System.out.println("########");
+        return possibleStates;
+    }
+
+    /* END MERON CODE */
+//
+//        public boolean isGoalState(State<PgLevel> state) {
+//        PgLevel level = state.getState();
+//        int i = level.position.x;
+//        int j = level.position.y;
+//
+//        for(String move: nextSteps(level)) {
+//            switch(move) {
+//                case "Move Up":
+//                    if(up(i,j,level) && level.getObject(i - 1 , j ) == 'g') return true;
+//                    break;
+//                case "Move Right":
+//                    if(right(i,j,level) && level.getObject(i , j + 1 ) == 'g') return true;
+//                    break;
+//                case "Move Down":
+//                    if(down(i,j,level) && level.getObject(i + 1, j ) == 'g') return true;
+//                    break;
+//                case "Move Left":
+//                    if(left(i,j,level) && level.getObject(i , j - 1 ) == 'g') return true;
+//                    break;
+//            }
+//        }
+//
+//
+//        return false;
+//    }
+
 
     @Override
     public double getStateEvaluation(State<PgLevel> state) {
@@ -306,7 +405,45 @@ public class PgSearchable implements Searchable<PgLevel> {
         }
     }
 
-     static double PgHeuristic(State<PgLevel> s, int kind) {
+
+    private boolean findStart(int i, int j, PgLevel level) {
+        level = level.copy();
+        char c = level.getObject(i, j);
+        level.setObject(i, j, ' ');
+
+        switch (c) {
+            case 's':
+                return true;
+            case 'g':
+                return up(i, j, level) && findGoal(i - 1, j, level) ||
+                        down(i, j, level) && findGoal(i + 1, j, level) ||
+                        right(i, j, level) && findGoal(i, j + 1, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            case '|':
+                return  up(i, j, level) && findGoal(i - 1, j, level) ||
+                        down(i, j, level) && findGoal(i + 1, j, level);
+            case '-':
+                return  right(i, j, level) && findGoal(i, j + 1, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            case 'L':
+                return  up(i, j, level) && findGoal(i - 1, j, level) ||
+                        right(i, j, level) && findGoal(i, j + 1, level);
+            case 'F':
+                return  down(i, j, level) && findGoal(i + 1, j, level) ||
+                        right(i, j, level) && findGoal(i, j + 1, level);
+            case '7':
+                return  down(i, j, level) && findGoal(i + 1, j, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            case 'J':
+                return  up(i, j, level) && findGoal(i - 1, j, level) ||
+                        left(i, j, level) && findGoal(i, j - 1, level);
+            default:
+                return false;
+        }
+    }
+
+
+    static double PgHeuristic(State<PgLevel> s, int kind) {
         double movement_cost = s.getCost(); // TODO: Should be a better grade;
         int nodeX = s.getState().position.x;
         int nodeY = s.getState().position.y;
@@ -341,19 +478,23 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     public static void main(String[] args) {
         PgLevel level = PgLevel.LevelBuilder.build(
-                "s--g");
+                "7-  \n" +
+                        "Js-7\n" +
+                        "7- g");
 
-        System.out.println(level.start);
+        //System.out.println(level.position);
         /* Is goals state + time */
         PgSearchable searchable = new PgSearchable(level);
 
-        long startTime = System.nanoTime();
-        System.out.println(searchable.isGoalState(new State<>(level)));
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime);
-        Long ms = duration / 1000000;
-        Double sec = (double) duration / 1000000000.0;
-        System.out.println("isGoalState took: " + ms + "ms" + " ("+sec+"sec)");
+        System.out.println(searchable.findGoal(1,2, level));
+//
+//        long startTime = System.nanoTime();
+//        System.out.println(searchable.isGoalState(new State<>(level)));
+//        long endTime = System.nanoTime();
+//        long duration = (endTime - startTime);
+//        Long ms = duration / 1000000;
+//        Double sec = (double) duration / 1000000000.0;
+//        System.out.println("isGoalState took: " + ms + "ms" + " ("+sec+"sec)");
 
 //        System.out.println("---------------------------");
 //
@@ -376,25 +517,16 @@ public class PgSearchable implements Searchable<PgLevel> {
 //            System.out.println("*****");
 //            System.out.println(item);
 //            System.out.println();
-//            ArrayList<State<PgLevel>> list2 = searchable.getPossibleStates(new State<>(item.getState()));
-//            int j= 0;
-//            for(State<PgLevel> item2: list2) {
-//                System.out.println("*******");
-//                System.out.println("* "+ i +"."+ ++j + " *");
-//                System.out.println("*******");
-//                System.out.println(item2);
-//                System.out.println();
-//            }
 //        }
 
-        /* next steps test */
-        for(String str: searchable.nextSteps(level)) {
-            System.out.println(str);
-        }
+//        /* next steps test */
+//        for(String str: searchable.nextSteps(level)) {
+//            System.out.println(str);
+//        }
 
-        State<PgLevel> state = new State<>(level);
-        System.out.println(state.getCameFrom());
-
+//        State<PgLevel> state = new State<>(level);
+//        System.out.println(state.getCameFrom());
+//
     }
 
 

@@ -24,9 +24,9 @@ public class PgSolver implements Solver {
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
         PgLevel level = PgLevel.LevelBuilder.build(
-                "F-|g \n" +
-                        "L-7  \n" +
-                        "s-J  ");
+                "7-  \n" +
+                        "Js|J\n" +
+                        "7- g");
 
         System.out.println("You ask for solution to: ");
         System.out.println(level);
