@@ -1,5 +1,6 @@
 package common_searchers;
 
+import searcher_interface.Heuristic;
 import searcher_interface.State;
 
 import java.util.ArrayList;
@@ -8,9 +9,15 @@ import java.util.PriorityQueue;
 
 public class PrioritySearcher<T> extends CommonSearcher<T> {
     protected PriorityQueue<State<T>> openList;
+    protected Heuristic heuristic;
 
-    PrioritySearcher() {
-        openList = new PriorityQueue<>(Comparator.comparingDouble(State::getCost));
+    public PrioritySearcher(Heuristic heuristic) {
+        this.heuristic=heuristic;
+        this.openList = new PriorityQueue<>((o1, o2) -> {
+            if (heuristic.calcHeuristic(o1) < heuristic.calcHeuristic(o2)) return -1;
+            else if (heuristic.calcHeuristic(o1) > heuristic.calcHeuristic(o2)) return 1;
+            else return 0;
+        });
 
         System.out.println("PrioritySearcher is initialized");
     }
@@ -32,7 +39,7 @@ public class PrioritySearcher<T> extends CommonSearcher<T> {
         }
 
         // Re-enqueue the popped states
-        for(State<T> s:poppedStates) {
+        for (State<T> s : poppedStates) {
             openList.add(s);
         }
     }

@@ -14,12 +14,8 @@ public class MainTrain {
 		Random r=new Random();
 		int port=6000+r.nextInt(1000);
 		TestSetter.runServer(port);
-		try{
-			TestServer.runClient(port);
-		}finally{
-			TestSetter.stopServer();
-		}
-		
+		TestServer.runClient(port);
+		TestSetter.stopServer();
 		System.out.println("done");
 	}
 

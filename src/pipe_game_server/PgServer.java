@@ -12,18 +12,27 @@ import game_server_interface.Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public class PgServer implements Server {
 
 
     @Override
-    public void start(ClientHandler clientHandler) throws IOException {
-        this.server = new ServerSocket(port);
+    public void start(ClientHandler clientHandler) {
+        try {
+            this.server = new ServerSocket(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         stop = false;
         System.out.println("Server is alive and running on port " + server.getLocalPort());
 
-        server.setSoTimeout(1000);
+        try {
+            server.setSoTimeout(1000);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
         new Thread(()-> {
             try {

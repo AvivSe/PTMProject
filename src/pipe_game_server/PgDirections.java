@@ -38,42 +38,25 @@ public class PgDirections extends ArrayList<String> implements Directions {
 
     // Vectors
     public PgDirections(Solution<PgLevel> solution, PgLevel request) {
+        for (PgLevel outer : solution) {
+            int x = outer.position.x;
+            int y = outer.position.y;
 
-        int N = request.getNumOfRows();
-        int M = request.getNumOfCol();
+            char c = outer.getObject(outer.position.x, outer.position.y);
 
-//        if(solution.size() < M*N) {
-        for (PgLevel solu : solution) {
-            int x = solu.position.x;
-            int y = solu.position.y;
-            char c = solu.getObjectOnPosition();
             char c2 = request.getObject(x, y);
-            //System.out.println("**("+x+","+y+")**\n"+solu.toString()+"\n*****");
-            if (c != ' ' && c != 's' && c != 'g') {
+            if (c != ' ' && c != 's' && c != 'g' && c != c2) {
                 add(x + "," + y + "," + timesToRotate(c2, c));
-                //}
             }
-//        } else {
-//            PgLevel finalState = solution.get(solution.size()-1);
-//            for(int i = 0; i < N; i++) {
-//                for(int j = 0; j < M; j++) {
-//                    char left = request.getObject(i,j);
-//                    char right =  finalState.getObject(i,j);
-//                    if (left != right) {
-//                        int timesToRotate = timesToRotate(left, right);
-//                        if (timesToRotate != 0) {
-//                            add(i + "," + j + "," + timesToRotate);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
         }
     }
 
     private int timesToRotate(char left, char right) {
+        if(left == right) return 0;
+
         int timesToRotate = 0;
+
+
         switch (left) {
             case '|':
             case '-':
@@ -133,30 +116,5 @@ public class PgDirections extends ArrayList<String> implements Directions {
                 } break;
         }
         return timesToRotate;
-    }
-
-    public static void main(String[] args) {
-      //  PgLevel source = PgLevel.LevelBuilder.build("LLL\nFFF\nJJJ\n777");
-        PgLevel source = PgLevel.LevelBuilder.build("s-7 \n" +
-                " |L7\n" +
-                "-F -\n" +
-                "7F-J\n" +
-                " g -");
-
-        Solution<PgLevel> sol = new Solution<>();
-        //State<PgLevel> targerState = new State<PgLevel>(PgLevel.LevelBuilder.build("F7J\n7JL\nLF7\nJLF"));
-        State<PgLevel> targerState = new State<PgLevel>(PgLevel.LevelBuilder.build("s-7 \n" +
-                " |L7\n" +
-                "-F |\n" +
-                "7F-J\n" +
-                " g -"));
-        sol.add(targerState.getState());
-
-
-        PgDirections directions = new PgDirections(sol, source);
-//        for(String s: directions) {
-//            System.out.println(s);
-//        }
-
     }
 }

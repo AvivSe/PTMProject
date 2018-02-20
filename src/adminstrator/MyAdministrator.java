@@ -36,11 +36,7 @@ public class MyAdministrator {
         ActionListener startAction = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
                     remote.start(clientHandler);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
             }
         };
 

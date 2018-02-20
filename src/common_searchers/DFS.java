@@ -31,7 +31,7 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
                 if (searchable.isGoalState(current)) {
                     System.out.println("DFS: GOAL!");
                     System.out.println("Cost: " + current.getCost());
-                    return backtrace(current);
+                    return bt(current);
                 } else {
                     stack.addAll(searchable.getPossibleStates(current));
                     System.out.println("Stack: " + stack.size());

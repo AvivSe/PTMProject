@@ -10,10 +10,12 @@ import searcher_interface.Searchable;
 import searcher_interface.State;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
+import static pipe_game_server.PgSearchable.Direction.*;
 
 public class PgSearchable implements Searchable<PgLevel> {
     private State<PgLevel> initialState;
-    private ArrayList<PgLevel> visited;
+    private List<Point> visited;
 
     PgSearchable(PgLevel level) {
         this.initialState = new State<>(level);
@@ -30,504 +32,186 @@ public class PgSearchable implements Searchable<PgLevel> {
                 j < 0 || j >= initialState.getState().getNumOfCol());
     }
 
-    private void AnalyzePossibleState(ArrayList<State<PgLevel>> list, State<PgLevel> state, Point position, String move) {
-        if (isOutOfBound(position.x, position.y))
-            return;
+    private Boolean hasNoPipe(PgLevel level, Point position) {
+        char c = level.getObject(position.x, position.y);
+        return c == ' ';
+    }
 
+    private Boolean isCurvedPipe(PgLevel level, Point position) {
+        char c = level.getObject(position.x, position.y);
+        return c == 'L' || c == 'J' || c == 'F' || c == '7';
+    }
+
+    private Boolean isGoal(PgLevel level, Point position) {
+        char c = level.getObject(position.x, position.y);
+        return c == 'g';
+    }
+
+    private Point applyMoveToDirection(int row, int col, Direction dir) {
+        switch (dir) {
+            case UP:
+                return new Point(row - 1, col);
+            case DOWN:
+                return new Point(row + 1, col);
+            case LEFT:
+                return new Point(row, col - 1);
+            case RIGHT:
+                return new Point(row, col + 1);
+        }
+        return null;
+    }
+
+    private void AnalyzePossibleState(List<State<PgLevel>> list, State<PgLevel> state, Direction cameFromDirection) {
+        int row = state.getState().position.x;
+        int col = state.getState().position.y;
+        Point position = applyMoveToDirection(row, col, cameFromDirection);
+
+        if (isOutOfBound(position.x, position.y)) return;
+
+        if (state.getCameFrom() != null) {
+            int cameFromX = state.getCameFrom().getState().position.x;
+            int cameFromY = state.getCameFrom().getState().position.y;
+            if (position.x == cameFromX && position.y == cameFromY)
+                return;
+        }
 
         PgLevel level = state.getState();
         PgLevel tmp = new PgLevel(level);
-        tmp.position = new Point(position.x,position.y);
-        Queue<State<PgLevel>> queue =  new LinkedList<>();
 
-        switch (move) {
-            case "Move Up":
-                switch (level.getObject(position.x,position.y)) {
-                    case 'L':
-                    case 'J':
-                    case 'F':
-                    case '7':
-                        tmp.setObject(position.x,position.y, 'F');
-                        queue.add(new State<>(tmp.copy()));
-                        tmp.setObject(position.x,position.y, '7');
-                        queue.add(new State<>(tmp.copy()));
-                        break;
-                    case '-':
-                    case '|':
-                        tmp.setObject(position.x,position.y, '|');
-                        queue.add(new State<>(tmp.copy()));;
-                        break;
-                } break;
+        if (hasNoPipe(level, position)) return;
 
-            case "Move Down":
-                switch (level.getObject(position.x,position.y)) {
-                    case 'L':
-                    case 'J':
-                    case 'F':
-                    case '7':
-                        tmp.setObject(position.x,position.y, 'J');
-                        queue.add(new State<>(tmp.copy()));
-                        tmp.setObject(position.x,position.y, 'L');
-                        queue.add(new State<>(tmp.copy()));
-                        break;
-                    case '-':
-                    case '|':
-                        tmp.setObject(position.x,position.y, '|');
-                        queue.add(new State<>(tmp.copy()));
-                        break;
-                } break;
-
-            case "Move Right":
-                switch (level.getObject(position.x,position.y)) {
-                    case 'L':
-                    case 'J':
-                    case 'F':
-                    case '7':
-                        tmp.setObject(position.x,position.y, 'J');
-                        queue.add(new State<>(tmp.copy()));
-                        tmp.setObject(position.x,position.y, '7');
-                        queue.add(new State<>(tmp.copy()));
-                        break;
-                    case '-':
-                    case '|':
-                        tmp.setObject(position.x,position.y, '-');
-                        queue.add(new State<>(tmp.copy()));
-                        break;
-                } break;
-
-            case "Move Left":
-                switch (level.getObject(position.x,position.y)) {
-                    case 'L':
-                    case 'J':
-                    case 'F':
-                    case '7':
-                        tmp.setObject(position.x,position.y, 'L');
-                        queue.add(new State<>(tmp.copy()));
-                        tmp.setObject(position.x,position.y, 'F');
-                        queue.add(new State<>(tmp.copy()));
-                        break;
-                    case '-':
-                    case '|':
-                        tmp.setObject(position.x,position.y, '-');
-                        queue.add(new State<>(tmp.copy()));
-                        break;
-                } break;
+        if (isGoal(level, position)) {
+            tmp.setX(position.x);
+            tmp.setY(position.y);
+            list.add(new State<>(new PgLevel(tmp)));
+            return;
         }
 
-        while(!queue.isEmpty()) {
-            State<PgLevel> current = queue.remove();
-                current.setCameFrom(state);
-                current.setCost(state.getCost() + 1);
-                list.add(current);
+        tmp.position.x = position.x;
+        tmp.position.y = position.y;
+
+        switch (cameFromDirection) {
+            case UP:
+                if (isCurvedPipe(level, position)) {
+                    tmp.setObject(position.x, position.y, 'F');
+                    list.add(new State<>(new PgLevel(tmp)));
+                    tmp.setObject(position.x, position.y, '7');
+                    list.add(new State<>(new PgLevel(tmp)));
+                } else {
+                    tmp.setObject(position.x, position.y, '|');
+                    list.add(new State<>(new PgLevel(tmp)));
+                }
+                break;
+
+            case DOWN:
+                if (isCurvedPipe(level, position)) {
+                    tmp.setObject(position.x, position.y, 'J');
+                    list.add(new State<>(new PgLevel(tmp)));
+                    tmp.setObject(position.x, position.y, 'L');
+                    list.add(new State<>(new PgLevel(tmp)));
+                } else {
+                    tmp.setObject(position.x, position.y, '|');
+                    list.add(new State<>(new PgLevel(tmp)));
+                }
+                break;
+
+            case RIGHT:
+                if (isCurvedPipe(level, position)) {
+                    tmp.setObject(position.x, position.y, 'J');
+                    list.add(new State<>(new PgLevel(tmp)));
+                    tmp.setObject(position.x, position.y, '7');
+                    list.add(new State<>(new PgLevel(tmp)));
+                } else {
+                    tmp.setObject(position.x, position.y, '-');
+                    list.add(new State<>(new PgLevel(tmp)));
+                }
+                break;
+
+            case LEFT:
+                if (isCurvedPipe(level, position)) {
+                    tmp.setObject(position.x, position.y, 'F');
+                    list.add(new State<>(new PgLevel(tmp)));
+                    tmp.setObject(position.x, position.y, 'L');
+                    list.add(new State<>(new PgLevel(tmp)));
+                } else {
+                    tmp.setObject(position.x, position.y, '-');
+                    list.add(new State<>(new PgLevel(tmp)));
+                }
+                break;
         }
     }
-//
-//    @Override
-//    public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
-//        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
-//        int row = state.getState().position.x;
-//        int col = state.getState().position.y;
-//
-//
-//
-//        for (String move : nextSteps(state.getState())) {
-//            switch (move) {
-//                case "Move Up":
-//                    AnalyzePossibleState(possibleStates, state, new Point(row - 1, col), move);
-//                    break;
-//                case "Move Right":
-//                    AnalyzePossibleState(possibleStates, state, new Point(row, col + 1), move);
-//                    break;
-//                case "Move Left":
-//                    AnalyzePossibleState(possibleStates, state, new Point(row, col - 1), move);
-//                    break;
-//                case "Move Down":
-//                    AnalyzePossibleState(possibleStates, state, new Point(row + 1 , col), move);
-//                    break;
-//            }
-//        }
-//
-////        for(State<PgLevel> s: possibleStates) {
-////            s.setCameFrom(state);
-////        }
-//        return possibleStates;
-//    }
-//
-//
-//    private ArrayList<String> nextSteps(PgLevel level) {
-//
-//        ArrayList<String> result = new ArrayList<>();
-//
-//        int i = level.position.x;
-//        int j = level.position.y;
-//
-//        char c = level.getObject(i,j);
-//
-//        switch (c) {
-//            case 's':
-//                result.add("Move Up");
-//                result.add("Move Right");
-//                result.add("Move Down");
-//                result.add("Move Left");
-//                break;
-//            case 'L':
-//                result.add("Move Up");
-//                result.add("Move Right");
-//                break;
-//            case 'F':
-//                result.add("Move Down");
-//                result.add("Move Right");
-//                break;
-//            case '7':
-//                result.add("Move Down");
-//                result.add("Move Left");
-//                break;
-//            case 'J':
-//                result.add("Move Up");
-//                result.add("Move Left");
-//                break;
-//            case '|':
-//                result.add("Move Down");
-//                result.add("Move Up");
-//                break;
-//            case '-':
-//                result.add("Move Left");
-//                result.add("Move Right");
-//                break;
-//        }
-//        return result;
-//    }
-    private ArrayList<String> nextSteps(char c) {
 
-        ArrayList<String> result = new ArrayList<>();
+    @Override
+    public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
+        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
+        int row = state.getState().position.x;
+        int col = state.getState().position.y;
+
+        List<Direction> nextSteps = nextSteps(state.getState());
+
+        for (Direction dir : nextSteps) {
+            AnalyzePossibleState(possibleStates, state, dir);
+        }
+
+        for (State<PgLevel> s : possibleStates) {
+            s.setCameFrom(state);
+            s.setCost(state.getCost() + 1);
+        }
+
+        visited.add(new Point(row, col));
+
+        return possibleStates;
+    }
+
+    public enum Direction {UP, DOWN, LEFT, RIGHT}
+
+    private List<Direction> nextSteps(PgLevel level) {
+
+        ArrayList<Direction> result = new ArrayList<>();
+
+        int i = level.position.x;
+        int j = level.position.y;
+
+        char c = level.getObject(i, j);
+
         switch (c) {
             case 's':
-                result.add("Move Up");
-                result.add("Move Right");
-                result.add("Move Down");
-                result.add("Move Left");
+                result.add(UP);
+                result.add(RIGHT);
+                result.add(DOWN);
+                result.add(LEFT);
                 break;
             case 'L':
-                result.add("Move Up");
-                result.add("Move Right");
+                result.add(UP);
+                result.add(RIGHT);
                 break;
             case 'F':
-                result.add("Move Down");
-                result.add("Move Right");
+                result.add(DOWN);
+                result.add(RIGHT);
                 break;
             case '7':
-                result.add("Move Down");
-                result.add("Move Left");
+                result.add(DOWN);
+                result.add(LEFT);
                 break;
             case 'J':
-                result.add("Move Up");
-                result.add("Move Left");
+                result.add(UP);
+                result.add(LEFT);
                 break;
             case '|':
-                result.add("Move Down");
-                result.add("Move Up");
+                result.add(DOWN);
+                result.add(UP);
                 break;
             case '-':
-                result.add("Move Left");
-                result.add("Move Right");
+                result.add(LEFT);
+                result.add(RIGHT);
                 break;
         }
         return result;
     }
 
-    private boolean up(int i, int j, PgLevel level) {
-        if(!isOutOfBound(i-1,j)) {
-            switch (level.getObject(i - 1, j)) {
-                case '7':
-                case '|':
-                case 'F':
-                case 'g':
-                    return true;
-            }
-        }
-        return false;
-    }
-
-     private boolean right(int i, int j, PgLevel level) {
-         if(!isOutOfBound(i,j + 1)) {
-             switch (level.getObject(i, j + 1)) {
-                 case '7':
-                 case 'J':
-                 case '-':
-                 case 'g':
-                     return true;
-             }
-         }
-        return false;
-    }
-
-     private boolean left(int i, int j, PgLevel level) {
-         if(!isOutOfBound(i,j-1)) {
-             switch (level.getObject(i, j - 1)) {
-                 case 'F':
-                 case 'L':
-                 case '-':
-                 case 'g':
-                     return true;
-             }
-         }
-        return false;
-    }
-
-     private boolean down(int i, int j, PgLevel level) {
-         if(!isOutOfBound(i+1,j)) {
-             switch (level.getObject(i + 1, j)) {
-                 case 'J':
-                 case 'L':
-                 case '|':
-                 case 'g':
-                     return true;
-             }
-         }
-        return false;
-    }
-
     public boolean isGoalState(State<PgLevel> state) {
-        PgLevel level = state.getState();
-        return findGoal(level.start.x, level.start.y, level);
-    }
-
-    /* MERON CODE */
-    @Override
-    public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
-        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
-
-
-        for (int i = 0; i < state.getState().getNumOfRows(); i++) {
-            for (int j = 0; j < state.getState().getNumOfCol(); j++) {
-                int times = 0;
-
-                switch (state.getState().getObject(i,j)) {
-                    case 'L':
-                    case 'F':
-                    case 'J':
-                    case '7':
-                        times = 4;
-                        break;
-                    case '-':
-                    case '|':
-                        times = 2;
-                        break;
-                }
-
-                State<PgLevel> s = new State<> (new PgLevel(state.getState()));
-                s.setCameFrom(new State<PgLevel>(state.getState()));
-                for(int k = 0; k < times+1; k++) {
-
-                    s.getState().rotate(i,j).setPosition(i,j);
-                    if(!visited.contains(s.getState()) && findGoal(i,j,new PgLevel(s.getState()).setObject(state.getState().start.x,state.getState().start.y,' '))) {
-//                        System.out.println(s.getState());
-//                        System.out.println(s.getState().getPosition().x);
-//                        System.out.println(s.getState().getPosition().y);
-                        possibleStates.add(s);
-                        visited.add(s.getState());
-                    }
-
-                }
-            }
+        return state.getState().getObjectOnPosition() == 'g';
         }
-        //System.out.println("########");
-        return possibleStates;
-    }
-
-    /* END MERON CODE */
-//
-//        public boolean isGoalState(State<PgLevel> state) {
-//        PgLevel level = state.getState();
-//        int i = level.position.x;
-//        int j = level.position.y;
-//
-//        for(String move: nextSteps(level)) {
-//            switch(move) {
-//                case "Move Up":
-//                    if(up(i,j,level) && level.getObject(i - 1 , j ) == 'g') return true;
-//                    break;
-//                case "Move Right":
-//                    if(right(i,j,level) && level.getObject(i , j + 1 ) == 'g') return true;
-//                    break;
-//                case "Move Down":
-//                    if(down(i,j,level) && level.getObject(i + 1, j ) == 'g') return true;
-//                    break;
-//                case "Move Left":
-//                    if(left(i,j,level) && level.getObject(i , j - 1 ) == 'g') return true;
-//                    break;
-//            }
-//        }
-//
-//
-//        return false;
-//    }
-
-
-    @Override
-    public double getStateEvaluation(State<PgLevel> state) {
-        return PgHeuristic(state,1);
-    }
-
-    private boolean findGoal(int i, int j, PgLevel level) {
-        level = level.copy();
-        char c = level.getObject(i, j);
-        level.setObject(i, j, ' ');
-
-        switch (c) {
-            case 'g':
-                return true;
-            case 's':
-                return up(i, j, level) && findGoal(i - 1, j, level) ||
-                        down(i, j, level) && findGoal(i + 1, j, level) ||
-                        right(i, j, level) && findGoal(i, j + 1, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            case '|':
-                return  up(i, j, level) && findGoal(i - 1, j, level) ||
-                        down(i, j, level) && findGoal(i + 1, j, level);
-            case '-':
-                return  right(i, j, level) && findGoal(i, j + 1, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            case 'L':
-                return  up(i, j, level) && findGoal(i - 1, j, level) ||
-                        right(i, j, level) && findGoal(i, j + 1, level);
-            case 'F':
-                return  down(i, j, level) && findGoal(i + 1, j, level) ||
-                        right(i, j, level) && findGoal(i, j + 1, level);
-            case '7':
-                return  down(i, j, level) && findGoal(i + 1, j, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            case 'J':
-                return  up(i, j, level) && findGoal(i - 1, j, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            default:
-                return false;
-        }
-    }
-
-
-    private boolean findStart(int i, int j, PgLevel level) {
-        level = level.copy();
-        char c = level.getObject(i, j);
-        level.setObject(i, j, ' ');
-
-        switch (c) {
-            case 's':
-                return true;
-            case 'g':
-                return up(i, j, level) && findGoal(i - 1, j, level) ||
-                        down(i, j, level) && findGoal(i + 1, j, level) ||
-                        right(i, j, level) && findGoal(i, j + 1, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            case '|':
-                return  up(i, j, level) && findGoal(i - 1, j, level) ||
-                        down(i, j, level) && findGoal(i + 1, j, level);
-            case '-':
-                return  right(i, j, level) && findGoal(i, j + 1, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            case 'L':
-                return  up(i, j, level) && findGoal(i - 1, j, level) ||
-                        right(i, j, level) && findGoal(i, j + 1, level);
-            case 'F':
-                return  down(i, j, level) && findGoal(i + 1, j, level) ||
-                        right(i, j, level) && findGoal(i, j + 1, level);
-            case '7':
-                return  down(i, j, level) && findGoal(i + 1, j, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            case 'J':
-                return  up(i, j, level) && findGoal(i - 1, j, level) ||
-                        left(i, j, level) && findGoal(i, j - 1, level);
-            default:
-                return false;
-        }
-    }
-
-
-    static double PgHeuristic(State<PgLevel> s, int kind) {
-        double movement_cost = s.getCost(); // TODO: Should be a better grade;
-        int nodeX = s.getState().position.x;
-        int nodeY = s.getState().position.y;
-        int endX = s.getState().end.x;
-        int endY = s.getState().end.y;
-
-        switch (kind) {
-            case 1:
-                /** 1.
-                 * The Manhattan Distance is taking the distance from going all the way on the X axis and adding that to the distance all the way on the Y axis to go from point A to point B.
-                 * This heuristic should usually be used whenever the AI can only move in the 4 cardinal directions.
-                 */
-                return movement_cost * (Math.abs(nodeX - endX) + Math.abs(nodeY - endY));
-            case 2:
-                /** 2.
-                 * The Pythagorean Distance is the most common form of distance, and is used when you can move in all directions.
-                 */
-                return movement_cost * Math.sqrt((nodeX - endX) ^ 2 + (nodeY - endY) ^ 2);
-            case 3:
-                /** 3.
-                 * The Chebyshev Distance is used whenever you're allowed to move in diagonally, so in 8 directions.
-                 * Assuming both straight and diagonals cost the same, this code should work sufficiently.
-                 */
-                return movement_cost * Math.max(Math.abs(nodeX - endX), Math.abs(nodeY - endY));
-
-                default:
-                    // Manhattan Distance is default
-                    return movement_cost * (Math.abs(nodeX - endX) + Math.abs(nodeY - endY));
-        }
-    }
-
-
-    public static void main(String[] args) {
-        PgLevel level = PgLevel.LevelBuilder.build(
-                "7-  \n" +
-                        "Js-7\n" +
-                        "7- g");
-
-        //System.out.println(level.position);
-        /* Is goals state + time */
-        PgSearchable searchable = new PgSearchable(level);
-
-        System.out.println(searchable.findGoal(1,2, level));
-//
-//        long startTime = System.nanoTime();
-//        System.out.println(searchable.isGoalState(new State<>(level)));
-//        long endTime = System.nanoTime();
-//        long duration = (endTime - startTime);
-//        Long ms = duration / 1000000;
-//        Double sec = (double) duration / 1000000000.0;
-//        System.out.println("isGoalState took: " + ms + "ms" + " ("+sec+"sec)");
-
-//        System.out.println("---------------------------");
-//
-//        long startTime2 = System.nanoTime();
-//        System.out.println(searchable.isGoalState(new State<PgLevel>(level)));
-//        long endTime2 = System.nanoTime();
-//        long duration2 = (endTime2 - startTime2);
-//        Long ms2 = duration2 / 1000000;
-//        Double sec2 = (double) duration2 / 1000000000.0;
-//
-//        System.out.println("isGoalState took: " + ms2 + "ms" + " ("+sec2+"sec)");
-//
-
-//        /* Print only next possible states */
-//        ArrayList<State<PgLevel>> list = searchable.getPossibleStates(new State<>(level));
-//        int i = 0;
-//        for(State<PgLevel> item: list) {
-//            System.out.println("*****");
-//            System.out.println("* "+ ++i +" *");
-//            System.out.println("*****");
-//            System.out.println(item);
-//            System.out.println();
-//        }
-
-//        /* next steps test */
-//        for(String str: searchable.nextSteps(level)) {
-//            System.out.println(str);
-//        }
-
-//        State<PgLevel> state = new State<>(level);
-//        System.out.println(state.getCameFrom());
-//
-    }
 
 
 }

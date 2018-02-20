@@ -15,18 +15,28 @@ import game_server_interface.Solver;
 public class PgSolver implements Solver {
     @Override
     public PgDirections solve(PgLevel level) {
-        Searcher<PgLevel> searcher = new BFS<>();
-        //Searcher<PgLevel> searcher = new DFS<>();
-        //Searcher<PgLevel> searcher = new BestFirstSearch<>();
-        return new PgDirections(searcher.search(new PgSearchable(level)), level);
+
+        Searcher<PgLevel> BFSSearcher = new BFS<>();
+        Searcher<PgLevel> DFSSearcer = new DFS<>();
+        Searcher<PgLevel> BestFirstSearcher = new BestFirstSearch<>(new PgManhattanDistance());
+        Searcher<PgLevel> HillClimbing = new HillClimbing<>(500, new PgManhattanDistance());
+
+
+        PgSearchable pgSearchable = new PgSearchable(level);
+
+        Solution<PgLevel> solution = HillClimbing.search(pgSearchable);
+
+        if(solution == null) {
+            solution = BFSSearcher.search(pgSearchable);
+        }
+
+        return new PgDirections(solution, level);
     }
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
-        PgLevel level = PgLevel.LevelBuilder.build(
-                "7-  \n" +
-                        "Js|J\n" +
-                        "7- g");
+        PgLevel level = LevelBuilder.build(
+                "s|g");
 
         System.out.println("You ask for solution to: ");
         System.out.println(level);
@@ -40,14 +50,13 @@ public class PgSolver implements Solver {
             Long ms = duration / 1000000;
             Double sec = (double) duration / 1000000000.0;
 
-            System.out.println("TOTAL: " + ms + "ms" + " ("+sec+"sec)");
+            System.out.println("TOTAL: " + ms + "ms" + " (" + sec + "sec)");
             System.out.println("\nThe vectors backtrace is:");
             if (vectors != null) {
                 System.out.println(vectors.toString());
             }
-        } catch (NullPointerException ignored){}
-
-
+        } catch (NullPointerException ignored) {
+        }
 
 
     }
