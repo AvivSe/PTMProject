@@ -1,8 +1,10 @@
+/**
+ *
+ * With this class you can describe any generic type, for example, it can describe the Pipe game problem states, EightPuzzle problem and etc..
+ * Aviv Segal
+ */
 package searcher_interface;
 
-import pipe_game_server.PgLevel; // only for test! this class is generic.
-
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class State<T>  {

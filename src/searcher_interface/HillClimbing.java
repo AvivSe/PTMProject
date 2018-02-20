@@ -1,7 +1,13 @@
 
-package common_searchers;
-
-import searcher_interface.*;
+package searcher_interface;
+/**
+ *
+ * In numerical analysis, hill climbing is a mathematical optimization technique which belongs to the family of local search.
+ * It is an iterative algorithm that starts with an arbitrary solution to a problem,
+ * then attempts to find a better solution by incrementally changing a single element of the solution.
+ * If the change produces a better solution, an incremental change is made to the new solution, repeating until no-
+ * further improvements can be found.
+ */
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,20 +32,22 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
         while (System.currentTimeMillis() - time0 < timeToRun) {
             ArrayList<State<T>> neighbors = searchable.getPossibleStates(next);
 
-            if (searchable.isGoalState(next)) return this.bt(next);
+            if (searchable.isGoalState(next)) {
+                System.out.println("HillClimbing: Goal");
+               // solution.add(next.getState());
+              //  return solution;
+                return this.BackTrace(next);
+            }
 
             if (neighbors.size() > 0) {
                 if (Math.random() < 0.7) { // with a high probability
                     // find the best one
-                    double grade = 0;
+                    double grade =  Double.POSITIVE_INFINITY;
                     for (State<T> step : neighbors) {
                         double g = grader.calcHeuristic(step);
-                        if (g <= grade) {
+                        if (g < grade) {
                             grade = g;
                             next = step;
-                            //add this step to the solution
-                            //result.add
-                            //result.add(step[0]);
                         }
                     }
                 } else {
@@ -47,7 +55,7 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
                 }
             }
         }
-
+        System.out.println("HillClimbing: TimeOut / NoPath");
         return null;
 
     }

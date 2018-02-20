@@ -32,7 +32,6 @@ public class PgClientHandler implements ClientHandler {
         System.out.println("Client ask for directions to level: \n"  + tmp);
 
         try {
-            // TODO: Turen on cash manger by uncommet thus lines.
                 out.print(this.cacheManager.load(tmp).toString());
                 System.out.println("Cache said: I have it in files :)");
                 out.flush();

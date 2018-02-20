@@ -7,17 +7,13 @@
  * 2. Repeat until the end is found or no possible options.
  */
 
-package common_searchers;
-
-import searcher_interface.*;
+package searcher_interface;
 
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<T> {
     public BestFirstSearch(Heuristic heuristic) {
         super(heuristic);
-        System.out.println("Greedy Best-first Search is initialized");
     }
 
     @Override
@@ -28,8 +24,7 @@ public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<
 
             if (searchable.isGoalState(n)) {
                 System.out.println("Best-first: GOAL!");
-                System.out.println("Cost: " + n.getCost());
-                return bt(n);
+                return BackTrace(n);
             }
 
             List<State<T>> possibleStates = searchable.getPossibleStates(n);
@@ -38,26 +33,16 @@ public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<
                     if (!openList.contains(s)) {
                         openList.add(s);
                     } else {
-                        updateCostInOpenList(s);
+                        updateHeuristicInPriorityQueue(s);
                     }
                 }
             }
 
             closeList.add(n);
         }
-        System.out.println("Can't find path");
+        System.out.println("Best-first: Can't find path");
         return null;
     }
 
-    public static void main(String[] args) {
-        PriorityQueue<Integer> queue =
-                new PriorityQueue<>(Integer::compare);
-        queue.add(10);
-        queue.add(1);
-        queue.add(20);
-        System.out.println(queue.poll());
-        System.out.println("Size: " + queue.size());
-
-    }
 
 }

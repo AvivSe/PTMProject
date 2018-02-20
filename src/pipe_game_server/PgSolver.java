@@ -8,7 +8,6 @@
 
 package pipe_game_server;
 
-import common_searchers.*;
 import searcher_interface.*;
 import game_server_interface.Solver;
 
@@ -19,16 +18,21 @@ public class PgSolver implements Solver {
         Searcher<PgLevel> BFSSearcher = new BFS<>();
         Searcher<PgLevel> DFSSearcer = new DFS<>();
         Searcher<PgLevel> BestFirstSearcher = new BestFirstSearch<>(new PgManhattanDistance());
-        Searcher<PgLevel> HillClimbing = new HillClimbing<>(500, new PgManhattanDistance());
+        Searcher<PgLevel> HillClimbingManhattan = new HillClimbing<>(5000, new PgRandomHeuristic());
+        //Searcher<PgLevel> HillClimbingRandom = new HillClimbing<>(10000, new PgRandomHeuristic());
 
+        Solution solution;
 
         PgSearchable pgSearchable = new PgSearchable(level);
 
-        Solution<PgLevel> solution = HillClimbing.search(pgSearchable);
+        //solution = HillClimbingRandom.search(pgSearchable);
+      // solution = HillClimbingManhattan.search(pgSearchable);
 
-        if(solution == null) {
+       // if(solution == null) {
             solution = BFSSearcher.search(pgSearchable);
-        }
+            //solution = DFSSearcer.search(pgSearchable);
+            //solution = BestFirstSearcher.search(pgSearchable);
+     //   }
 
         return new PgDirections(solution, level);
     }

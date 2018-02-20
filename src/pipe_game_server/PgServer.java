@@ -5,7 +5,6 @@
 
 package pipe_game_server;
 
-import adminstrator.MyAdministrator;
 import game_server_interface.ClientHandler;
 import game_server_interface.Server;
 
@@ -75,9 +74,7 @@ public class PgServer implements Server {
                 } catch (IOException error) {
                     System.out.println(error.getMessage()+" Waiting for another Client...");
                 }
-            }catch (SocketTimeoutException error) {
-                //System.out.println(error.getMessage());
-            }
+            }catch (SocketTimeoutException ignored) { }
         }
         server.close();
     }
@@ -85,7 +82,6 @@ public class PgServer implements Server {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         PgServer myServer = new PgServer(6400);
         myServer.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
-        //new MyAdministrator(myServer, new PgClientHandler(new PgSolver(),new PgCacheManager())).gui();
     }
 
 }

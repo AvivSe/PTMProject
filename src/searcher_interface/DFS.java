@@ -1,11 +1,5 @@
-package common_searchers;
+package searcher_interface;
 
-import searcher_interface.Searchable;
-import searcher_interface.Searcher;
-import searcher_interface.Solution;
-import searcher_interface.State;
-
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class DFS<T> extends CommonSearcher implements Searcher<T> {
@@ -13,13 +7,10 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
 
     public DFS() {
         stack = new Stack<>();
-        System.out.println("DFS is initialized..");
     }
-
 
     @Override
     public Solution search(Searchable<T> searchable) {
-        long startTime = System.nanoTime();
         State<T> initialState = searchable.getInitialState();
 
         stack.add(initialState);
@@ -27,18 +18,13 @@ public class DFS<T> extends CommonSearcher implements Searcher<T> {
         while(!stack.isEmpty()){
             State<T> current = stack.pop();
             if (!closeList.contains(current)) {
-                System.out.println("exploring..");
                 if (searchable.isGoalState(current)) {
                     System.out.println("DFS: GOAL!");
-                    System.out.println("Cost: " + current.getCost());
-                    return bt(current);
+                    return BackTrace(current);
                 } else {
                     stack.addAll(searchable.getPossibleStates(current));
-                    System.out.println("Stack: " + stack.size());
                     closeList.add(current);
                 }
-            } else {
-                System.out.println("Dupli Prevented");
             }
         }
 

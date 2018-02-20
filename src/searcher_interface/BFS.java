@@ -1,9 +1,5 @@
-package common_searchers;
+package searcher_interface;
 
-import searcher_interface.Searchable;
-import searcher_interface.Searcher;
-import searcher_interface.Solution;
-import searcher_interface.State;
 import java.util.*;
 
 public class BFS<T> extends CommonSearcher implements Searcher<T> {
@@ -12,12 +8,10 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
     public BFS() {
         super();
         queue =  new LinkedList<>();
-        System.out.println("BFS is initialized..");
     }
 
     @Override
-    public Solution<State<T>> search(Searchable<T> searchable) {
-        long startTime = System.nanoTime();
+    public Solution search(Searchable<T> searchable) {
         State<T> initialState = searchable.getInitialState();
 
         queue.add(initialState);
@@ -27,9 +21,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
            if (!closeList.contains(current)) {
                 if (searchable.isGoalState(current)) {
                     System.out.println("BFS: GOAL!");
-                    System.out.println(current.getState());
-                    System.out.println("Cost: " + current.getCost());
-                    return bt(current);
+                    return BackTrace(current);
                 } else {
                     ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
                         queue.addAll(nextPossibleStates);

@@ -1,10 +1,8 @@
 package pipe_game_server;
 
-import pipe_game_server.PgLevel;
 import searcher_interface.Heuristic;
 import searcher_interface.State;
 
-import java.awt.*;
 
 public class PgManhattanDistance implements Heuristic<PgLevel> {
     @Override
@@ -14,8 +12,9 @@ public class PgManhattanDistance implements Heuristic<PgLevel> {
         int endX = s.getState().getEnd().x;
         int endY = s.getState().getEnd().y;
 
-        // The Manhattan Distance is taking the distance from going all the way on the X axis and adding that to the distance all the way on the Y axis to go from point A to point B.
+        // The Manhattan Distance is taking the distance from going all the way on the X axis and -
+        // adding that to the distance all the way on the Y axis to go from point A to point B.
         // This heuristic should usually be used whenever the AI can only move in the 4 cardinal directions.
-        return (Math.abs(startX - endX) + Math.abs(startY - endY));
+        return Math.abs(startX - endX) + Math.abs(startY - endY);
     }
 }

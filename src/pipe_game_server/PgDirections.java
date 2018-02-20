@@ -56,7 +56,6 @@ public class PgDirections extends ArrayList<String> implements Directions {
 
         int timesToRotate = 0;
 
-
         switch (left) {
             case '|':
             case '-':
