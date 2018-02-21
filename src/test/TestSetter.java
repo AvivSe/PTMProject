@@ -32,24 +32,13 @@ public class TestSetter {
 	// run your server here
 	static Server s;
 	public static void runServer(int port){
-		try {
 			s=new PgServer(port);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
 			s.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 	}
 	// stop your server here
 	public static void stopServer(){
-		try {
 			s.stop();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

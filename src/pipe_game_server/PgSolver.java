@@ -18,20 +18,19 @@ public class PgSolver implements Solver {
         Searcher<PgLevel> BFSSearcher = new BFS<>();
         Searcher<PgLevel> DFSSearcer = new DFS<>();
         Searcher<PgLevel> BestFirstSearcher = new BestFirstSearch<>(new PgManhattanDistance());
-        Searcher<PgLevel> HillClimbingManhattan = new HillClimbing<>(5000, new PgRandomHeuristic());
-        //Searcher<PgLevel> HillClimbingRandom = new HillClimbing<>(10000, new PgRandomHeuristic());
+        Searcher<PgLevel> HillClimbingManhattan = new HillClimbing<>(5000, new PgManhattanDistance());
 
         Solution solution;
 
         PgSearchable pgSearchable = new PgSearchable(level);
 
-        //solution = HillClimbingRandom.search(pgSearchable);
-      // solution = HillClimbingManhattan.search(pgSearchable);
+        //solution = RandomHB.search(pgSearchable);
+       //solution = HillClimbingManhattan.search(pgSearchable);
 
        // if(solution == null) {
-            solution = BFSSearcher.search(pgSearchable);
+            //solution = BFSSearcher.search(pgSearchable);
             //solution = DFSSearcer.search(pgSearchable);
-            //solution = BestFirstSearcher.search(pgSearchable);
+            solution = BestFirstSearcher.search(pgSearchable);
      //   }
 
         return new PgDirections(solution, level);
@@ -42,23 +41,24 @@ public class PgSolver implements Solver {
         PgLevel level = LevelBuilder.build(
                 "s|g");
 
-        System.out.println("You ask for solution to: ");
-        System.out.println(level);
+//        System.out.println("You ask for solution to: ");
+//        System.out.println(level);
 
         try {
             long startTime = System.nanoTime();
             PgDirections vectors = mySolver.solve(level);
             long endTime = System.nanoTime();
-
+            // put here something to check
             long duration = (endTime - startTime);
             Long ms = duration / 1000000;
             Double sec = (double) duration / 1000000000.0;
 
-            System.out.println("TOTAL: " + ms + "ms" + " (" + sec + "sec)");
-            System.out.println("\nThe vectors backtrace is:");
-            if (vectors != null) {
-                System.out.println(vectors.toString());
-            }
+//            System.out.println("TOTAL: " + ms + "ms" + " (" + sec + "sec)");
+//            System.out.println("\nThe vectors backtrace is:");
+
+//            if (vectors != null) {
+//                System.out.println(vectors.toString());
+//            }
         } catch (NullPointerException ignored) {
         }
 

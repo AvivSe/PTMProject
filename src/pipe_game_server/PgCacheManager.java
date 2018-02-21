@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class PgCacheManager implements CacheManager {
     @Override
-    public PgDirections load(String request) throws IOException {
+    public PgDirections load(String request) {
         try {
             Scanner in = new Scanner(new FileInputStream(path + Integer.toString(request.hashCode())));
             PgDirections directions = new PgDirections();
@@ -24,7 +24,7 @@ public class PgCacheManager implements CacheManager {
             //return null;
             return directions;
             } catch (FileNotFoundException e) {
-            System.out.println("Cache: Don't have it in DB.\n");
+//            System.out.println("Cache: Don't have it in DB.\n");
         }
         return null;
     }

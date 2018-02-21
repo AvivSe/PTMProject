@@ -23,7 +23,7 @@ public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<
             State<T> n = openList.poll();
 
             if (searchable.isGoalState(n)) {
-                System.out.println("Best-first: GOAL!");
+//                System.out.println("Best-first: GOAL!");
                 return BackTrace(n);
             }
 
@@ -40,7 +40,7 @@ public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<
 
             closeList.add(n);
         }
-        System.out.println("Best-first: Can't find path");
+//        System.out.println("Best-first: Can't find path");
         return null;
     }
 

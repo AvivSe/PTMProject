@@ -29,45 +29,25 @@ public class PgClientHandler implements ClientHandler {
         String tmp = req.toString();
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = LevelBuilder.build(tmp);
-        System.out.println("Client ask for directions to level: \n"  + tmp);
+//        System.out.println("Client ask for directions to level: \n"  + tmp);
 
         try {
                 out.print(this.cacheManager.load(tmp).toString());
-                System.out.println("Cache said: I have it in files :)");
-                out.flush();
+//                System.out.println("Cache said: I have it in files :)");
         } catch (NullPointerException error) {
             try {
-                System.out.println("Solver said: maybe I can solve it :)");
+//                System.out.println("Solver said: maybe I can solve it :)");
                 Directions pgDirections = solver.solve(request);
                 cacheManager.save(tmp , pgDirections.toString());
-                System.out.println("\nSolution is:\n"+ pgDirections.toString());
-                out.print(pgDirections.toString());
-                out.flush();
-            } catch (NullPointerException error2) {
-                System.out.println("Solver said: I cant solve it :(");
-                System.out.print("Client did not got an answer. ");
-                out.print("done");
-                out.flush();
-            }
-        }
-//        Directions pgDirections = this.cacheManager.load(tmp);
-//        if (pgDirections != null) {
-//            System.out.println("Cache said: I have it in files :)");
-//            out.write(pgDirections.toString());
-//        } else {
-//            System.out.println("Solver said: maybe I can solve it :)");
-//            try {
-//                pgDirections = solver.solve(request);
-//                cacheManager.save(tmp , pgDirections.toString());
 //                System.out.println("\nSolution is:\n"+ pgDirections.toString());
-//                out.write(pgDirections.toString());
-//            }  catch (NullPointerException error) {
+                out.print(pgDirections.toString());
+            } catch (NullPointerException error2) { // if there is no solution till now:
 //                System.out.println("Solver said: I cant solve it :(");
 //                System.out.print("Client did not got an answer. ");
-//                out.write("done");
-//            }
-//        }
-        System.out.print("Client got answer. ");
+                out.print("done");
+            }
+        }
+//        System.out.print("Client got answer. ");
 
         out.flush();
         out.close();
