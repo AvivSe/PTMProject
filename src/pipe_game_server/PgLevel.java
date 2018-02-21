@@ -121,16 +121,24 @@ public class PgLevel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PgLevel pgLevel = (PgLevel) o;
-        return this.position.equals(pgLevel.position) && Arrays.equals(matrix, pgLevel.matrix);
+
+        for(int i =0; i < getNumOfRows(); i++) {
+            for(int j =0; j < getNumOfCol(); j++) {
+                if(matrix[i][j] != pgLevel.matrix[i][j])
+                    return false;
+            }
+        }
+
+        return Objects.equals(position, pgLevel.position);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(position.x, position.y);
+
+        int result = Objects.hash(position);
         result = 31 * result + Arrays.hashCode(matrix);
         return result;
     }
-
 
     public static void main(String[] args) {
         PgLevel level = LevelBuilder.build("s-7\n|-g");

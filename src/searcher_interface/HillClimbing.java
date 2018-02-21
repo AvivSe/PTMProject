@@ -33,7 +33,7 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
             ArrayList<State<T>> neighbors = searchable.getPossibleStates(next);
 
             if (searchable.isGoalState(next)) {
-                System.out.println("HillClimbing: Goal");
+                //System.out.println("HillClimbing: Goal");
                 return this.BackTrace(next);
             }
 
@@ -51,10 +51,10 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
                 } else {
                     next = neighbors.get(new Random().nextInt(neighbors.size()));
                 }
-                System.out.println(next.getState());
+               // System.out.println(next.getState());
             }
         }
-        System.out.println("HillClimbing: TimeOut / NoPath");
+        //System.out.println("HillClimbing: TimeOut / NoPath");
         return null;
 
     }

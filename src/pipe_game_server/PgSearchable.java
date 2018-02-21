@@ -15,11 +15,9 @@ import static pipe_game_server.PgSearchable.Direction.*;
 
 public class PgSearchable implements Searchable<PgLevel> {
     private State<PgLevel> initialState;
-    private List<Point> visited;
 
     PgSearchable(PgLevel level) {
         this.initialState = new State<>(level);
-        visited = new ArrayList<>();
     }
 
     @Override
@@ -161,8 +159,6 @@ public class PgSearchable implements Searchable<PgLevel> {
             s.setCameFrom(state);
             s.setCost(state.getCost() + 1);
         }
-
-        visited.add(new Point(row, col));
 
         return possibleStates;
     }

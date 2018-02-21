@@ -10,19 +10,22 @@ class PrioritySearcher<T> extends CommonSearcher<T> {
     Heuristic heuristic1;
 
     PrioritySearcher(Heuristic heuristic) {
-        this.openList = new PriorityQueue<>(Comparator.comparingDouble((ToDoubleFunction<State<T>>) heuristic::calcHeuristic));
-    }
+        this.openList = new PriorityQueue<>((o1, o2) -> {
+            if (heuristic.calcHeuristic(o1) < heuristic.calcHeuristic(o2)) return -1;
+            else if (heuristic.calcHeuristic(o1) > heuristic.calcHeuristic(o2)) return 1;
+            else return 0;
+        });    }
 
-    void updateHeuristicInPriorityQueue(State<T> newState) {
+    void updateCostInPriorityQueue(State<T> newState) {
         ArrayList<State<T>> poppedStates = new ArrayList<>();
         //State<T> poppedState = openList.remove();
 
         // Pop all the states until you reach the state we wish to update.
-        while (openList.size() != 0 && openList.peek() != newState) {
+        while (openList.size() != 0 && !openList.peek().equals(newState) ) {
             poppedStates.add(openList.remove());
         }
 
-        if (heuristic1.calcHeuristic(openList.peek()) > heuristic1.calcHeuristic(newState)) {
+        if (openList.peek().getCost() > newState.getCost()) {
             // Dequeue the state with the old cost
             // and enqueue the state with the new cost.
             openList.remove();

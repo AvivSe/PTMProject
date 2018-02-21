@@ -21,8 +21,8 @@ public class PgCacheManager implements CacheManager {
                 directions.add(in.nextLine());
             }
 
-            return null;
-            //return directions;
+            //return null;
+            return directions;
             } catch (FileNotFoundException e) {
 //            System.out.println("Cache: Don't have it in DB.\n");
         }

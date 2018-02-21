@@ -33,7 +33,7 @@ public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<
                     if (!openList.contains(s)) {
                         openList.add(s);
                     } else {
-                        updateHeuristicInPriorityQueue(s);
+//                        updateCostInPriorityQueue(s);
                     }
                 }
             }

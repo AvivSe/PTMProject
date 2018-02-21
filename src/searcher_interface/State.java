@@ -61,7 +61,6 @@ public class State<T>  {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(state);
     }
 

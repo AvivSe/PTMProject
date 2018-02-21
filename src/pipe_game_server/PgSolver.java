@@ -25,13 +25,14 @@ public class PgSolver implements Solver {
         PgSearchable pgSearchable = new PgSearchable(level);
 
         //solution = RandomHB.search(pgSearchable);
-       //solution = HillClimbingManhattan.search(pgSearchable);
+       solution = HillClimbingManhattan.search(pgSearchable);
 
        // if(solution == null) {
-            //solution = BFSSearcher.search(pgSearchable);
+//            solution = BFSSearcher.search(pgSearchable);
             //solution = DFSSearcer.search(pgSearchable);
-            solution = BestFirstSearcher.search(pgSearchable);
+           // solution = BestFirstSearcher.search(pgSearchable);
      //   }
+        //System.out.println("END");
 
         return new PgDirections(solution, level);
     }
