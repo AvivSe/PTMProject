@@ -10,6 +10,6 @@ public interface Server {
      * @param clientHandler Various implements solving different kinds of problems or requests.
      */
 
-    public void start(ClientHandler clientHandler);
-    public void stop() ;
+    void start(ClientHandler clientHandler);
+    void stop() ;
 }

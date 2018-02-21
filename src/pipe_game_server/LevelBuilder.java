@@ -15,7 +15,7 @@ public class LevelBuilder {
             for (int j = 0; j < result.getNumOfCol(); j++) {
                 if (chars[j] == 's') {
                     result.setStart(new Point(i, j));
-                    result.position = result.getStart();
+                    result.setPosition(result.getStart());
                 }
                 if (chars[j] == 'g') {
                     result.setEnd(new Point(i, j));

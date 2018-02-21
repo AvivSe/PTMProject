@@ -62,20 +62,24 @@ public class PgSearchable implements Searchable<PgLevel> {
     }
 
     private void AnalyzePossibleState(List<State<PgLevel>> list, State<PgLevel> state, Direction cameFromDirection) {
-        int row = state.getState().position.x;
-        int col = state.getState().position.y;
+        int row = state.getState().getX();
+        int col = state.getState().getY();
         Point position = applyMoveToDirection(row, col, cameFromDirection);
 
+        /* case you out of matrix bounds */
         if (isOutOfBound(position.x, position.y)) return;
 
+        /* case you moved where you came from */
         if (state.getCameFrom() != null) {
-            int cameFromX = state.getCameFrom().getState().position.x;
-            int cameFromY = state.getCameFrom().getState().position.y;
+            int cameFromX = state.getCameFrom().getState().getX();
+            int cameFromY = state.getCameFrom().getState().getY();
             if (position.x == cameFromX && position.y == cameFromY)
                 return;
         }
 
         PgLevel level = state.getState();
+
+        /* editing only deep copy */
         PgLevel tmp = new PgLevel(level);
 
         if (hasNoPipe(level, position)) return;
@@ -87,8 +91,8 @@ public class PgSearchable implements Searchable<PgLevel> {
             return;
         }
 
-        tmp.position.x = position.x;
-        tmp.position.y = position.y;
+        tmp.setX(position.x);
+        tmp.setY(position.y);
 
         switch (cameFromDirection) {
             case UP:
@@ -144,8 +148,8 @@ public class PgSearchable implements Searchable<PgLevel> {
     @Override
     public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
         ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
-        int row = state.getState().position.x;
-        int col = state.getState().position.y;
+        int row = state.getState().getX();
+        int col = state.getState().getY();
 
         List<Direction> nextSteps = nextSteps(state.getState());
 
@@ -169,8 +173,8 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         ArrayList<Direction> result = new ArrayList<>();
 
-        int i = level.position.x;
-        int j = level.position.y;
+        int i = level.getX();
+        int j = level.getY();
 
         char c = level.getObject(i, j);
 

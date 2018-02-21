@@ -18,7 +18,7 @@ public class PgSolver implements Solver {
         Searcher<PgLevel> BFSSearcher = new BFS<>();
         Searcher<PgLevel> DFSSearcer = new DFS<>();
         Searcher<PgLevel> BestFirstSearcher = new BestFirstSearch<>(new PgManhattanDistance());
-        Searcher<PgLevel> HillClimbingManhattan = new HillClimbing<>(5000, new PgManhattanDistance());
+        Searcher<PgLevel> HillClimbingManhattan = new HillClimbing<>(5000, new PgRandomHeuristic());
 
         Solution solution;
 

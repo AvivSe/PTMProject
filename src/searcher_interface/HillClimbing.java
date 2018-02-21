@@ -14,11 +14,11 @@ import java.util.Random;
 
 public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
     private long timeToRun;
-    private Heuristic<T> grader;
+    private Heuristic<T> heuristic;
 
-    public HillClimbing(long timeToRun, Heuristic<T> grader) {
+    public HillClimbing(long timeToRun, Heuristic<T> heuristic) {
         this.timeToRun = timeToRun;
-        this.grader = grader;
+        this.heuristic = heuristic;
     }
 
     @Override
@@ -33,17 +33,17 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
             ArrayList<State<T>> neighbors = searchable.getPossibleStates(next);
 
             if (searchable.isGoalState(next)) {
-//                System.out.println("HillClimbing: Goal");
+                System.out.println("HillClimbing: Goal");
                 return this.BackTrace(next);
             }
 
             if (neighbors.size() > 0) {
                 if (Math.random() < 0.7) { // with a high probability
                     // find the best one
-                    double grade =  Double.POSITIVE_INFINITY;
+                    double grade =  heuristic.indication();
                     for (State<T> step : neighbors) {
-                        double g = grader.calcHeuristic(step);
-                        if (g < grade) {
+                        double g = heuristic.calcHeuristic(step);
+                        if (heuristic.isLeftBetter(g , grade)) {
                             grade = g;
                             next = step;
                         }
@@ -51,9 +51,10 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
                 } else {
                     next = neighbors.get(new Random().nextInt(neighbors.size()));
                 }
+                System.out.println(next.getState());
             }
         }
-//        System.out.println("HillClimbing: TimeOut / NoPath");
+        System.out.println("HillClimbing: TimeOut / NoPath");
         return null;
 
     }

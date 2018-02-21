@@ -39,10 +39,10 @@ public class PgDirections extends ArrayList<String> implements Directions {
     // Vectors
     public PgDirections(Solution<PgLevel> solution, PgLevel request) {
         for (PgLevel outer : solution) {
-            int x = outer.position.x;
-            int y = outer.position.y;
+            int x = outer.getX();
+            int y = outer.getY();
 
-            char c = outer.getObject(outer.position.x, outer.position.y);
+            char c = outer.getObjectOnPosition();
 
             char c2 = request.getObject(x, y);
             if (c != ' ' && c != 's' && c != 'g' && c != c2) {

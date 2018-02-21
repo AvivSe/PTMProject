@@ -5,6 +5,18 @@ import searcher_interface.State;
 
 
 public class PgManhattanDistance implements Heuristic<PgLevel> {
+
+    @Override
+    public double indication() {
+        return Double.POSITIVE_INFINITY;
+    }
+
+    @Override
+    public boolean isLeftBetter(double left, double right) {
+
+        return left < right;
+    }
+
     @Override
     public double calcHeuristic(State<PgLevel> s) {
         int startX = s.getState().getStart().x;

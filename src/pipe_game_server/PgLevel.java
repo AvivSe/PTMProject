@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class PgLevel {
     private char[][] matrix;
-    Point position;
+    private Point position;
 
     Point start;
     Point end;
@@ -61,6 +61,22 @@ public class PgLevel {
 
     public void setY(int y) {
         this.position.y = y;
+    }
+
+    public int getX() {
+        return this.position.x;
+    }
+
+    public int getY() {
+        return this.position.y;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
     public char getObject(int row, int column) {
