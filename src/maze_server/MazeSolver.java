@@ -10,11 +10,11 @@ import java.util.List;
 public class MazeSolver implements Solver<Maze> {
 
     @Override
-    public MazeDirections solve(Maze m) {
+    public MazeInstructions solve(Maze m) {
         Searcher BestFS = new BestFirstSearch(new MazeHeuristic(m));
         Solution<Grid> solution = BestFS.search(new MazeSearchable(m));
 
-        return new MazeDirections(solution, m);
+        return new MazeInstructions(solution, m);
     }
 
 
@@ -54,12 +54,7 @@ public class MazeSolver implements Solver<Maze> {
         //actions=answer;
 
         final Grid p=m.getEntrance();
-        actions.forEach(s->{
-            if(s.equals("UP")) p.row--;
-            if(s.equals("DOWN")) p.row++;
-            if(s.equals("RIGHT")) p.col++;
-            if(s.equals("LEFT")) p.col--;
-        });
+        Maze.followSolverDirectionsGoalCheck(actions, p);
 
         if(!p.equals(m.getExit()))
             System.out.println("the Maze is not solved (-20)");

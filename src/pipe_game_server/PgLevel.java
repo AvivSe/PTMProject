@@ -3,6 +3,7 @@
  * in this game we have water flow from 's' to 'g', its a n*m grid and the water have to flow trow the pipes.
  * so in this case, Position symbols the location in the grid of the water, to describe various of 'states' we -
  * can both rotate the pipe and change the position.
+ * found it's better to hold both board and position same object, consider the board is not static in Pipe Game.
  * Aviv Segal
  */
 package pipe_game_server;
@@ -19,17 +20,15 @@ public class PgLevel {
     Point start;
     Point end;
 
-
     public char[][] getMatrix() {
         return matrix;
     }
 
-
     public PgLevel(PgLevel level) {
-        this.matrix = new char[level.getNumOfRows()][level.getNumOfCol()];
+        this.matrix = new char[level.getNumOfRows()][level.getNumOfCols()];
 
         for (int i = 0; i < getNumOfRows(); i++) {
-            for (int j = 0; j < getNumOfCol(); j++) {
+            for (int j = 0; j < getNumOfCols(); j++) {
                 this.matrix[i][j] = level.matrix[i][j];
             }
         }
@@ -55,19 +54,19 @@ public class PgLevel {
         this.matrix[row][column] = c;
     }
 
-    public void setX(int x) {
-        this.position.x = x;
+    public void setRow(int row) {
+        this.position.x = row;
     }
 
-    public void setY(int y) {
-        this.position.y = y;
+    public void setCol(int col) {
+        this.position.y = col;
     }
 
-    public int getX() {
+    public int getRow() {
         return this.position.x;
     }
 
-    public int getY() {
+    public int getCol() {
         return this.position.y;
     }
 
@@ -91,7 +90,7 @@ public class PgLevel {
     public String toString() {
         StringBuilder result = new StringBuilder();
         int lengthRows = getNumOfRows();
-        int lengthCols = getNumOfCol();
+        int lengthCols = getNumOfCols();
         for(int i = 0; i < lengthRows; i++) {
             for(int j = 0; j < lengthCols; j++) {
                 result.append(matrix[i][j]);
@@ -106,7 +105,7 @@ public class PgLevel {
 
     public int getNumOfRows() { return this.matrix.length; }
 
-    public int getNumOfCol() { return this.matrix[0].length;}
+    public int getNumOfCols() { return this.matrix[0].length;}
 
     public Point getStart() {
         return this.start;
@@ -123,7 +122,7 @@ public class PgLevel {
         PgLevel pgLevel = (PgLevel) o;
 
         for(int i =0; i < getNumOfRows(); i++) {
-            for(int j =0; j < getNumOfCol(); j++) {
+            for(int j = 0; j < getNumOfCols(); j++) {
                 if(matrix[i][j] != pgLevel.matrix[i][j])
                     return false;
             }

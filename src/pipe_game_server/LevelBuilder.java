@@ -12,7 +12,7 @@ public class LevelBuilder {
 
         for (int i = 0; i < result.getNumOfRows(); i++) {
             char[] chars = rows[i].toCharArray();
-            for (int j = 0; j < result.getNumOfCol(); j++) {
+            for (int j = 0; j < result.getNumOfCols(); j++) {
                 if (chars[j] == 's') {
                     result.setStart(new Point(i, j));
                     result.setPosition(result.getStart());

@@ -12,10 +12,10 @@ import java.util.Scanner;
 
 public class PgCacheManager implements CacheManager {
     @Override
-    public PgDirections load(String request) {
+    public PgInstructions load(String request) {
         try {
             Scanner in = new Scanner(new FileInputStream(path + Integer.toString(request.hashCode())));
-            PgDirections directions = new PgDirections();
+            PgInstructions directions = new PgInstructions();
 
             while(in.hasNextLine()){
                 directions.add(in.nextLine());

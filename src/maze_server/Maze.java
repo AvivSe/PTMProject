@@ -58,4 +58,13 @@ public class Maze {
 		return null;
 	}
 
+	public static void followSolverDirectionsGoalCheck(List<String> actions, Grid p) {
+		actions.forEach(s->{
+			if(s.equals("UP")) p.row--;
+			if(s.equals("DOWN")) p.row++;
+			if(s.equals("RIGHT")) p.col++;
+			if(s.equals("LEFT")) p.col--;
+		});
+	}
+
 }

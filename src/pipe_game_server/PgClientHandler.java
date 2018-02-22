@@ -4,7 +4,7 @@ import java.io.*;
 
 import game_server_interface.CacheManager;
 import game_server_interface.ClientHandler;
-import game_server_interface.Directions;
+import game_server_interface.Instructions;
 import game_server_interface.Solver;
 
 /**
@@ -37,10 +37,10 @@ public class PgClientHandler implements ClientHandler {
         } catch (NullPointerException error) {
             try {
 //                System.out.println("Solver said: maybe I can solve it :)");
-                Directions pgDirections = solver.solve(request);
-                cacheManager.save(tmp , pgDirections.toString());
-//                System.out.println("\nSolution is:\n"+ pgDirections.toString());
-                out.print(pgDirections.toString());
+                Instructions pgInstructions = solver.solve(request);
+                cacheManager.save(tmp , pgInstructions.toString());
+//                System.out.println("\nSolution is:\n"+ pgInstructions.toString());
+                out.print(pgInstructions.toString());
             } catch (NullPointerException error2) { // if there is no solution till now:
 //                System.out.println("Solver said: I cant solve it :(");
 //                System.out.print("Client did not got an answer. ");

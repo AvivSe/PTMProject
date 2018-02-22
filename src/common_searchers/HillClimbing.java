@@ -56,7 +56,7 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
                // System.out.println(next.getState());
             }
         }
-        //System.out.println("HillClimbing: TimeOut / NoPath");
+        System.out.println("HillClimbing: TimeOut / NoPath");
         return null;
 
     }

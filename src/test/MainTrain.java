@@ -28,6 +28,40 @@ public class MainTrain {
 			TestSetter.stopServer();
 		}
 
+		//----------- Question 3 --------------
+		// test Best first Search (20 points)
+		byte[][] mazeData={
+				{1,1,1,1,1},
+				{2,0,0,0,1},
+				{1,1,1,0,1},
+				{1,0,0,0,1},
+				{1,0,1,0,1},
+				{1,3,1,1,1},
+		};
+		Maze m = new Maze(mazeData);
+
+		MazeSolver mazeSolver = new MazeSolver();
+
+		List<String> actions = mazeSolver.solve(m);
+
+		System.out.println(actions);
+
+
+		// the following is the solution for the maze above:
+		//List<String> answer = Arrays.asList("RIGHT","RIGHT","RIGHT","DOWN","DOWN","LEFT","LEFT","DOWN","DOWN");
+		//actions=answer;
+
+		final Grid p=m.getEntrance();
+
+		Maze.followSolverDirectionsGoalCheck(actions, p);
+
+		if(!p.equals(m.getExit()))
+			System.out.println("the Maze is not solved (-20)");
+
+
+		System.out.println("done");
 	}
+
+
 
 }

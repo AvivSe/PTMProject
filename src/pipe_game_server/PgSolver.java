@@ -17,7 +17,7 @@ import game_server_interface.Solver;
 
 public class PgSolver implements Solver<PgLevel> {
     @Override
-    public PgDirections solve(PgLevel level) {
+    public PgInstructions solve(PgLevel level) {
 
         Searcher<PgLevel> BFSSearcher = new BFS<>();
         Searcher<PgLevel> DFSSearcer = new DFS<>();
@@ -32,7 +32,7 @@ public class PgSolver implements Solver<PgLevel> {
         //solution = BFSSearcher.search(pgSearchable);
         //solution = DFSSearcer.search(pgSearchable);
         solution = BestFirstSearcher.search(pgSearchable);
-        PgDirections pgDirections = new PgDirections(solution, level);
+        PgInstructions pgDirections = new PgInstructions(solution, level);
 
         System.out.println(pgDirections);
 
@@ -49,7 +49,7 @@ public class PgSolver implements Solver<PgLevel> {
 
         try {
             long startTime = System.nanoTime();
-            PgDirections vectors = mySolver.solve(level);
+            PgInstructions vectors = mySolver.solve(level);
             long endTime = System.nanoTime();
             // put here something to check
             long duration = (endTime - startTime);

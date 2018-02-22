@@ -8,11 +8,8 @@
  */
 
 package common_searchers;
-
 import searcher_interface.*;
-
 import java.util.List;
-
 
 public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<T> {
     public BestFirstSearch(Heuristic heuristic) {

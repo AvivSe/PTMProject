@@ -2,7 +2,6 @@ package common_searchers;
 
 import searcher_interface.Heuristic;
 import searcher_interface.State;
-
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
@@ -35,5 +34,4 @@ class PrioritySearcher<T> extends CommonSearcher<T> {
         // Re-enqueue the popped states
         openList.addAll(poppedStates);
     }
-
 }

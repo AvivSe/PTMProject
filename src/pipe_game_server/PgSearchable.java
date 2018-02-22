@@ -27,12 +27,11 @@ public class PgSearchable implements Searchable<PgLevel> {
 
     private boolean isOutOfBound(int i, int j) {
         return (i < 0 || i >= initialState.getState().getNumOfRows() ||
-                j < 0 || j >= initialState.getState().getNumOfCol());
+                j < 0 || j >= initialState.getState().getNumOfCols());
     }
 
     private Boolean hasNoPipe(PgLevel level, Point position) {
-        char c = level.getObject(position.x, position.y);
-        return c == ' ';
+        return level.getObject(position.x, position.y) == ' ';
     }
 
     private Boolean isCurvedPipe(PgLevel level, Point position) {
@@ -60,8 +59,8 @@ public class PgSearchable implements Searchable<PgLevel> {
     }
 
     private void AnalyzePossibleState(List<State<PgLevel>> list, State<PgLevel> state, Direction cameFromDirection) {
-        int row = state.getState().getX();
-        int col = state.getState().getY();
+        int row = state.getState().getRow();
+        int col = state.getState().getCol();
         Point position = applyMoveToDirection(row, col, cameFromDirection);
 
         /* case you out of matrix bounds */
@@ -69,9 +68,9 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         /* case you moved where you came from */
         if (state.getCameFrom() != null) {
-            int cameFromX = state.getCameFrom().getState().getX();
-            int cameFromY = state.getCameFrom().getState().getY();
-            if (position.x == cameFromX && position.y == cameFromY)
+            int cameFromRow = state.getCameFrom().getState().getRow();
+            int cameFromCol = state.getCameFrom().getState().getCol();
+            if (position.x == cameFromRow && position.y == cameFromCol)
                 return;
         }
 
@@ -83,14 +82,14 @@ public class PgSearchable implements Searchable<PgLevel> {
         if (hasNoPipe(level, position)) return;
 
         if (isGoal(level, position)) {
-            tmp.setX(position.x);
-            tmp.setY(position.y);
+            tmp.setRow(position.x);
+            tmp.setCol(position.y);
             list.add(new State<>(new PgLevel(tmp)));
             return;
         }
 
-        tmp.setX(position.x);
-        tmp.setY(position.y);
+        tmp.setRow(position.x);
+        tmp.setCol(position.y);
 
         switch (cameFromDirection) {
             case UP:
@@ -146,8 +145,8 @@ public class PgSearchable implements Searchable<PgLevel> {
     @Override
     public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
         ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
-        int row = state.getState().getX();
-        int col = state.getState().getY();
+        int row = state.getState().getRow();
+        int col = state.getState().getCol();
 
         List<Direction> nextSteps = nextSteps(state.getState());
 
@@ -169,8 +168,8 @@ public class PgSearchable implements Searchable<PgLevel> {
 
         ArrayList<Direction> result = new ArrayList<>();
 
-        int i = level.getX();
-        int j = level.getY();
+        int i = level.getRow();
+        int j = level.getCol();
 
         char c = level.getObject(i, j);
 

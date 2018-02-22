@@ -1,13 +1,12 @@
 package maze_server;
 
-import game_server_interface.Directions;
+import game_server_interface.Instructions;
 import searcher_interface.Solution;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MazeDirections extends ArrayList<String> implements Directions {
-    MazeDirections(Solution<Grid> solution, Maze m) {
+public class MazeInstructions extends ArrayList<String> implements Instructions {
+    MazeInstructions(Solution<Grid> solution, Maze m) {
 //        if(m.getEntrance().col < solution.get(0).col)
 //            this.add("RIGHT");
 //        else if(m.getEntrance().col > solution.get(0).col)

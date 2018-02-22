@@ -9,13 +9,13 @@
  */
 
 package pipe_game_server;
-import game_server_interface.Directions;
+import game_server_interface.Instructions;
 import searcher_interface.Solution;
 
 import java.util.ArrayList;
 
-public class PgDirections extends ArrayList<String> implements Directions {
-    public PgDirections() {
+public class PgInstructions extends ArrayList<String> implements Instructions {
+    public PgInstructions() {
     }
 
     @Override
@@ -28,17 +28,17 @@ public class PgDirections extends ArrayList<String> implements Directions {
     }
 
     // Visual
-    public PgDirections(Solution<PgLevel> solution) {
+    public PgInstructions(Solution<PgLevel> solution) {
         for (PgLevel state : solution) {
             add(state.toString());
         }
     }
 
     // Vectors
-    public PgDirections(Solution<PgLevel> solution, PgLevel request) {
+    public PgInstructions(Solution<PgLevel> solution, PgLevel request) {
         for (PgLevel outer : solution) {
-            int x = outer.getX();
-            int y = outer.getY();
+            int x = outer.getRow();
+            int y = outer.getCol();
 
             char c = outer.getObjectOnPosition();
 

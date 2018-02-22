@@ -25,7 +25,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
             State<T> current = queue.remove();
            if (!closeList.contains(current)) {
                 if (searchable.isGoalState(current)) {
-//                    System.out.println("BFS: GOAL!");
+                    System.out.println("BFS: GOAL!");
                     return BackTrace(current);
                 } else {
                     ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
@@ -35,7 +35,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
             }
         }
 
-//        System.out.println("BFS: Can't find path.");
+        System.out.println("BFS: Can't find path.");
         return null;
     }
 
