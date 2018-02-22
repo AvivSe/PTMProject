@@ -1,16 +1,9 @@
 package test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // edit these imports according to your project
 import game_server_interface.*;
-import maze_server.Grid;
-import maze_server.Maze;
-import maze_server.MazeHeuristic;
-import maze_server.MazeSearchable;
-import pipe_game_server.*;
-import searcher_interface.BestFirstSearch;
+		import pipe_game_server.*;
+import common_searchers.BestFirstSearch;
 
 import searcher_interface.*;
 

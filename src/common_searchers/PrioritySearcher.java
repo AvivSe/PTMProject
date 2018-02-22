@@ -1,13 +1,13 @@
-package searcher_interface;
+package common_searchers;
+
+import searcher_interface.Heuristic;
+import searcher_interface.State;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.function.ToDoubleFunction;
 
 class PrioritySearcher<T> extends CommonSearcher<T> {
     PriorityQueue<State<T>> openList;
-    Heuristic heuristic1;
 
     PrioritySearcher(Heuristic heuristic) {
         this.openList = new PriorityQueue<>((o1, o2) -> {

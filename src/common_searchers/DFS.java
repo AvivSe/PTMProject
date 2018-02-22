@@ -1,4 +1,9 @@
-package searcher_interface;
+package common_searchers;
+
+import searcher_interface.Searchable;
+import searcher_interface.Searcher;
+import searcher_interface.Solution;
+import searcher_interface.State;
 
 import java.util.Stack;
 

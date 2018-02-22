@@ -1,13 +1,9 @@
-/**
- *
- * With this class you can describe any generic type, for example, it can describe the Pipe game problem states, EightPuzzle problem and etc..
- * Aviv Segal
- */
 package searcher_interface;
+
 
 import java.util.Objects;
 
-public class State<T>  {
+public class State<T> {
     private T state;
     private State<T> cameFrom;
     private double cost;
@@ -49,7 +45,9 @@ public class State<T>  {
         this.cost = cost;
     }
 
-    public boolean hasCameFrom() { return this.cameFrom != null; }
+    public boolean hasCameFrom() {
+        return this.cameFrom != null;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -68,7 +66,4 @@ public class State<T>  {
     public String toString() {
         return this.state.toString();
     }
-
-
 }
-

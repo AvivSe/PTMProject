@@ -1,5 +1,5 @@
 
-package searcher_interface;
+package common_searchers;
 /**
  *
  * In numerical analysis, hill climbing is a mathematical optimization technique which belongs to the family of local search.
@@ -8,6 +8,8 @@ package searcher_interface;
  * If the change produces a better solution, an incremental change is made to the new solution, repeating until no-
  * further improvements can be found.
  */
+
+import searcher_interface.*;
 
 import java.util.ArrayList;
 import java.util.Random;

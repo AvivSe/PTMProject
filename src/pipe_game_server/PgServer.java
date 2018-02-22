@@ -23,7 +23,7 @@ public class PgServer implements Server {
             e.printStackTrace();
         }
         stop = false;
-//        System.out.println("Server is alive and running on port " + server.getLocalPort());
+        System.out.println("Server is alive and running on port " + server.getLocalPort());
 
         try {
             server.setSoTimeout(1000);
@@ -43,7 +43,7 @@ public class PgServer implements Server {
     @Override
     public void stop()  {
         this.stop = true;
-//        System.out.println("Server is down.");
+        System.out.println("Server is down.");
     }
 
     private ServerSocket server;
@@ -54,23 +54,23 @@ public class PgServer implements Server {
         this.port = port;
         this.server = null;
         this.stop = true;
-//        System.out.println("Ready to start...");
+        System.out.println("Ready to start...");
     }
 
     private void run(ClientHandler clientHandler) throws IOException {
         while (!stop){
             try {
-//                System.out.print(".");
+                System.out.print(".");
                 Socket socket = this.server.accept();
                 try {
 
-//                    System.out.print("\nNew client on port " + socket.getPort() + ", waiting for query..\n");
+                    System.out.print("\nNew client on port " + socket.getPort() + ", waiting for query..\n");
                     clientHandler.handler(socket.getInputStream(), socket.getOutputStream());
                     socket.getInputStream().close();
                     socket.getOutputStream().close();
                     socket.close();
                 } catch (IOException error) {
-//                    System.out.println(error.getMessage()+" Waiting for another Client...");
+                    System.out.println(error.getMessage()+" Waiting for another Client...");
                 }
             }catch (SocketTimeoutException ignored) { }
         }
@@ -79,7 +79,10 @@ public class PgServer implements Server {
 
     public static void main(String[] args)  {
         PgServer myServer = new PgServer(6400);
-        myServer.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
+
+        /* w/o controller un/re comment this */
+        // myServer.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
+        new PgServerController(myServer, new PgClientHandler(new PgSolver(),new PgCacheManager())).gui();
     }
 
 }

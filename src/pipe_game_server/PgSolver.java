@@ -8,6 +8,10 @@
 
 package pipe_game_server;
 
+import common_searchers.BFS;
+import common_searchers.BestFirstSearch;
+import common_searchers.DFS;
+import common_searchers.HillClimbing;
 import searcher_interface.*;
 import game_server_interface.Solver;
 

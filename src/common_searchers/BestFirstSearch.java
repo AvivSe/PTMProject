@@ -7,9 +7,12 @@
  * 2. Repeat until the end is found or no possible options.
  */
 
-package searcher_interface;
+package common_searchers;
+
+import searcher_interface.*;
 
 import java.util.List;
+
 
 public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<T> {
     public BestFirstSearch(Heuristic heuristic) {

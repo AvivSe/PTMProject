@@ -11,10 +11,8 @@
 package pipe_game_server;
 import game_server_interface.Directions;
 import searcher_interface.Solution;
-import searcher_interface.State;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class PgDirections extends ArrayList<String> implements Directions {
     public PgDirections() {

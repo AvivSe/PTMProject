@@ -1,13 +1,10 @@
 package maze_server;
 
-import game_server_interface.Directions;
 import game_server_interface.Solver;
-import pipe_game_server.PgLevel;
-import searcher_interface.BestFirstSearch;
+import common_searchers.BestFirstSearch;
 import searcher_interface.Searcher;
 import searcher_interface.Solution;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MazeSolver implements Solver<Maze> {
@@ -20,42 +17,6 @@ public class MazeSolver implements Solver<Maze> {
         return new MazeDirections(solution, m);
     }
 
-
-    /* ------------- Best First Search Test --------------
-     * You are given a Maze
-     * Create a new Searchable from the Maze
-     * Solve the Maze
-     * and return a list of moves from {UP,DOWN,RIGHT,LEFT}
-     *
-     */
-//
-//    public static List<String> solveMaze(Maze m){
-//        Searcher BestFS = new BestFirstSearch(new MazeHeuristic(m));
-//        Solution<Grid> solution = BestFS.search(new MazeSearchable(m));
-//        List<String> result = new ArrayList<>();
-//
-//        if(m.getEntrance().col < solution.get(0).col)
-//            result.add("RIGHT");
-//        else if(m.getEntrance().col > solution.get(0).col)
-//            result.add("LEFT");
-//        else if(m.getEntrance().row < solution.get(0).row)
-//            result.add("DOWN");
-//        else if(m.getEntrance().col > solution.get(0).col)
-//            result.add("UP");
-//
-//        for(int i = 0; i < solution.size()-1; i++) {
-//            if(solution.get(i).col < solution.get(i+1).col)
-//                result.add("RIGHT");
-//            else if(solution.get(i).col > solution.get(i+1).col)
-//                result.add("LEFT");
-//            else if(solution.get(i).row < solution.get(i+1).row)
-//                result.add("DOWN");
-//            else if(solution.get(i).col > solution.get(i+1).col)
-//                result.add("UP");
-//
-//        }
-//        return result;
-//    }
 
     public static void main(String[] args) {
 
