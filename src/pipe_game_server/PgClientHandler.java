@@ -2,10 +2,10 @@ package pipe_game_server;
 
 import java.io.*;
 
-import game_server_interface.CacheManager;
-import game_server_interface.ClientHandler;
-import game_server_interface.Instructions;
-import game_server_interface.Solver;
+import server_interface.CacheManager;
+import server_interface.ClientHandler;
+import server_interface.Instructions;
+import server_interface.Solver;
 
 /**
  *
@@ -28,7 +28,7 @@ public class PgClientHandler implements ClientHandler {
 
         String tmp = req.toString();
         tmp = req.toString().substring(0,tmp.length()-5);
-        PgLevel request = LevelBuilder.build(tmp);
+        PgLevel request = PgLevelBuilder.build(tmp);
 //        System.out.println("Client ask for directions to level: \n"  + tmp);
 
         try {

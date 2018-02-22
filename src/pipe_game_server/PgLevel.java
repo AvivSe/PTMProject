@@ -140,7 +140,7 @@ public class PgLevel {
     }
 
     public static void main(String[] args) {
-        PgLevel level = LevelBuilder.build("s-7\n|-g");
+        PgLevel level = PgLevelBuilder.build("s-7\n|-g");
 //        System.out.println(level);
     }
 

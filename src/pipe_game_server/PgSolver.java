@@ -13,7 +13,7 @@ import common_searchers.BestFirstSearch;
 import common_searchers.DFS;
 import common_searchers.HillClimbing;
 import searcher_interface.*;
-import game_server_interface.Solver;
+import server_interface.Solver;
 
 public class PgSolver implements Solver<PgLevel> {
     @Override
@@ -23,26 +23,31 @@ public class PgSolver implements Solver<PgLevel> {
         Searcher<PgLevel> DFSSearcer = new DFS<>();
         Searcher<PgLevel> BestFirstSearcher = new BestFirstSearch<>(new PgManhattanDistance());
         Searcher<PgLevel> HillClimbingManhattan = new HillClimbing<>(5000, new PgRandomHeuristic());
+        Searcher<PgLevel> MyHB = new HillClimbing<>(500, new PgMyHeuristic());
 
         Solution solution;
 
         PgSearchable pgSearchable = new PgSearchable(level);
-        //solution = RandomHB.search(pgSearchable);
+        //solution = MyHB.search(pgSearchable);
         //solution = HillClimbingManhattan.search(pgSearchable);
         //solution = BFSSearcher.search(pgSearchable);
         //solution = DFSSearcer.search(pgSearchable);
         solution = BestFirstSearcher.search(pgSearchable);
-        PgInstructions pgDirections = new PgInstructions(solution, level);
+        PgInstructions pgInstructions = new PgInstructions(solution, level);
 
-        System.out.println(pgDirections);
+        System.out.println(pgInstructions);
 
-        return pgDirections;
+        return pgInstructions;
     }
 
     public static void main(String[] args) {
         PgSolver mySolver = new PgSolver();
-        PgLevel level = LevelBuilder.build(
-                "s|g");
+        PgLevel level = PgLevelBuilder.build(
+                "s|L \n" +
+                         " |L7\n" +
+                         " F |\n" +
+                         "7F-J\n" +
+                         " g -");
 
 //        System.out.println("You ask for solution to: ");
 //        System.out.println(level);

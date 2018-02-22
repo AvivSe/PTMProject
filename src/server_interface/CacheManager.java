@@ -1,4 +1,4 @@
-package game_server_interface;
+package server_interface;
 
 import java.io.IOException;
 

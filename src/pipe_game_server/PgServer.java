@@ -5,8 +5,8 @@
 
 package pipe_game_server;
 
-import game_server_interface.ClientHandler;
-import game_server_interface.Server;
+import server_interface.ClientHandler;
+import server_interface.Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;

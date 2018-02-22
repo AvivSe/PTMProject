@@ -1,6 +1,6 @@
 package maze_server;
 
-import game_server_interface.Solver;
+import server_interface.Solver;
 import common_searchers.BestFirstSearch;
 import searcher_interface.Searcher;
 import searcher_interface.Solution;

@@ -9,7 +9,7 @@
  */
 
 package pipe_game_server;
-import game_server_interface.Instructions;
+import server_interface.Instructions;
 import searcher_interface.Solution;
 
 import java.util.ArrayList;

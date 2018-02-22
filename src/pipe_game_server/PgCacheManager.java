@@ -5,7 +5,7 @@
 
 package pipe_game_server;
 
-import game_server_interface.CacheManager;
+import server_interface.CacheManager;
 
 import java.io.*;
 import java.util.Scanner;

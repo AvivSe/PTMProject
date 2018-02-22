@@ -2,7 +2,7 @@ package pipe_game_server;
 
 import java.awt.*;
 
-public class LevelBuilder {
+public class PgLevelBuilder {
     public static PgLevel build(String problem) {
         String[] rows = problem.split("\n");
         int numRows = rows.length;

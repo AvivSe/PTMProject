@@ -1,4 +1,4 @@
-package game_server_interface;
+package server_interface;
 
 /**
  * Aviv Segal 2018/17

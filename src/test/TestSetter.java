@@ -1,7 +1,7 @@
 package test;
 
 // edit these imports according to your project
-import game_server_interface.*;
+import server_interface.*;
 		import pipe_game_server.*;
 import common_searchers.BestFirstSearch;
 
