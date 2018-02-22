@@ -20,6 +20,8 @@ class CommonSearcher<T> {
             currentState = currentState.getCameFrom();
         }
 
+        solution.add(currentState.getState());
+
         Collections.reverse(solution);
         return solution;
     }

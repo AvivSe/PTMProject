@@ -1,22 +1,33 @@
 package test;
 
+//import java.util.Arrays;
+import maze_server.Grid;
+import maze_server.Maze;
+import maze_server.MazeSolver;
+
+import java.util.List;
 import java.util.Random;
 
 public class MainTrain {
 
 	public static void main(String[] args) {
-		// design test (50 points)
+		//----------- Question 1 --------------
+		// design test (40 points)
 		DesignTest dt=new DesignTest();
 		TestSetter.setClasses(dt);
 		dt.testDesign();
 		
-		// execution test (50 points)
+		//----------- Question 2 --------------
+		// execution test (40 points)
 		Random r=new Random();
 		int port=6000+r.nextInt(1000);
 		TestSetter.runServer(port);
-		TestServer.runClient(port);
-		TestSetter.stopServer();
-		System.out.println("done");
+		try{
+			TestServer.runClient(port);
+		}finally{
+			TestSetter.stopServer();
+		}
+
 	}
 
 }

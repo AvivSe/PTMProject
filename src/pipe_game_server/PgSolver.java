@@ -11,7 +11,7 @@ package pipe_game_server;
 import searcher_interface.*;
 import game_server_interface.Solver;
 
-public class PgSolver implements Solver {
+public class PgSolver implements Solver<PgLevel> {
     @Override
     public PgDirections solve(PgLevel level) {
 
@@ -23,18 +23,16 @@ public class PgSolver implements Solver {
         Solution solution;
 
         PgSearchable pgSearchable = new PgSearchable(level);
-
         //solution = RandomHB.search(pgSearchable);
-       solution = HillClimbingManhattan.search(pgSearchable);
+        //solution = HillClimbingManhattan.search(pgSearchable);
+        //solution = BFSSearcher.search(pgSearchable);
+        //solution = DFSSearcer.search(pgSearchable);
+        solution = BestFirstSearcher.search(pgSearchable);
+        PgDirections pgDirections = new PgDirections(solution, level);
 
-       // if(solution == null) {
-//            solution = BFSSearcher.search(pgSearchable);
-            //solution = DFSSearcer.search(pgSearchable);
-           // solution = BestFirstSearcher.search(pgSearchable);
-     //   }
-        //System.out.println("END");
+        System.out.println(pgDirections);
 
-        return new PgDirections(solution, level);
+        return pgDirections;
     }
 
     public static void main(String[] args) {

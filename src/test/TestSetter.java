@@ -1,16 +1,19 @@
 package test;
 
-// edit these imports according to your project
-import game_server_interface.CacheManager;
-import game_server_interface.ClientHandler;
-import pipe_game_server.PgCacheManager;
-import pipe_game_server.PgClientHandler;
-import pipe_game_server.PgServer;
-import pipe_game_server.PgSolver;
-import game_server_interface.Server;
-import game_server_interface.Solver;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.IOException;
+// edit these imports according to your project
+import game_server_interface.*;
+import maze_server.Grid;
+import maze_server.Maze;
+import maze_server.MazeHeuristic;
+import maze_server.MazeSearchable;
+import pipe_game_server.*;
+import searcher_interface.BestFirstSearch;
+
+import searcher_interface.*;
+
 
 public class TestSetter {
 	
@@ -20,25 +23,38 @@ public class TestSetter {
 		// don't forget to import the correct package e.g., "import server.Server"
 		dt.setServerInteface(Server.class);
 		// now fill in the other types according to their names
+		// server's implementation
 		dt.setServerClass(PgServer.class);
+		// client handler interface
 		dt.setClientHandlerInterface(ClientHandler.class);
+		// client handler class
 		dt.setClientHandlerClass(PgClientHandler.class);
+		// cache manager interface
 		dt.setCacheManagerInterface(CacheManager.class);
+		// cache manager class
 		dt.setCacheManagerClass(PgCacheManager.class);
+		// solver interface
 		dt.setSolverInterface(Solver.class);
+		// solver class
 		dt.setSolverClass(PgSolver.class);
+		// searchable interface
+		dt.setSearchableInterface(Searchable.class);
+		// searcher interface
+		dt.setSearcherInterface(Searcher.class);
+		// your searchable pipe game class
+		dt.setPipeGameClass(PgSearchable.class);
+		// your Best First Search implementation
+		dt.setBestFSClass(BestFirstSearch.class);
 	}
 	
 	// run your server here
 	static Server s;
 	public static void runServer(int port){
-			s=new PgServer(port);
-			s.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
-
+		s=new PgServer(port);
+		s.start(new PgClientHandler(new PgSolver(),new PgCacheManager()));
 	}
 	// stop your server here
 	public static void stopServer(){
-			s.stop();
+		s.stop();
 	}
-
 }
