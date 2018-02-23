@@ -1,8 +1,5 @@
-package pipe_game_server;
+package pipeGame;
 
-
-import pipe_game_server.PgClientHandler;
-import pipe_game_server.PgServer;
 
 import javax.swing.*;
 import java.awt.*;

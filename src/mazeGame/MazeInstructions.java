@@ -1,4 +1,4 @@
-package maze_server;
+package mazeGame;
 
 import server_interface.Instructions;
 import searcher_interface.Solution;
@@ -7,14 +7,7 @@ import java.util.ArrayList;
 
 public class MazeInstructions extends ArrayList<String> implements Instructions {
     MazeInstructions(Solution<Grid> solution, Maze m) {
-//        if(m.getEntrance().col < solution.get(0).col)
-//            this.add("RIGHT");
-//        else if(m.getEntrance().col > solution.get(0).col)
-//            this.add("LEFT");
-//        else if(m.getEntrance().row < solution.get(0).row)
-//            this.add("DOWN");
-//        else if(m.getEntrance().col > solution.get(0).col)
-//            this.add("UP");
+        if(solution == null) return;
 
         for(int i = 0; i < solution.size()-1; i++) {
             if (solution.get(i).col < solution.get(i + 1).col)
@@ -23,7 +16,7 @@ public class MazeInstructions extends ArrayList<String> implements Instructions 
                 this.add("LEFT");
             else if (solution.get(i).row < solution.get(i + 1).row)
                 this.add("DOWN");
-            else if (solution.get(i).col > solution.get(i + 1).col)
+            else if (solution.get(i).row > solution.get(i + 1).row)
                 this.add("UP");
         }
 

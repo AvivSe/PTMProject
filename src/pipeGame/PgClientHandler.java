@@ -1,4 +1,4 @@
-package pipe_game_server;
+package pipeGame;
 
 import java.io.*;
 

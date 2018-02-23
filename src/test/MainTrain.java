@@ -1,9 +1,9 @@
 package test;
 
 //import java.util.Arrays;
-import maze_server.Grid;
-import maze_server.Maze;
-import maze_server.MazeSolver;
+import mazeGame.Grid;
+import mazeGame.Maze;
+import mazeGame.MazeSolver;
 
 import java.util.List;
 import java.util.Random;
@@ -58,10 +58,9 @@ public class MainTrain {
 		if(!p.equals(m.getExit()))
 			System.out.println("the Maze is not solved (-20)");
 
-
 		System.out.println("done");
-	}
 
+	}
 
 
 }

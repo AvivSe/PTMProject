@@ -1,4 +1,4 @@
-package maze_server;
+package mazeGame;
 
 import server_interface.Solver;
 import common_searchers.BestFirstSearch;
@@ -23,10 +23,10 @@ public class MazeSolver implements Solver<Maze> {
         //----------- Question 3 --------------
         // test Best first Search (20 points)
         byte[][] mazeData={
-                {1,1,1,1,1},
-                {2,0,0,0,1},
-                {1,1,1,0,1},
+                {1,1,1,2,1},
                 {1,0,0,0,1},
+                {1,0,1,1,1},
+                {1,0,1,0,1},
                 {1,0,1,0,1},
                 {1,3,1,1,1},
         };

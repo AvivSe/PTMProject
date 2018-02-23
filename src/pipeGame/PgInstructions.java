@@ -8,7 +8,7 @@
  * Aviv Segal
  */
 
-package pipe_game_server;
+package pipeGame;
 import server_interface.Instructions;
 import searcher_interface.Solution;
 

@@ -1,4 +1,4 @@
-package maze_server;
+package mazeGame;
 
 // a position class for row, col
 public class Grid{

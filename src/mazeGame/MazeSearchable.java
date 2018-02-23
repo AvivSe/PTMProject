@@ -1,4 +1,4 @@
-package maze_server;
+package mazeGame;
 
 import searcher_interface.Searchable;
 import searcher_interface.State;
@@ -35,12 +35,12 @@ public class MazeSearchable implements Searchable<Grid> {
         }
 
         for(Grid move: possibleMoves) {
-            if(move.row == state.getState().row || move.col == state.getState().col) {
+            //if(move.row == state.getState().row || move.col == state.getState().col) {
                 State<Grid> neighbor = new State<>(move);
                 neighbor.setCameFrom(state);
                 neighbor.setCost(state.getCost() + 1);
                 results.add(neighbor);
-            }
+            //}
         }
 
         return results;

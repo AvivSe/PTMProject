@@ -6,7 +6,7 @@
  * found it's better to hold both board and position same object, consider the board is not static in Pipe Game.
  * Aviv Segal
  */
-package pipe_game_server;
+package pipeGame;
 
 
 import java.awt.*;

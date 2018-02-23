@@ -1,4 +1,4 @@
-package maze_server;
+package mazeGame;
 
 import searcher_interface.Heuristic;
 import searcher_interface.State;
@@ -21,12 +21,12 @@ public class MazeHeuristic implements Heuristic<Grid>{
 
     @Override
     public double calcHeuristic(State<Grid> s) {
-        int positionX = s.getState().row;
-        int positionY = s.getState().col;
-        int endX = maze.getExit().row;
-        int endY = maze.getExit().col;
+        int positionRow = s.getState().row;
+        int positionCol = s.getState().col;
+        int endRow = maze.getExit().row;
+        int endCol = maze.getExit().col;
 
         // Manhattan Distance
-        return Math.abs(positionX - endX) + Math.abs(positionY - endY);
+        return Math.abs(positionRow - endRow) + Math.abs(positionCol - endCol);
     }
 }

@@ -3,7 +3,7 @@
  * Aviv Segal 12/2017
  */
 
-package pipe_game_server;
+package pipeGame;
 
 import server_interface.ClientHandler;
 import server_interface.Server;

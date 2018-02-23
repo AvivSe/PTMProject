@@ -6,7 +6,7 @@
  * Aviv Segal 12/2017
  */
 
-package pipe_game_server;
+package pipeGame;
 
 import common_searchers.BFS;
 import common_searchers.BestFirstSearch;

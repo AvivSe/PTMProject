@@ -1,12 +1,9 @@
-package maze_server;
+package mazeGame;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Maze {
-
-
-	
 	// maze data
 	byte[][] data;
 	
@@ -40,19 +37,19 @@ public class Maze {
 		return(i>=0 && i<data.length && j>=0 && j<data[i].length && (data[i][j]==(byte)0 || data[i][j]==(byte)3));
 	}
 	
-	// returns a list of possible grid positions given a grid position in the maze
+	// returns a list of possible grid positions given a grid position
 	List<Grid> getPossibleMoves(Grid g){
 		int i=g.row, j=g.col;
 		if(i>=0 && i<data.length && j>=0 && j<data[i].length){
 			List<Grid> list=new ArrayList<>();
 			if(isFree(i, j-1)) list.add(new Grid(i,j-1));
-			if(isFree(i-1, j-1)) list.add(new Grid(i-1,j-1));
+			//if(isFree(i-1, j-1)) list.add(new Grid(i-1,j-1));
 			if(isFree(i-1, j)) list.add(new Grid(i-1,j));
-			if(isFree(i-1, j+1)) list.add(new Grid(i-1,j+1));
+			//if(isFree(i-1, j+1)) list.add(new Grid(i-1,j+1));
 			if(isFree(i, j+1)) list.add(new Grid(i,j+1));
-			if(isFree(i+1, j+1)) list.add(new Grid(i+1,j+1));
+			//if(isFree(i+1, j+1)) list.add(new Grid(i+1,j+1));
 			if(isFree(i+1, j)) list.add(new Grid(i+1,j));
-			if(isFree(i+1, j-1)) list.add(new Grid(i+1,j-1));
+			//if(isFree(i+1, j-1)) list.add(new Grid(i+1,j-1));
 			return list;
 		}
 		return null;

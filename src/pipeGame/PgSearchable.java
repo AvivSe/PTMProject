@@ -4,14 +4,14 @@
  * - the "Black Box" algorithms classes.
  * Aviv Segal
  */
-package pipe_game_server;
+package pipeGame;
 
 import searcher_interface.Searchable;
 import searcher_interface.State;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import static pipe_game_server.PgSearchable.Direction.*;
+import static pipeGame.PgSearchable.Direction.*;
 
 public class PgSearchable implements Searchable<PgLevel> {
     private State<PgLevel> initialState;

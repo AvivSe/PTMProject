@@ -1,4 +1,4 @@
-package pipe_game_server;
+package pipeGame;
 
 import searcher_interface.Heuristic;
 import searcher_interface.State;
@@ -75,8 +75,6 @@ public class PgMyHeuristic implements Heuristic<PgLevel> {
 
         return false;
     }
-
-
 
     @Override
     public double calcHeuristic(State<PgLevel> s) {
