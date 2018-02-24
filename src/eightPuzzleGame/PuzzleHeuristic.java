@@ -11,11 +11,12 @@ public class PuzzleHeuristic implements Heuristic<Puzzle> {
 
     @Override
     public boolean isLeftBetter(double left, double right) {
-        return false;
+        return left < right;
     }
 
     @Override
     public double calcHeuristic(State<Puzzle> state) {
-        return 0;
+
+        return 1;
     }
 }

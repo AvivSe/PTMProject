@@ -1,3 +1,8 @@
+/**
+ * Aviv Segal 2018
+ *
+ */
+
 package pipeGame;
 
 import searcher_interface.Heuristic;

@@ -82,11 +82,6 @@ public class Puzzle {
                 {7,6,5}
         };
 
-//        byte[][] goal2={
-//                {1,2,3},
-//                {6,5,4},
-//                {7,8,0}
-//        };
 
         goals.add(new Puzzle(goal1));
 

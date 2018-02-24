@@ -1,6 +1,7 @@
 package eightPuzzleGame;
 
 import common_searchers.BFS;
+import common_searchers.BestFirstSearch;
 import searcher_interface.Searcher;
 import searcher_interface.Solution;
 import server_interface.Instructions;
@@ -11,7 +12,11 @@ public class PuzzleSolver implements Solver<Puzzle> {
     @Override
     public PuzzleInstructions solve(Puzzle problem) {
         Searcher BFS = new BFS();
-        Solution<Puzzle> solution = BFS.search(new PuzzleSearchable(problem));
+        Searcher BestFS = new BestFirstSearch(new PuzzleHeuristic());
+
+
+       Solution<Puzzle> solution = BFS.search(new PuzzleSearchable(problem));
+        //Solution<Puzzle> solution = BestFS.search(new PuzzleSearchable(problem));
 
         return new PuzzleInstructions(solution);
     }
@@ -27,7 +32,12 @@ public class PuzzleSolver implements Solver<Puzzle> {
         PuzzleSolver puzzleSolver = new PuzzleSolver();
 
         List<String> actions = puzzleSolver.solve(puzzle);
+        System.out.println("Steps to goal:");
 
-        System.out.println(actions.size());
+        for(String action: actions) {
+            System.out.println(action);
+        }
+
+        System.out.println("Ttoal actions: "+actions.size());
     }
 }
