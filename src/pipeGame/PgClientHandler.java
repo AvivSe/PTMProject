@@ -29,21 +29,21 @@ public class PgClientHandler implements ClientHandler {
         String tmp = req.toString();
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevelBuilder.build(tmp);
-//        System.out.println("Client ask for directions to level: \n"  + tmp);
+        System.out.println("Client ask for directions to level: \n"  + tmp);
 
         try {
                 out.print(this.cacheManager.load(tmp).toString());
-//                System.out.println("Cache said: I have it in files :)");
+                System.out.println("Cache said: I have it in files :)");
         } catch (NullPointerException error) {
             try {
-//                System.out.println("Solver said: maybe I can solve it :)");
+                System.out.println("Solver said: maybe I can solve it :)");
                 Instructions pgInstructions = solver.solve(request);
                 cacheManager.save(tmp , pgInstructions.toString());
-//                System.out.println("\nSolution is:\n"+ pgInstructions.toString());
+                System.out.println("\nSolution is:\n"+ pgInstructions.toString());
                 out.print(pgInstructions.toString());
             } catch (NullPointerException error2) { // if there is no solution till now:
-//                System.out.println("Solver said: I cant solve it :(");
-//                System.out.print("Client did not got an answer. ");
+                System.out.println("Solver said: I cant solve it :(");
+                System.out.print("Client did not got an answer. ");
                 out.print("done");
             }
         }
