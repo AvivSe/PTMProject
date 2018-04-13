@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import pipeGame.client.LevelDisplayer?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pipeGame.client.MainWindowController">
+   <bottom>
+       <HBox spacing="5.0" BorderPane.alignment="CENTER">
+           <BorderPane.margin>
+               <Insets />
+           </BorderPane.margin>
+           <padding>
+               <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+           </padding>
+          <children>
+              <Label text="Status:">
+                 <HBox.margin>
+                     <Insets />
+                 </HBox.margin>
+              </Label>
+              <Label fx:id="status" text=" available">
+
+              </Label>
+          </children>
+       </HBox>
+   </bottom>
+   <center>
+
+   </center>
+   <top>
+      <HBox spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+             <Button minWidth="100" mnemonicParsing="false" onAction="#openFile" prefHeight="25.0" prefWidth="60.0" text="From File" />
+             <Button minWidth="70" mnemonicParsing="false" onAction="#setRandomLevel" prefHeight="25.0" prefWidth="60.0" text="Random" />
+             <Button mnemonicParsing="false" onAction="#solve" prefHeight="25.0" prefWidth="60.0" text="Solve!" />
+             <TextField fx:id="address">127.0.0.1:6400</TextField>
+             <Button mnemonicParsing="false" onAction="#test" prefHeight="25.0" prefWidth="60.0" text="Test" />
+
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </top>
+   <center>
+      <LevelDisplayer fx:id="levelDisplayer" prefHeight="Infinity" prefWidth="Infinity" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

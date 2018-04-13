@@ -3,7 +3,6 @@
     <output-path>$PROJECT_DIR$/src/test</output-path>
     <root id="archive" name="PTM_projectTest.jar">
       <element id="module-output" name="PTMProject" />
-      <element id="library" level="project" name="stateProjects" />
     </root>
   </artifact>
 </component>
