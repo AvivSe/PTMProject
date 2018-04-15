@@ -22,7 +22,7 @@ public class ClientConnectTest {
         out.flush();
 
         System.out.println("Press 1 to submit a level: ");
-        if(scanner.nextInt() == 1) {
+        if(scanner.hasNext()) {
             out.println("s|g");
             out.println("done");
             out.flush();

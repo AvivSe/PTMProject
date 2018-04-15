@@ -1,14 +1,16 @@
 package pipeGame.client;
 
-
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -34,14 +36,8 @@ public class LevelDisplayer extends GridPane {
                 addColumn(j);
                 char c = data[i][j];
 
-                Image img = null;
-                try {
-                    if(data[i][j] != ' ')
-                        img = new Image(new FileInputStream("./resources/"+data[i][j]+".jpg"));
-                } catch (FileNotFoundException e) {}
-
                 Button btn = new Button(Character.toString(c));
-                btn.setFont(Font.font("Tahoma", FontWeight.BOLD, FontPosture.REGULAR,24));
+                btn.setFont(Font.font("Tahoma", FontWeight.BOLD, FontPosture.REGULAR,26));
                 btn.setPrefSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
                 Color color;

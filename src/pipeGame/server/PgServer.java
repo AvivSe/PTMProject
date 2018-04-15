@@ -11,6 +11,7 @@ import server_interface.Server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -64,26 +65,29 @@ public class PgServer implements Server {
 
         while (!stop){
             try {
-                System.out.print(".");
+                //System.out.print(".");
                 Socket socket = this.server.accept();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-//                            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//                            int weight = Integer.valueOf(in.readLine());
-//                            System.out.println("\nNew client on port " + socket.getPort() + " Weight: " + weight);
+                            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            PrintWriter out = new PrintWriter(socket.getOutputStream());
+                            String firstLine = in.readLine();
 
-                            clientHandler.handler(socket.getInputStream(), socket.getOutputStream());
+                            if(!firstLine.equals("test")) {
+                                System.out.println("\nNew client on port " + socket.getPort() + " Weight: " + firstLine);
+                                clientHandler.handler(in, out);
+                            }
 
-                            socket.getInputStream().close();
-                            socket.getOutputStream().close();
+                            in.close();
+                            out.close();
                             socket.close();
 
-
-                        } catch (IOException error) {
-                            System.out.println(error.getMessage()+" Waiting for another Client...");
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+
                     }
                 }).start();
             }catch (SocketTimeoutException ignored) { }
@@ -91,6 +95,7 @@ public class PgServer implements Server {
 
         server.close();
     }
+
 
     public static void main(String[] args)  {
         PgServer myServer = new PgServer(6400);

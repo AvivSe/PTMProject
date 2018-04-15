@@ -17,9 +17,7 @@ import server_interface.Solver;
  */
 public class PgClientHandler implements ClientHandler {
     @Override
-    public void handler(InputStream input, OutputStream output) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(input));
-        PrintWriter out = new PrintWriter(output);
+    public void handler(BufferedReader in, PrintWriter out) throws IOException {
 
         StringBuilder req = new StringBuilder(in.readLine() + "\n");
         while (!req.toString().contains("done")) {

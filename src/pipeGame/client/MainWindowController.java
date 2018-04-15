@@ -44,11 +44,13 @@ public class MainWindowController implements Initializable{
         try {
             Socket s = new Socket(getIp(),getPort());
             changeStatus(address.getText() + " is available.", "green");
-
+            PrintWriter out = new PrintWriter(s.getOutputStream());
+            out.println("test");
+            out.flush();
+            out.close();
             s.close();
         } catch (IOException e) {
             changeStatus(address.getText() + " is NOT available.", "red");
-
         }
 
     }
@@ -84,21 +86,31 @@ public class MainWindowController implements Initializable{
         status.setText(str);
     }
 
-    public void solve() throws IOException {
-        changeStatus("You ask for solution.", "blue");
+    public int getWeight() {
+       int result = 0;
+       for(char[] row: data)
+           for(char c: row)
+               if(c == 'L' || c == 'F' || c == '7' || c == 'J' || c == '|' || c == '-')
+                   result++;
+
+       return result;
+    }
+
+    public void solve() throws IOException, InterruptedException {
+        changeStatus("Waiting for answer...", "blue");
 
         Socket s = new Socket(getIp(), getPort());
         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         PrintWriter out = new PrintWriter(s.getOutputStream());
-//        int size = data.length*data[0].length;
-//        out.println(size);
-//        out.flush();
+
+        out.println(getWeight());
+        out.flush();
 
         StringBuilder stringBuilder = new StringBuilder();
 
         for(char[] line: data) {
-            for(int i = 0; i < line.length; i++) {
-                stringBuilder.append(line[i]);
+            for (char c : line) {
+                stringBuilder.append(c);
             }
             stringBuilder.append("\n");
         }
