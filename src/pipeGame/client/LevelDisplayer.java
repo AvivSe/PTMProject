@@ -1,18 +1,14 @@
 package pipeGame.client;
 
-import javafx.geometry.Insets;
+import javafx.animation.AnimationTimer;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
+import java.util.ArrayList;
 
 public class LevelDisplayer extends GridPane {
 
@@ -61,6 +57,17 @@ public class LevelDisplayer extends GridPane {
                 add(btn,j,i);
             }
         }
+    }
+
+    public void viewSolution(ArrayList<String> solution) {
+
+        for(String s: solution) {
+            String vector[] =  s.split(",");
+            System.out.println(s);
+            this.rotate(Integer.valueOf(vector[0]),Integer.valueOf(vector[1]),Integer.valueOf(vector[2]));
+
+        }
+
     }
 
     public void rotate(int row,int col,int times){

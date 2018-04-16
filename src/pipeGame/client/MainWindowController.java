@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -58,14 +59,51 @@ public class MainWindowController implements Initializable{
     public void setRandomLevel() {
         changeStatus("Generating level", "blue");
 
-        char newData[][] = new char[][]{
+        // TODO return levels from files
+        ArrayList<char[][]> list = new ArrayList<>();
+
+        list.add(new char[][]{
                 {'s', 'F', 'L'},
                 {'F', '7', 'L'},
                 {'L', 'J', 'F'},
                 {'7', 'F', 'g'}
-        };
+        });
 
-        setLevel(newData);
+        list.add(new char[][]{
+            {'g','F','L',' '},
+            {'F','7','L','J'},
+            {'L','J','F','L'},
+            {'J','L','7','J'},
+            {'7','F','L','s'}
+        });
+
+        list.add(new char[][]{
+                {'F','7','L','J'},
+                {'L','s','F','L'},
+                {'J','L','7','J'},
+                {'7','F','L','g'}
+        });
+
+        list.add(new char[][]{
+                {'s','|','g'}
+        });
+
+        list.add(new char[][]{
+                {'s','L','L','L'},
+                {'L','L','L','L'},
+                {'L','L','L','L'},
+                {'L','L','L','g'}
+        });
+
+        list.add(new char[][]{
+                {'s','|'},
+                {'L','L'},
+                {'7','g'}
+        });
+
+        Collections.shuffle(list);
+
+        setLevel(list.get(0));
     }
 
     public void setLevel(char[][] data) {
@@ -119,13 +157,15 @@ public class MainWindowController implements Initializable{
         out.flush();
 
         String answer = in.readLine();
+        ArrayList<String> solution = new ArrayList<>();
 
-        System.out.println(answer);
         while(!answer.equals("done")) {
-            System.out.println(answer);
-            levelDisplayer.rotate(Character.getNumericValue(answer.charAt(0)),Character.getNumericValue(answer.charAt(2)),Character.getNumericValue(answer.charAt(4)));
+            //System.out.println(answer);
+            solution.add(answer);
             answer = in.readLine();
         }
+
+        levelDisplayer.viewSolution(solution);
 
         in.close();
         out.close();
