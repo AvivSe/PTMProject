@@ -2,6 +2,7 @@ package pipeGame.client;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -32,6 +33,9 @@ public class MainWindowController implements Initializable{
 
     @FXML
     TextField address;
+
+    @FXML
+    Button viewMode;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -122,6 +126,16 @@ public class MainWindowController implements Initializable{
     public void changeStatus(String str, String color) {
         status.setStyle("-fx-text-fill: "+color+";");
         status.setText(str);
+    }
+
+    public void setViewMode() {
+        if(viewMode.getText().toLowerCase().equals("visual")) {
+            viewMode.setText("Textual");
+        } else {
+            viewMode.setText("Visual");
+        }
+        levelDisplayer.changeViewMode();
+        changeStatus("View mode changed to - "+ viewMode.getText(), "blue");
     }
 
     public int getWeight() {

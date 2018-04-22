@@ -38,6 +38,8 @@
              <Button mnemonicParsing="false" onAction="#solve" prefHeight="25.0" prefWidth="60.0" text="Solve!" />
              <TextField fx:id="address">127.0.0.1:6400</TextField>
              <Button mnemonicParsing="false" onAction="#test" prefHeight="25.0" prefWidth="60.0" text="Test" />
+             <Button fx:id="viewMode" mnemonicParsing="false" onAction="#setViewMode" prefHeight="25.0" prefWidth="60.0" text="Visual" />
+
 
          </children>
          <padding>
