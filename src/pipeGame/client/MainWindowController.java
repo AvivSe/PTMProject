@@ -135,7 +135,7 @@ public class MainWindowController implements Initializable{
             viewMode.setText("Visual");
         }
         levelDisplayer.changeViewMode();
-        changeStatus("View mode changed to - "+ viewMode.getText(), "blue");
+        changeStatus("Main mode changed to - "+ viewMode.getText(), "blue");
     }
 
     public int getWeight() {

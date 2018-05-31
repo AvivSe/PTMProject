@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+           <tabs>
+               <Tab text="Server">
+                   <content>
+                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                               <VBox layoutX="18.0" layoutY="14.0" prefHeight="329.0" prefWidth="564.0">
+                                   <children>
+                                       <VBox prefHeight="96.0" prefWidth="564.0">
+                                           <children>
+                                               <HBox prefHeight="15.0" prefWidth="564.0">
+                                                   <children>
+                                                       <Label prefHeight="26.0" prefWidth="70.0" text="Address:">
+                                                           <font>
+                                                               <Font size="14.0" />
+                                                           </font>
+                                                           <HBox.margin>
+                                                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                           </HBox.margin>
+                                                       </Label>
+                                                       <TextField fx:id="address" text="127.0.0.1:6400">
+                                                           <HBox.margin>
+                                                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                           </HBox.margin>
+                                                       </TextField>
+                                          <Button mnemonicParsing="false" text="Test">
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                                   </children>
+                                               </HBox>
+                                           </children>
+                                       </VBox>
+                                   </children>
+                               </VBox>
+                           </children></AnchorPane>
+                   </content>
+               </Tab>
+               <Tab text="Graphics">
+                   <content>
+                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                   </content>
+               </Tab>
+            <Tab text="Sound">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+           </tabs>
+       </TabPane>
+
+   </center>
+   <bottom>
+               <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="564.0" BorderPane.alignment="CENTER">
+                   <children>
+                       <Button mnemonicParsing="false" text="apply">
+                           <HBox.margin>
+                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                       </Button>
+                       <Button mnemonicParsing="false" text="save">
+                           <HBox.margin>
+                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                       </Button>
+                       <Button mnemonicParsing="false" text="close">
+                           <HBox.margin>
+                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                       </Button>
+                   </children>
+               </HBox>
+   </bottom>
+</BorderPane>

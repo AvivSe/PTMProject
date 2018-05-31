@@ -7,7 +7,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
 public class LevelDisplayer extends GridPane {
