@@ -47,7 +47,7 @@
          <children>
             <HBox prefHeight="28.0" prefWidth="830.0">
                <children>
-                  <Button mnemonicParsing="false" text="Solve">
+                  <Button fx:id="solve" mnemonicParsing="false" text="Solve">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
