@@ -1,16 +1,14 @@
 package pipeGame.view;
 
-import javafx.event.EventHandler;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import pipeGame.model.PgModel;
 import pipeGame.viewmodel.PgViewModel;
 import java.io.IOException;
 import java.net.URL;
@@ -25,10 +23,28 @@ public class MainWindowController implements Initializable, View {
     @FXML
     Button solve;
 
+    @FXML
+    Text timer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        solve.setOnMouseClicked(event -> viewModel.solve());
+
+        Platform.runLater(()-> viewModel.timeLeft.addListener(event->{
+
+            timer.setText(viewModel.timeLeft.getValue());
+            if(Integer.valueOf(viewModel.timeLeft.getValue()) <= 0) {
+                timer.setText("Game Over!");
+            }
+        }));
+
+        solve.setOnMouseClicked(event -> {
+            try {
+                viewModel.solve();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         this.viewModel = new PgViewModel();
 
         levelDisplayer.viewModel = this.viewModel;

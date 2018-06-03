@@ -49,9 +49,4 @@ public class LevelDisplayer extends GridPane {
             }
         }
     }
-
-
-
-
-
 }

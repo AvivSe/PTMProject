@@ -7,15 +7,17 @@ import pipeGame.model.PgModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Scanner;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.util.*;
 
 public class PgViewModel implements Observer, ViewModel {
     public StringProperty[][] data;
     public PgModel model;
     public StringProperty address;
+    public StringProperty timeLeft;
+    public Timer timer;
+    public TimerTask task;
 
     public PgViewModel() {
         this.model = new PgModel();
@@ -27,6 +29,10 @@ public class PgViewModel implements Observer, ViewModel {
                 {'L','J','F','L'},
                 {'J','L','7','J'},
                 {'7','F','L','g'}});
+
+        startTimer();
+
+
     }
 
     public void setLevel(char[][] level){
@@ -36,6 +42,31 @@ public class PgViewModel implements Observer, ViewModel {
             for( int j = 0; j < level[i].length; j++) {
                 this.data[i][j] = new SimpleStringProperty(String.valueOf(level[i][j]));
             }
+        }
+    }
+
+    public void startTimer() {
+        stopTimer();
+        timer=new Timer();
+        timeLeft = new SimpleStringProperty("7");
+        task=new TimerTask() {
+            @Override
+            public void run() {
+                timeLeft.set(String.valueOf(Integer.valueOf(timeLeft.get())-1));
+                if(Integer.valueOf(timeLeft.get())  <= 0) {
+                    stopTimer();
+                }
+
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    public void stopTimer() {
+        if(timer!=null) {
+            System.out.println("cacling");
+            task.cancel();
+            timer.cancel();
         }
     }
 
@@ -103,7 +134,7 @@ public class PgViewModel implements Observer, ViewModel {
     }
 
 
-    public void solve() {
+    public void solve() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
 
         for(StringProperty[] line: data) {
@@ -113,7 +144,14 @@ public class PgViewModel implements Observer, ViewModel {
             stringBuilder.append("\n");
         }
 
-        model.solve(stringBuilder.toString());
+        ArrayList<String> solution = model.solve(stringBuilder.toString());
+        for(String line: solution) {
+            String[] vector = line.split(",");
+            int i = Integer.valueOf(vector[0]);
+            int j = Integer.valueOf(vector[1]);
+            int times = Integer.valueOf(vector[2]);
+            rotate(i,j,times);
+        }
     }
 
     @Override

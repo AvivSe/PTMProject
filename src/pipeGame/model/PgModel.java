@@ -1,14 +1,14 @@
 package pipeGame.model;
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Scanner;
 
 public class PgModel extends Observable implements Model {
+
     public int weight(String request) {
         int result = 0;
         for(int i = 0; i < request.length(); i++) {
@@ -21,43 +21,41 @@ public class PgModel extends Observable implements Model {
         return result;
     }
 
-    public ArrayList<String> solve(String request) {
-//        System.out.println("Weight: " + weight(request));
-//        System.out.println(request);
-//
-//        Socket s = new Socket(getIp(), getPort());
-//        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-//        PrintWriter out = new PrintWriter(s.getOutputStream());
-//
-//        out.println(getWeight());
-//        out.flush();
-//
-//        StringBuilder stringBuilder = new StringBuilder();
-//
-//        for(char[] line: data) {
-//            for (char c : line) {
-//                stringBuilder.append(c);
-//            }
-//            stringBuilder.append("\n");
-//        }
-//        stringBuilder.append("done");
-//        out.println(stringBuilder.toString());
-//        out.flush();
-//
-//        String answer = in.readLine();
-//        ArrayList<String> solution = new ArrayList<>();
-//
-//        while(!answer.equals("done")) {
-//            //System.out.println(answer);
-//            solution.add(answer);
-//            answer = in.readLine();
-//        }
-//
-//        in.close();
-//        out.close();
-//        s.close();
+    public String getIp() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File("pgGame.conf"));
+        return scanner.nextLine().split(":")[0];
+    }
 
-        return null;
+    public int getPort() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File("pgGame.conf"));
+        return Integer.valueOf(scanner.nextLine().split(":")[1]);
+    }
+
+    public ArrayList<String> solve(String request) throws IOException {
+        Socket s = new Socket(getIp(), getPort());
+        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        PrintWriter out = new PrintWriter(s.getOutputStream());
+
+        out.println(weight(request));
+        out.flush();
+
+        out.println(request += "done");
+        out.flush();
+
+        String answer = in.readLine();
+        ArrayList<String> solution = new ArrayList<>();
+
+        while(!answer.equals("done")) {
+            //System.out.println(answer);
+            solution.add(answer);
+            answer = in.readLine();
+        }
+
+        in.close();
+        out.close();
+        s.close();
+
+        return solution;
     }
 
 
