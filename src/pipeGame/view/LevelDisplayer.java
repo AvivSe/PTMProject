@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -17,6 +18,7 @@ public class LevelDisplayer extends GridPane {
     PgViewModel viewModel;
 
     public void bindData() {
+
         this.data = new StringProperty[viewModel.data.length][viewModel.data[0].length];
 
         // Bind data with View-Model
@@ -41,7 +43,7 @@ public class LevelDisplayer extends GridPane {
             addRow(i);
             for(int j = 0; j < data[i].length; j++) {
                 addColumn(j);
-                Node grid = new Grid(data[i][j].get());
+                Node grid = new ButtonGrid(data[i][j].get());
                 int finalJ = j;
                 int finalI = i;
                 grid.setOnMouseClicked(e->viewModel.rotate(finalI, finalJ,1));

@@ -6,8 +6,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
-class Grid extends Button {
-    Grid(String str) {
+
+class ButtonGrid extends Button {
+    ButtonGrid(String str) {
         super(str);
         setFont(Font.font("Tahoma", FontWeight.BOLD, FontPosture.REGULAR,26));
         setPrefSize(Integer.MAX_VALUE, Integer.MAX_VALUE);

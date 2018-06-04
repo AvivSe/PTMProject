@@ -11,18 +11,21 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.*;
 
-public class PgViewModel implements Observer, ViewModel {
+public class PgViewModel implements ViewModel {
     public StringProperty[][] data;
     public PgModel model;
-    public StringProperty address;
     public StringProperty timeLeft;
     public Timer timer;
     public TimerTask task;
+    public StringProperty currentWindow;
+
+    int index;
 
     public PgViewModel() {
         this.model = new PgModel();
+        currentWindow = new SimpleStringProperty();
 
-        // Default level:
+        // TODO: replace this hard-coded default level
         this.setLevel(new char[][] {
                 {'s','F','L',' '},
                 {'F','7','L','J'},
@@ -30,9 +33,11 @@ public class PgViewModel implements Observer, ViewModel {
                 {'J','L','7','J'},
                 {'7','F','L','g'}});
 
+        currentWindow.setValue("start");
+    }
+
+    public void startGame() {
         startTimer();
-
-
     }
 
     public void setLevel(char[][] level){
@@ -48,7 +53,7 @@ public class PgViewModel implements Observer, ViewModel {
     public void startTimer() {
         stopTimer();
         timer=new Timer();
-        timeLeft = new SimpleStringProperty("7");
+        timeLeft = new SimpleStringProperty("5");
         task=new TimerTask() {
             @Override
             public void run() {
@@ -145,17 +150,24 @@ public class PgViewModel implements Observer, ViewModel {
         }
 
         ArrayList<String> solution = model.solve(stringBuilder.toString());
-        for(String line: solution) {
-            String[] vector = line.split(",");
-            int i = Integer.valueOf(vector[0]);
-            int j = Integer.valueOf(vector[1]);
-            int times = Integer.valueOf(vector[2]);
-            rotate(i,j,times);
-        }
+        index = 0;
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(index < solution.size()) {
+                    String[] vector = solution.get(index).split(",");
+                    int i = Integer.valueOf(vector[0]);
+                    int j = Integer.valueOf(vector[1]);
+                    int times = Integer.valueOf(vector[2]);
+                    rotate(i,j,times);
+                    index++;
+                } else {
+                    timer.cancel();
+                }
+            }
+        }, 0, 100);
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
 }
