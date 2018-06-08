@@ -1,5 +1,6 @@
 package pipeGame.viewmodel;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.FileChooser;
@@ -8,60 +9,98 @@ import pipeGame.model.PgModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PgViewModel implements ViewModel {
     public StringProperty[][] data;
-    public PgModel model;
     public StringProperty timeLeft;
-    public Timer timer;
-    public TimerTask task;
     public StringProperty currentWindow;
+    private PgModel model;
+    private Timer timer;
+    private TimerTask task;
+    private int index;
 
-    int index;
 
     public PgViewModel() {
         this.model = new PgModel();
-        currentWindow = new SimpleStringProperty();
-
-        // TODO: replace this hard-coded default level
-        this.setLevel(new char[][] {
-                {'s','F','L',' '},
-                {'F','7','L','J'},
-                {'L','J','F','L'},
-                {'J','L','7','J'},
-                {'7','F','L','g'}});
-
-        currentWindow.setValue("start");
+        timeLeft = new SimpleStringProperty();
+        currentWindow = new SimpleStringProperty("startView");
     }
 
     public void startGame() {
-        startTimer();
+        this.setLevel(null);
+        this.currentWindow.setValue("gameView");
+        this.startTimer();
+        this.model.win.addListener(e->{
+            if(model.win.getValue().equals(true))
+                this.winView();
+        });
+
     }
 
-    public void setLevel(char[][] level){
-        this.data = new StringProperty[level.length][level[0].length];
-
-        for(int i = 0; i < level.length; i++) {
-            for( int j = 0; j < level[i].length; j++) {
-                this.data[i][j] = new SimpleStringProperty(String.valueOf(level[i][j]));
+    private void setLevel(char[][] level){
+        // Set level if exists
+        if(level != null) {
+            this.data = new StringProperty[level.length][level[0].length];
+            for (int i = 0; i < level.length; i++) {
+                for (int j = 0; j < level[i].length; j++) {
+                    this.data[i][j] = new SimpleStringProperty(String.valueOf(level[i][j]));
+                    this.data[i][j].addListener(e->Platform.runLater(()->model.isGoal(dataToCharArray())));
+                }
             }
+        }
+        // Get Random level from folder if not exists
+        else {
+            //TODO make path dynamic
+            File folder = new File("src/pipeGame/defualts/levels");
+            List<File> listOfFiles = Arrays.asList(Objects.requireNonNull(folder.listFiles()));
+            fileToData(listOfFiles.get(ThreadLocalRandom.current().nextInt(0,  listOfFiles.size())));
+        }
+    }
+
+    private void fileToData(File file) {
+        if (file != null) {
+            System.out.println(file.getName());
+            ArrayList<ArrayList<Character>> newData = new ArrayList<>();
+            Scanner scanner = null;
+            try {
+                scanner = new Scanner(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            assert scanner != null;
+            while (scanner.hasNext()) {
+                ArrayList<Character> row = new ArrayList<>();
+                newData.add(row);
+                for (char c : scanner.nextLine().toCharArray()) {
+                    row.add(c);
+                }
+            }
+            char result[][] = new char[newData.size()][newData.get(0).size()];
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[0].length; j++) {
+                    result[i][j] = newData.get(i).get(j);
+                }
+            }
+            this.setLevel(result);
         }
     }
 
     public void startTimer() {
         stopTimer();
         timer=new Timer();
-        timeLeft = new SimpleStringProperty("5");
+        //timeLeft.setValue(String.valueOf(model.weight(dataToString())*5));
+        timeLeft.setValue("10");
         task=new TimerTask() {
             @Override
             public void run() {
                 timeLeft.set(String.valueOf(Integer.valueOf(timeLeft.get())-1));
                 if(Integer.valueOf(timeLeft.get())  <= 0) {
+                    currentWindow.setValue("overView");
                     stopTimer();
                 }
-
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
@@ -69,7 +108,8 @@ public class PgViewModel implements ViewModel {
 
     public void stopTimer() {
         if(timer!=null) {
-            System.out.println("cacling");
+            model.win.setValue(false);
+            timeLeft.setValue("0");
             task.cancel();
             timer.cancel();
         }
@@ -80,34 +120,17 @@ public class PgViewModel implements ViewModel {
         fileChooser.setTitle("Open pipe game file (.pg)");
         fileChooser.setInitialDirectory(new File("./"));
         File chosen = fileChooser.showOpenDialog(null);
-        if (chosen != null) {
-            System.out.println(chosen.getName());
-            ArrayList<ArrayList<Character>> newData = new ArrayList<>();
+        fileToData(chosen);
+        this.startView();
+    }
 
-            Scanner scanner = null;
-            try {
-                scanner = new Scanner(chosen);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+    private String dataToString() {
+        StringBuilder result = new StringBuilder();
+        for(StringProperty[] line: data)
+            for (StringProperty s: line)
+                result.append(s.getValue());
 
-            while (scanner.hasNext()) {
-                ArrayList<Character> row = new ArrayList<>();
-                newData.add(row);
-                for (char c : scanner.nextLine().toCharArray()) {
-                    row.add(c);
-                }
-            }
-
-            char result[][] = new char[newData.size()][newData.get(0).size()];
-            for (int i = 0; i < result.length; i++) {
-                for (int j = 0; j < result[0].length; j++) {
-                    result[i][j] = newData.get(i).get(j);
-                }
-            }
-
-            this.setLevel(result);
-        }
+        return result.toString();
     }
 
     public void rotate(int row,int col,int times){
@@ -138,10 +161,20 @@ public class PgViewModel implements ViewModel {
         }
     }
 
+    private void startView() {
+        this.currentWindow.setValue("startView");
+        this.stopTimer();
+    }
+
+    private void winView() {
+        if(!this.currentWindow.getValue().equals("winView")) {
+            this.stopTimer();
+            this.currentWindow.setValue("winView");
+        }
+    }
 
     public void solve() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-
         for(StringProperty[] line: data) {
             for (StringProperty c : line) {
                 stringBuilder.append(c.get());
@@ -170,4 +203,15 @@ public class PgViewModel implements ViewModel {
         }, 0, 100);
     }
 
+    private char[][] dataToCharArray() {
+        int rows = data.length;
+        int cols = data[0].length;
+        char[][] result = new char[rows][cols];
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++) {
+                result[i][j] = data[i][j].getValue().charAt(0);
+            }
+        }
+        return result;
+    }
 }

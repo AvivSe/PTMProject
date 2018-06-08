@@ -13,14 +13,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import pipeGame.viewmodel.PgViewModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LevelDisplayer extends GridPane {
     public StringProperty[][] data;
     PgViewModel viewModel;
 
     public void bindData() {
-
         this.data = new StringProperty[viewModel.data.length][viewModel.data[0].length];
-
         // Bind data with View-Model
         for(int i = 0; i < viewModel.data.length; i++) {
             for(int j = 0; j < viewModel.data[i].length; j++) {

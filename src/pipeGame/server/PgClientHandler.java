@@ -27,7 +27,7 @@ public class PgClientHandler implements ClientHandler {
         String tmp = req.toString();
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevelBuilder.build(tmp);
-//        System.out.println("Client ask for directions to level: \n"  + tmp);
+//      System.out.println("Client ask for directions to level: \n"  + tmp);
 
         try {
                 out.print(this.cacheManager.load(tmp).toString());

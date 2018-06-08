@@ -8,6 +8,7 @@ package pipeGame.server;
 import server_interface.ClientHandler;
 import server_interface.Server;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,11 +17,31 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class PgServer implements Server {
+    private ServerSocket server;
+    boolean stop;
+    private int port;
+    PriorityExecutorService<PgTask> priorityExecutorService;
+
+    public PgServer(int port) {
+        this.port = port;
+        this.server = null;
+        this.stop = true;
+        System.out.println("Ready to start...");
+
+        priorityExecutorService =
+                new PriorityExecutorService<>(
+                        Executors.newCachedThreadPool(),
+                            new PriorityBlockingQueue<>(), 999999);
+    }
+
     @Override
     public void start(ClientHandler clientHandler) {
+        priorityExecutorService.activeExecutor();
         try {
             this.server = new ServerSocket(port);
         } catch (IOException e) {
@@ -47,18 +68,8 @@ public class PgServer implements Server {
     @Override
     public void stop()  {
         this.stop = true;
+        this.priorityExecutorService.shutdownExecutor();
         System.out.println("Server is down.");
-    }
-
-    private ServerSocket server;
-    public boolean stop;
-    private int port;
-
-    public PgServer(int port) {
-        this.port = port;
-        this.server = null;
-        this.stop = true;
-        System.out.println("Ready to start...");
     }
 
     private void run(ClientHandler clientHandler) throws IOException {
@@ -77,12 +88,22 @@ public class PgServer implements Server {
 
                             if(!firstLine.equals("test")) {
                                 System.out.println("\nNew client on port " + socket.getPort() + " Weight: " + firstLine);
-                                clientHandler.handler(in, out);
+
+                                priorityExecutorService.add(new PgTask(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            clientHandler.handler(in, out);
+                                            in.close();
+                                            out.close();
+                                            socket.close();
+                                        } catch(IOException ignored) {}
+                                    }
+                                }, Integer.valueOf(firstLine)));
+
                             }
 
-                            in.close();
-                            out.close();
-                            socket.close();
+
 
                         } catch (IOException e) {
                             e.printStackTrace();
