@@ -1,11 +1,8 @@
 package pipeGame.view;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-
-
 import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,7 +12,7 @@ public class ConfigurationWindowController implements Initializable {
     @FXML
     TextField address;
 
-    public void save() throws FileNotFoundException, UnsupportedEncodingException {
+    public void save() throws FileNotFoundException {
         PrintWriter writer = new PrintWriter(new File("pgGame.conf"));
         writer.println(address.getText());
         writer.close();

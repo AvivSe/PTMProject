@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import pipeGame.viewmodel.PgViewModel;
 import java.io.IOException;
 import java.net.URL;
-
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable, View {
@@ -46,9 +45,7 @@ public class MainWindowController implements Initializable, View {
         Platform.runLater(()-> viewModel.timeLeft.addListener(event->{
             timer.setText(viewModel.timeLeft.getValue());
         }));
-
     }
-
 
     private void drawGameOver() {
         Button gameOver = new Button("You Lose!");

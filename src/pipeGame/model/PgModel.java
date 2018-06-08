@@ -1,15 +1,13 @@
 package pipeGame.model;
 
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Scanner;
 
-public class PgModel extends Observable implements Model {
+public class PgModel implements Model {
     public BooleanProperty win;
 
     private int numRows;
@@ -19,7 +17,7 @@ public class PgModel extends Observable implements Model {
         win = new SimpleBooleanProperty(false);
     }
 
-    public int weight(String request) {
+    private int weight(String request) {
         int result = 0;
         for(int i = 0; i < request.length(); i++) {
             char c = request.charAt(i);
@@ -31,12 +29,12 @@ public class PgModel extends Observable implements Model {
         return result;
     }
 
-    public String getIp() throws FileNotFoundException {
+    private String getIp() throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("pgGame.conf"));
         return scanner.nextLine().split(":")[0];
     }
 
-    public int getPort() throws FileNotFoundException {
+    private int getPort() throws FileNotFoundException {
         Scanner scanner = new Scanner(new File("pgGame.conf"));
         return Integer.valueOf(scanner.nextLine().split(":")[1]);
     }
@@ -173,5 +171,4 @@ public class PgModel extends Observable implements Model {
             return (i >= 0 && i < numRows &&
                     j >= 0 && j < numCols);
         }
-
 }

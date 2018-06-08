@@ -21,7 +21,6 @@ public class PgViewModel implements ViewModel {
     private TimerTask task;
     private int index;
 
-
     public PgViewModel() {
         this.model = new PgModel();
         timeLeft = new SimpleStringProperty();
@@ -36,7 +35,6 @@ public class PgViewModel implements ViewModel {
             if(model.win.getValue().equals(true))
                 this.winView();
         });
-
     }
 
     private void setLevel(char[][] level){
@@ -106,7 +104,7 @@ public class PgViewModel implements ViewModel {
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
-    public void stopTimer() {
+    private void stopTimer() {
         if(timer!=null) {
             model.win.setValue(false);
             timeLeft.setValue("0");
