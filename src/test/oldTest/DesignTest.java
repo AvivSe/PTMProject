@@ -1,4 +1,4 @@
-package test;
+package test.oldTest;
 
 import java.lang.reflect.Field;
 
@@ -69,9 +69,8 @@ public class DesignTest {
 		}
 		
 		if(!ar[0] || !ar[1])
-			System.out.println("Your ClientHandler does not contain a Solver or a CacheManager (-4)");
+			System.out.println("Your ClientHandler does not contain a Solver or a CacheManager (-8)");
 	}
-	
 	
 	public Class<?> getSearchableInterface() {
 		return searchableInterface;

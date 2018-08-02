@@ -1,4 +1,4 @@
-package test;
+package test.oldTest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,8 +8,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class TestServer {
-	
-	
+
 	public static void runClient(int port){
 		Socket s=null;
 		PrintWriter out=null;
@@ -24,24 +23,22 @@ public class TestServer {
 			out.flush();
 			String line=in.readLine();
 			if(line==null || !line.equals("0,1,1"))
-				System.out.println("Your Server did not reply at all or replied a correct solution (-30)");
+				System.out.println("Your Server did not reply at all or replied a correct solution (-40)");
 			line=in.readLine();
 			if(line==null || !line.equals("done"))
 				System.out.println("Your Server does not work according to the right protocol (-10)");
 		}catch(SocketTimeoutException e){
-			System.out.println("Your Server takes over 3 seconds to answer (-40)");
+			System.out.println("Your Server takes over 3 seconds to answer (-50)");
 		}catch(IOException e){
-			System.out.println("Your Server ran into some IOException (-40)");
+			System.out.println("Your Server ran into some IOException (-50)");
 		}finally{
 			try {
 				in.close();
 				out.close();
 				s.close();
 			} catch (IOException e) {
-				System.out.println("Your Server ran into some IOException (-40)");
+				System.out.println("Your Server ran into some IOException (-50)");
 			}
 		}
-		
 	}
-
 }
