@@ -17,7 +17,9 @@ import server_interface.Solver;
  */
 public class PgClientHandler implements ClientHandler {
     @Override
-    public void handler(BufferedReader in, PrintWriter out) throws IOException {
+    public void handler(InputStream input, OutputStream output) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(input));
+        PrintWriter out = new PrintWriter(output);
 
         StringBuilder req = new StringBuilder(in.readLine() + "\n");
         while (!req.toString().contains("done")) {
@@ -27,7 +29,7 @@ public class PgClientHandler implements ClientHandler {
         String tmp = req.toString();
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevelBuilder.build(tmp);
-//      System.out.println("Client ask for directions to level: \n"  + tmp);
+        System.out.println("Client ask for directions to level: \n"  + tmp);
 
         try {
                 out.print(this.cacheManager.load(tmp).toString());

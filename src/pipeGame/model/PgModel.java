@@ -44,8 +44,8 @@ public class PgModel implements Model {
         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         PrintWriter out = new PrintWriter(s.getOutputStream());
 
-        out.println(weight(request));
-        out.flush();
+        //out.println(weight(request));
+        //out.flush();
 
         out.println(request += "done");
         out.flush();

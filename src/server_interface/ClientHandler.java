@@ -16,6 +16,6 @@ public interface ClientHandler {
      * @param out client Writer
      * @throws IOException
      */
-    void handler(BufferedReader in, PrintWriter out) throws IOException;
+    void handler(InputStream in, OutputStream out) throws IOException;
 
 }
