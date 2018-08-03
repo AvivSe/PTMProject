@@ -8,7 +8,6 @@ public class PriorityExecutorService<T extends Comparable & Runnable> {
     private BlockingQueue<T> queue;
     private boolean stop;
 
-
     public PriorityExecutorService(ExecutorService executorService, BlockingQueue<T> blockingQueue) {
         this.executor = executorService;
         this.queue = blockingQueue;
