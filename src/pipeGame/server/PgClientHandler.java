@@ -6,7 +6,6 @@ import server_interface.CacheManager;
 import server_interface.ClientHandler;
 import server_interface.Instructions;
 import server_interface.Solver;
-
 /**
  *
  * The purpose of this kind of ClientHandler is to solve level in our Pipe-Game Project,
