@@ -96,7 +96,6 @@ public class PgServer implements Server {
                         socketInputStream.reset();
 
                         System.out.println("\nNew client on port " + socket.getPort() + " Weight: " + priority);
-
                         priorityExecutorService.add(new PgTask(() -> {
                             try {
                                 clientHandler.handler(socketInputStream, socket.getOutputStream());
