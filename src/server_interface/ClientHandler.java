@@ -1,7 +1,6 @@
 package server_interface;
 
 import java.io.*;
-
 /**
  *
  * ClientHandler is a service that takes care for specific client,
