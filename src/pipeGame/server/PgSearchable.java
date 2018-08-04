@@ -143,10 +143,8 @@ public class PgSearchable implements Searchable<PgLevel> {
     }
 
     @Override
-    public ArrayList<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
-        ArrayList<State<PgLevel>> possibleStates = new ArrayList<>();
-        int row = state.getState().getRow();
-        int col = state.getState().getCol();
+    public List<State<PgLevel>> getPossibleStates(State<PgLevel> state) {
+        List<State<PgLevel>> possibleStates = new ArrayList<>();
 
         List<Direction> nextSteps = nextSteps(state.getState());
 

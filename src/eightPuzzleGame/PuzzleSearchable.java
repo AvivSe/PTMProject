@@ -19,8 +19,8 @@ public class PuzzleSearchable implements Searchable<Puzzle> {
     }
 
     @Override
-    public ArrayList<State<Puzzle>> getPossibleStates(State<Puzzle> state) {
-        ArrayList<State<Puzzle>> result = new ArrayList<>();
+    public List<State<Puzzle>> getPossibleStates(State<Puzzle> state) {
+        List<State<Puzzle>> result = new ArrayList<>();
 
         List<Puzzle> nextSteps = state.getState().getPossibleMoves();
 

@@ -17,7 +17,7 @@ public class BestFirstSearch<T> extends PrioritySearcher<T> implements Searcher<
     }
 
     @Override
-    public Solution search(Searchable<T> searchable) {
+    public Solution<T> search(Searchable<T> searchable) {
         openList.add(searchable.getInitialState());
         while (openList.size() > 0) {
             State<T> n = openList.poll();

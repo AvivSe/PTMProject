@@ -6,10 +6,10 @@
  */
 
 package searcher_interface;
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Searchable<T> {
     State<T> getInitialState();
-    ArrayList<State<T>> getPossibleStates(State<T> state);
+    List<State<T>> getPossibleStates(State<T> state);
     boolean isGoalState(State<T> state);
 }

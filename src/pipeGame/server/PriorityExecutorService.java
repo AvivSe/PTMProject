@@ -7,10 +7,8 @@ public class PriorityExecutorService<T extends Comparable & Runnable> {
     private ExecutorService executor;
     private BlockingQueue<T> queue;
     private boolean stop;
-    private int pollingTimeOut;
 
-    public PriorityExecutorService(ExecutorService executorService, BlockingQueue<T> blockingQueue, int pollingTimeOut) {
-        this.pollingTimeOut = pollingTimeOut;
+    public PriorityExecutorService(ExecutorService executorService, BlockingQueue<T> blockingQueue) {
         this.executor = executorService;
         this.queue = blockingQueue;
         this.stop = false;
@@ -20,15 +18,9 @@ public class PriorityExecutorService<T extends Comparable & Runnable> {
     public void activeExecutor() {
         new Thread(()-> {
             while(!stop) {
-                try {
-                    T toExecute = queue.poll(pollingTimeOut, TimeUnit.MILLISECONDS);
-
-                    if(toExecute != null)
-                        executor.execute(toExecute);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                T toExecute = queue.poll();
+                if(toExecute != null)
+                    executor.execute(toExecute);
             }
         }).start();
 

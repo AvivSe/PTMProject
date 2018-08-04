@@ -11,7 +11,7 @@ package common_searchers;
 
 import searcher_interface.*;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
@@ -24,7 +24,7 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
     }
 
     @Override
-    public Solution search(Searchable<T> searchable) {
+    public Solution<T> search(Searchable<T> searchable) {
         //Define the current state as an initial state
         State<T> next = searchable.getInitialState();
 
@@ -32,7 +32,7 @@ public class HillClimbing<T> extends CommonSearcher<T> implements Searcher<T> {
 
         //Loop until the goal state is achieved or no more operators can be applied on the current state:
         while (System.currentTimeMillis() - time0 < timeToRun) {
-            ArrayList<State<T>> neighbors = searchable.getPossibleStates(next);
+            List<State<T>> neighbors = searchable.getPossibleStates(next);
 
             if (searchable.isGoalState(next)) {
                 //System.out.println("HillClimbing: Goal");

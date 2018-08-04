@@ -16,7 +16,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
     }
 
     @Override
-    public Solution search(Searchable<T> searchable) {
+    public Solution<T> search(Searchable<T> searchable) {
         State<T> initialState = searchable.getInitialState();
 
         queue.add(initialState);
@@ -28,7 +28,7 @@ public class BFS<T> extends CommonSearcher implements Searcher<T> {
                     System.out.println("BFS: GOAL!");
                     return BackTrace(current);
                 } else {
-                    ArrayList<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
+                    List<State<T>> nextPossibleStates = searchable.getPossibleStates(current);
                         queue.addAll(nextPossibleStates);
                     closeList.add(current);
                 }

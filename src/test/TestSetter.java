@@ -64,70 +64,9 @@ public class TestSetter {
 	 *
 	 */
 
-	static Queue<String> moves =  new LinkedList<>();
 	public static List<String> solveWordGame(WordGame tp) {
 
-		int n = tp.getCurrentState().length();
-		for(int i = 0; i < n; i++) {
-			for (int j = i; j < n; j++) {
-				String tmp = j + "," + (n-1);
-				moves.add(tmp);
-			}
-		}
-
-		// of course, you should replace this code with a calculated answer...
-		List<String> sol=Arrays.asList("0,3","1,3");
-
-
-		Searchable<String> wordGameSearchable = new Searchable<String>() {
-			State<String> initalstate = new State<>("",null,0);
-
-			@Override
-			public State<String> getInitialState() {
-				return initalstate;
-			}
-
-			@Override
-			public ArrayList<State<String>> getPossibleStates(State<String> state) {
-				ArrayList<State<String>> result = new ArrayList<>();
-				String move = moves.poll();
-				moves.add(move);
-				String[] tmp = move.split(",");
-				int i = Integer.valueOf(tmp[0]), j = Integer.valueOf(tmp[1]);
-				double cost = tp.switchLetters(i, j);
-				result.add(new State<>(move, state, state.getCost() + cost));
-
-				return result;
-			}
-
-			@Override
-			public boolean isGoalState(State<String> state) {
-				return tp.isGoal();
-			}
-		};
-
-		Searcher<String> searcher = new BestFirstSearch<>(new Heuristic() {
-			@Override
-			public double indication() {
-				return 0;
-			}
-
-			@Override
-			public boolean isLeftBetter(double left, double right) {
-				return false;
-			}
-
-			@Override
-			public double calcHeuristic(State state) {
-				return 0;
-			}
-		});
-		Solution solution = searcher.search(wordGameSearchable);
-		solution.remove(0);
-		Collections.reverse(solution);
-		tp.applyActions(solution);
-		Collections.reverse(solution);
-		return solution;
+		return null;
 	}
 
 

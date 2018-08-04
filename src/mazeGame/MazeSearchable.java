@@ -19,8 +19,8 @@ public class MazeSearchable implements Searchable<Grid> {
     }
 
     @Override
-    public ArrayList<State<Grid>> getPossibleStates(State<Grid> state) {
-        ArrayList<State<Grid>> results = new ArrayList<>();
+    public List<State<Grid>> getPossibleStates(State<Grid> state) {
+        List<State<Grid>> results = new ArrayList<>();
 
         List<Grid> possibleMoves = maze.getPossibleMoves(state.getState());
 

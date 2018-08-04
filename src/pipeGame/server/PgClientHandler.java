@@ -6,7 +6,6 @@ import server_interface.CacheManager;
 import server_interface.ClientHandler;
 import server_interface.Instructions;
 import server_interface.Solver;
-
 /**
  *
  * The purpose of this kind of ClientHandler is to solve level in our Pipe-Game Project,
@@ -17,7 +16,9 @@ import server_interface.Solver;
  */
 public class PgClientHandler implements ClientHandler {
     @Override
-    public void handler(BufferedReader in, PrintWriter out) throws IOException {
+    public void handler(InputStream input, OutputStream output) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(input));
+        PrintWriter out = new PrintWriter(output);
 
         StringBuilder req = new StringBuilder(in.readLine() + "\n");
         while (!req.toString().contains("done")) {
@@ -27,10 +28,10 @@ public class PgClientHandler implements ClientHandler {
         String tmp = req.toString();
         tmp = req.toString().substring(0,tmp.length()-5);
         PgLevel request = PgLevelBuilder.build(tmp);
-//      System.out.println("Client ask for directions to level: \n"  + tmp);
+        System.out.println("Client ask for directions to level: \n"  + tmp);
 
         try {
-                out.print(this.cacheManager.load(tmp).toString());
+            out.print(this.cacheManager.load(tmp).toString());
 //              System.out.println("Cache said: I have it in files :)");
         } catch (NullPointerException error) {
             try {

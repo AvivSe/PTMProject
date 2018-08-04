@@ -1,7 +1,6 @@
 package server_interface;
 
 import java.io.*;
-
 /**
  *
  * ClientHandler is a service that takes care for specific client,
@@ -16,6 +15,6 @@ public interface ClientHandler {
      * @param out client Writer
      * @throws IOException
      */
-    void handler(BufferedReader in, PrintWriter out) throws IOException;
+    void handler(InputStream in, OutputStream out) throws IOException;
 
 }
